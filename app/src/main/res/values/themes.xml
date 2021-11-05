@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="Theme" parent="Theme.AppCompat.DayNight">
+        <item name="colorPrimaryDark">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+    </style>
+</resources>
