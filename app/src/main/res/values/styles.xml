@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Button" parent="Widget.AppCompat.Button">
+    <style name="Button"
+        parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/text</item>
-        <item name="android:background">@color/button</item>
+        <item name="android:background">@color/second_background</item>
     </style>
-
-    <style name="EditText" parent="Widget.AppCompat.EditText">
+    <style name="EditText"
+        parent="Widget.AppCompat.EditText">
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:background">@null</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textColorHint">@color/text</item>
-
     </style>
-
-    <style name="TextView" parent="Widget.AppCompat.TextView">
+    <style name="TextView"
+        parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/text</item>
+    </style>
+    <style name="Snackbar"
+        parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:background">@color/second_background</item>
+    </style>
+    <style name="SnackbarButton"
+        parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="android:textColor">@color/text</item>
+    </style>
+    <style name="SnackbarTextView"
+        parent="Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/text</item>
     </style>
 </resources>

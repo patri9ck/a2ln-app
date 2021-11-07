@@ -1,7 +1,10 @@
 <resources>
-
-    <style name="Theme" parent="Theme.AppCompat.DayNight">
+    <style name="Theme"
+        parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimaryDark">@color/background</item>
         <item name="android:navigationBarColor">@color/background</item>
+        <item name="snackbarStyle">@style/Snackbar</item>
+        <item name="snackbarButtonStyle">@style/SnackbarButton</item>
+        <item name="snackbarTextViewStyle">@style/SnackbarTextView</item>
     </style>
 </resources>
