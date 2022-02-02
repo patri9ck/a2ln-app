@@ -1,0 +1,1 @@
+- Removed automatic versionCode and versionName resolving
