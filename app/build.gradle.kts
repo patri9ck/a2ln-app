@@ -2,14 +2,6 @@ plugins {
     id("com.android.application")
 }
 
-fun runCommand(command : String) : String {
-    val process = Runtime.getRuntime().exec(command)
-
-    process.waitFor()
-
-    return process.inputStream.bufferedReader().readText().trim()
-}
-
 android {
     compileSdk = 31
 
@@ -18,8 +10,8 @@ android {
         minSdk = 27
         targetSdk = 31
 
-        versionCode = runCommand("git tag").split("\n").size
-        versionName = runCommand("git describe --tags --abbrev=0")
+        versionCode = 2
+        versionName = "1.0.1"
     }
 
     compileOptions {

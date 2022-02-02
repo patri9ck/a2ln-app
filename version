@@ -1,0 +1,23 @@
+#!/bin/sh
+
+gradle_script=app/build.gradle.kts
+
+if ! [ -f "$gradle_script" ]
+then
+	echo "Cannot find $gradle_script"
+	
+	exit 1
+fi
+
+if ! version_code=$(git tag | wc -l) || ! version_name=$(git describe --tags --abbrev=0)
+then
+	echo 'Cannot get version code or version name'
+
+	exit 1
+fi
+
+echo "Version code: $version_code"
+echo "Version name: $version_name"
+
+sed -i "s/versionCode = .*/versionCode = $version_code/" "$gradle_script"
+sed -i "s/versionName = .*/versionName = \"$version_name\"/" "$gradle_script"
