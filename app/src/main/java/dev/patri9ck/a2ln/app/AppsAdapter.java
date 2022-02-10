@@ -4,9 +4,9 @@ import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,7 +45,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
 
         holder.nameTextView.setText(app.getName());
 
-        holder.appToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        holder.appCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             app.setEnabled(isChecked);
 
             String packageName = app.getPackageName();
@@ -63,7 +63,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
             notificationReceiver.setDisabledApps(disabledApps);
         });
 
-        holder.appToggleButton.setChecked(app.isEnabled());
+        holder.appCheckBox.setChecked(app.isEnabled());
 
         holder.iconImageView.setImageDrawable(app.getIcon());
     }
@@ -80,14 +80,14 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
     protected static class AppViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nameTextView;
-        private ToggleButton appToggleButton;
+        private CheckBox appCheckBox;
         private ImageView iconImageView;
 
         public AppViewHolder(View itemView) {
             super(itemView);
 
             nameTextView = itemView.findViewById(R.id.name_text_view);
-            appToggleButton = itemView.findViewById(R.id.app_toggle_button);
+            appCheckBox = itemView.findViewById(R.id.app_check_box);
             iconImageView = itemView.findViewById(R.id.icon_image_view);
         }
     }
