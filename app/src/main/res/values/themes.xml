@@ -3,6 +3,8 @@
         parent="Theme.MaterialComponents.DayNight">
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="actionBarStyle">@style/ActionBar</item>
         <item name="snackbarStyle">@style/Snackbar</item>
         <item name="snackbarButtonStyle">@style/SnackbarButton</item>
         <item name="snackbarTextViewStyle">@style/SnackbarTextView</item>

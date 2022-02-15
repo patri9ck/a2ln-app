@@ -28,4 +28,7 @@
         parent="Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/text</item>
     </style>
+    <style name="ActionBar" parent="Widget.MaterialComponents.Light.ActionBar.Solid">
+        <item name="background">@color/background</item>
+    </style>
 </resources>
