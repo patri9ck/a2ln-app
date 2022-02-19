@@ -3,4 +3,6 @@
     <color name="text">#404040</color>
     <color name="background">#f2f2f2</color>
     <color name="second_background">#bfbfbf</color>
+
+    <color name="accent">#2962ff</color>
 </resources>
