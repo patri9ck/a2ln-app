@@ -16,6 +16,11 @@
         parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/text</item>
     </style>
+    <style name="ActionBar"
+        parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/background</item>
+        <item name="android:textColor">@color/accent</item>
+    </style>
     <style name="Snackbar"
         parent="Widget.MaterialComponents.Snackbar">
         <item name="android:background">@color/second_background</item>
@@ -27,8 +32,5 @@
     <style name="SnackbarTextView"
         parent="Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/text</item>
-    </style>
-    <style name="ActionBar" parent="Widget.MaterialComponents.Light.ActionBar.Solid">
-        <item name="background">@color/background</item>
     </style>
 </resources>
