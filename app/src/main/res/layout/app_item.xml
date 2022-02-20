@@ -3,26 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
-
     <ImageView android:id="@+id/icon_image_view"
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:layout_gravity="center_vertical"
-        android:layout_margin="@dimen/padding_list"/>
-
+        android:layout_margin="@dimen/list_margin"/>
     <TextView style="@style/TextView"
         android:id="@+id/name_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        android:singleLine="true" />
-
-    <CheckBox
-        android:id="@+id/app_check_box"
+        android:layout_margin="@dimen/list_margin"
+        android:layout_weight="1"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+    <CheckBox android:id="@+id/app_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_margin="@dimen/padding_list" />
+        android:layout_margin="@dimen/list_margin"/>
 </LinearLayout>

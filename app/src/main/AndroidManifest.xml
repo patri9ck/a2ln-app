@@ -9,19 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme">
-        <activity
-            android:name="dev.patri9ck.a2ln.address.AddressesActivity"
-            android:launchMode="singleTop"
-            android:exported="true">
+        <activity android:name="dev.patri9ck.a2ln.address.AddressesActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name="dev.patri9ck.a2ln.app.AppsActivity"
+        <activity android:name="dev.patri9ck.a2ln.app.AppsActivity"
             android:label="@string/apps"
-            android:parentActivityName=".address.AddressesActivity" />
+            android:parentActivityName=".address.AddressesActivity"/>
         <service android:name="dev.patri9ck.a2ln.notification.NotificationReceiver"
             android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
