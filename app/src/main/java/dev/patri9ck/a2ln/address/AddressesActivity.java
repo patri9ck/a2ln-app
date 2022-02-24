@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +25,7 @@ import dev.patri9ck.a2ln.configuration.Configuration;
 import dev.patri9ck.a2ln.configuration.Storage;
 import dev.patri9ck.a2ln.notification.NotificationReceiver;
 
-public class AddressesActivity extends Activity {
+public class AddressesActivity extends AppCompatActivity {
 
     private Gson gson = new Gson();
 

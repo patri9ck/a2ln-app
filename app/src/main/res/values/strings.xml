@@ -8,4 +8,7 @@
     <string name="permission">Permission</string>
     <string name="apps">Apps</string>
     <string name="back">Back</string>
+    <string name="title_devices">Devices</string>
+    <string name="title_apps">Apps</string>
+    <string name="title_settings">Settings</string>
 </resources>
