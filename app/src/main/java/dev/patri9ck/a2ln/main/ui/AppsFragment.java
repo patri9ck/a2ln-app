@@ -1,4 +1,4 @@
-package dev.patri9ck.a2ln.main.ui.apps;
+package dev.patri9ck.a2ln.main.ui;
 
 import android.content.ComponentName;
 import android.content.Intent;

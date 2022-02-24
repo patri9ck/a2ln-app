@@ -20,15 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".address.AddressesActivity"
-            android:exported="true"
-            android:launchMode="singleTop">
-        </activity>
-        <activity
-            android:name=".app.AppsActivity"
-            android:label="@string/apps"
-            android:parentActivityName=".address.AddressesActivity" />
 
         <service
             android:name=".notification.NotificationReceiver"

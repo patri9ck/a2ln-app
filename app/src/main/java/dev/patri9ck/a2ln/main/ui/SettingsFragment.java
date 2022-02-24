@@ -1,4 +1,4 @@
-package dev.patri9ck.a2ln.main.ui.settings;
+package dev.patri9ck.a2ln.main.ui;
 
 import android.content.Intent;
 import android.os.Bundle;

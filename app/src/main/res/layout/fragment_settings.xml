@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="?dialogPreferredPadding"
     android:orientation="vertical"
-    tools:context=".main.ui.apps.AppsFragment">
+    tools:context=".main.ui.AppsFragment">
 
     <Button
         android:id="@+id/permissions_button"
