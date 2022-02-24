@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.util.Log;
 
@@ -34,9 +35,13 @@ public class ParsedNotification {
 
         if (largeIcon != null) {
             try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-                ((BitmapDrawable) largeIcon.loadDrawable(context)).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                Drawable drawable = largeIcon.loadDrawable(context);
 
-                return new ParsedNotification(title.toString(), text.toString(), byteArrayOutputStream.toByteArray());
+                if (drawable instanceof BitmapDrawable) {
+                    ((BitmapDrawable) drawable).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+
+                    return new ParsedNotification(title.toString(), text.toString(), byteArrayOutputStream.toByteArray());
+                }
             } catch (IOException exception) {
                 Log.e("A2LN", "Failed to convert picture to bytes", exception);
             }
