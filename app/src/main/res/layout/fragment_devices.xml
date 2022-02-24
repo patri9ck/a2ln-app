@@ -1,17 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.ui.apps.AppsFragment">
-
-    <TextView
-        android:id="@+id/text_devices"
+    android:orientation="vertical">
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/addresses_recycler_view"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp" />
-</FrameLayout>
+        android:orientation="horizontal">
+        <EditText style="@style/EditText"
+            android:id="@+id/host_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/widget_margin"
+            android:layout_weight="2"
+            android:digits="0123456789."
+            android:hint="@string/host"
+            android:importantForAutofill="no"
+            android:inputType="number"/>
+        <EditText style="@style/EditText"
+            android:id="@+id/port_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/widget_margin"
+            android:layout_weight="1"
+            android:hint="@string/port"
+            android:importantForAutofill="no"
+            android:inputType="number"/>
+        <Button style="@style/Button"
+            android:id="@+id/add_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/widget_margin"
+            android:layout_weight="1"
+            android:text="@string/add"/>
+    </LinearLayout>
+</LinearLayout>

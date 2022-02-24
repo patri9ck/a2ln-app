@@ -28,15 +28,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
         storage = new Storage(this);
         configuration = gson.fromJson(getIntent().getStringExtra(Configuration.class.getName()), Configuration.class);
 
         if (configuration == null) {
             configuration = storage.loadConfiguration();
         }
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
