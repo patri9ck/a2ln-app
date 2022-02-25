@@ -1,6 +1,8 @@
 package dev.patri9ck.a2ln.main.ui;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
 
+import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.address.Address;
 import dev.patri9ck.a2ln.address.AddressesAdapter;
 import dev.patri9ck.a2ln.address.SwipeToDeleteCallback;
@@ -52,10 +56,24 @@ public class DevicesFragment extends Fragment {
         binding = FragmentDevicesBinding.inflate(inflater, container, false);
 
         loadAddressesRecyclerView();
-        binding.addButton.setOnClickListener(new View.OnClickListener() {
+        binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onAdd(view);
+                View dialogView = getLayoutInflater().inflate( R.layout.add_dialog, null);
+
+                new AlertDialog.Builder(view.getContext())
+                        .setView(dialogView)
+                        .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                onAdd(dialogView);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        })
+                        .show();
             }
         });
 
@@ -88,8 +106,8 @@ public class DevicesFragment extends Fragment {
     }
 
     public void onAdd(View view) {
-        String host = binding.hostEditText.getText().toString();
-        String port = binding.portEditText.getText().toString();
+        String host = ((EditText) view.findViewById(R.id.host_edit_text)).getText().toString();
+        String port = ((EditText) view.findViewById(R.id.host_edit_text)).getText().toString();
 
         if (host.isEmpty() || port.isEmpty()) {
             return;
