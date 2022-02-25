@@ -107,7 +107,7 @@ public class DevicesFragment extends Fragment {
 
     public void onAdd(View view) {
         String host = ((EditText) view.findViewById(R.id.host_edit_text)).getText().toString();
-        String port = ((EditText) view.findViewById(R.id.host_edit_text)).getText().toString();
+        String port = ((EditText) view.findViewById(R.id.port_edit_text)).getText().toString();
 
         if (host.isEmpty() || port.isEmpty()) {
             return;
