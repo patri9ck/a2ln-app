@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="?dialogPreferredPadding">
+    <EditText style="@style/EditText"
+        android:id="@+id/host_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/widget_margin"
+        android:digits="0123456789."
+        android:hint="@string/host"
+        android:importantForAutofill="no"
+        android:inputType="number"/>
+    <EditText style="@style/EditText"
+        android:id="@+id/port_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/widget_margin"
+        android:hint="@string/port"
+        android:importantForAutofill="no"
+        android:inputType="number"/>
+</LinearLayout>
