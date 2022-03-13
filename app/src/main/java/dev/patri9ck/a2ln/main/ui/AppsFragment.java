@@ -45,8 +45,8 @@ public class AppsFragment extends Fragment {
 
     private FragmentAppsBinding binding;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAppsBinding.inflate(inflater, container, false);
 
         loadAppsRecyclerView();
@@ -70,12 +70,14 @@ public class AppsFragment extends Fragment {
         }
 
         getContext().unbindService(serviceConnection);
+
         bound = false;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         binding = null;
     }
 

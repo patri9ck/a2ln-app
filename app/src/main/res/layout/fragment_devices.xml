@@ -3,19 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <androidx.recyclerview.widget.RecyclerView android:id="@+id/addresses_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:layout_height="match_parent"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="?dialogPreferredPadding"
         android:layout_gravity="bottom|end"
+        android:layout_margin="?dialogPreferredPadding"
         android:clickable="true"
-        app:tint="@android:color/white"
+        android:contentDescription="@string/add"
         app:srcCompat="@drawable/ic_add"
-        android:contentDescription="@string/add" />
+        app:tint="@android:color/white"/>
 </FrameLayout>

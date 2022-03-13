@@ -2,39 +2,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="dev.patri9ck.a2ln">
-
-    <application
-        android:allowBackup="true"
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme">
-        <activity
-            android:name=".main.MainActivity"
+        <activity android:name=".main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".notification.NotificationReceiver"
+        <service android:name=".notification.NotificationReceiver"
             android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
+                <action android:name="android.service.notification.NotificationListenerService"/>
             </intent-filter>
         </service>
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission
-        android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
 </manifest>

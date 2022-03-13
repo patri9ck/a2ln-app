@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="?dialogPreferredPadding"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:padding="?dialogPreferredPadding">
     <EditText style="@style/EditText"
         android:id="@+id/host_edit_text"
         android:layout_width="match_parent"
@@ -14,7 +13,6 @@
         android:hint="@string/host"
         android:importantForAutofill="no"
         android:inputType="number"/>
-
     <EditText style="@style/EditText"
         android:id="@+id/port_edit_text"
         android:layout_width="match_parent"

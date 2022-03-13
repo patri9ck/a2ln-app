@@ -2,7 +2,6 @@ package dev.patri9ck.a2ln.main.ui;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -51,30 +50,20 @@ public class DevicesFragment extends Fragment {
 
     private FragmentDevicesBinding binding;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDevicesBinding.inflate(inflater, container, false);
 
         loadAddressesRecyclerView();
-        binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View dialogView = getLayoutInflater().inflate( R.layout.add_dialog, null);
 
-                new AlertDialog.Builder(view.getContext())
-                        .setView(dialogView)
-                        .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                onAdd(dialogView);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        })
-                        .show();
-            }
+        binding.floatingActionButton.setOnClickListener(view -> {
+            View dialogView = getLayoutInflater().inflate(R.layout.add_dialog, null);
+
+            new AlertDialog.Builder(view.getContext())
+                    .setView(dialogView)
+                    .setPositiveButton(R.string.add, (dialog, which) -> onAdd(dialogView))
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
+                    .show();
         });
 
         return binding.getRoot();
@@ -96,16 +85,18 @@ public class DevicesFragment extends Fragment {
         }
 
         getContext().unbindService(serviceConnection);
+
         bound = false;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         binding = null;
     }
 
-    public void onAdd(View view) {
+    private void onAdd(View view) {
         String host = ((EditText) view.findViewById(R.id.host_edit_text)).getText().toString();
         String port = ((EditText) view.findViewById(R.id.port_edit_text)).getText().toString();
 

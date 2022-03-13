@@ -3,13 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="?dialogPreferredPadding"
     android:orientation="vertical"
+    android:padding="?dialogPreferredPadding"
     tools:context=".main.ui.AppsFragment">
-
-    <Button
-        android:id="@+id/permissions_button"
+    <Button android:id="@+id/permissions_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/permission" />
+        android:text="@string/permission"/>
 </LinearLayout>

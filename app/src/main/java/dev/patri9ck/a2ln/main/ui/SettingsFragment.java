@@ -16,16 +16,11 @@ public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
 
-        binding.permissionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
-            }
-        });
+        binding.permissionsButton.setOnClickListener(view -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
 
         return binding.getRoot();
     }
@@ -33,6 +28,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         binding = null;
     }
 }

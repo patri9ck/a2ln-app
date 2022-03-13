@@ -4,22 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_devices">
-
-    <fragment
-        android:id="@+id/navigation_devices"
+    <fragment android:id="@+id/navigation_devices"
         android:name="dev.patri9ck.a2ln.main.ui.DevicesFragment"
         android:label="@string/title_devices"
-        tools:layout="@layout/fragment_devices" />
-
-    <fragment
-        android:id="@+id/navigation_apps"
+        tools:layout="@layout/fragment_devices"/>
+    <fragment android:id="@+id/navigation_apps"
         android:name="dev.patri9ck.a2ln.main.ui.AppsFragment"
         android:label="@string/title_apps"
-        tools:layout="@layout/fragment_apps" />
-
-    <fragment
-        android:id="@+id/navigation_settings"
+        tools:layout="@layout/fragment_apps"/>
+    <fragment android:id="@+id/navigation_settings"
         android:name="dev.patri9ck.a2ln.main.ui.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings"/>
 </navigation>
