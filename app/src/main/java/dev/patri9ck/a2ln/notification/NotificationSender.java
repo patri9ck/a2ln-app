@@ -15,13 +15,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import dev.patri9ck.a2ln.address.Address;
-
 public class NotificationSender implements AutoCloseable {
 
     private static final String TAG = "A2LNNS";
-
-    private static final String ADDRESS = "tcp://%s:%d";
 
     private static final int TIMEOUT_SECONDS = 5;
     private static final int CLOSE_SECONDS = 10;
@@ -34,13 +30,13 @@ public class NotificationSender implements AutoCloseable {
 
     private Timer closeTimer;
 
-    private List<Address> addresses;
+    private List<String> addresses;
 
-    public NotificationSender(List<Address> addresses) {
+    public NotificationSender(List<String> addresses) {
         this.addresses = addresses;
     }
 
-    public synchronized void setAddresses(List<Address> addresses) {
+    public synchronized void setAddresses(List<String> addresses) {
         close();
 
         this.addresses = addresses;
@@ -79,7 +75,7 @@ public class NotificationSender implements AutoCloseable {
 
         try {
             countDownLatch.await();
-        } catch (InterruptedException exception) {}
+        } catch (InterruptedException ignored) {}
 
         Log.v(TAG, "Finished trying to send notification");
     }
@@ -100,7 +96,7 @@ public class NotificationSender implements AutoCloseable {
 
             socket.setSendTimeOut(TIMEOUT_SECONDS * 1000);
             socket.setImmediate(false);
-            socket.connect(String.format(ADDRESS, address.getHost(), address.getPort()));
+            socket.connect("tcp://" + address);
 
             sockets.add(socket);
         });
