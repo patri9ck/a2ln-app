@@ -15,7 +15,7 @@ import dev.patri9ck.a2ln.databinding.FragmentSettingsBinding;
 public class SettingsFragment extends Fragment {
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentSettingsBinding binding = FragmentSettingsBinding.inflate(inflater, container, false);
 
         binding.permissionsButton.setOnClickListener(view -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));

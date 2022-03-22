@@ -2,6 +2,7 @@ package dev.patri9ck.a2ln.address;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 

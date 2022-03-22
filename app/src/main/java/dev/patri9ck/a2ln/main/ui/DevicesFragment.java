@@ -56,7 +56,7 @@ public class DevicesFragment extends Fragment {
     private FragmentDevicesBinding binding;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDevicesBinding.inflate(inflater, container, false);
 
         binding.floatingActionButton.setOnClickListener(view -> {
@@ -88,7 +88,6 @@ public class DevicesFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("A2LN", "STOPPPPP");
 
         sharedPreferences.edit().putStringSet(getString(R.string.preferences_addresses_key), new HashSet<>(addresses)).apply();
 
