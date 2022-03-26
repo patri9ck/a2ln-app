@@ -1,18 +1,20 @@
 package dev.patri9ck.a2ln.notification;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-import dev.patri9ck.a2ln.address.Address;
-import dev.patri9ck.a2ln.configuration.Configuration;
-import dev.patri9ck.a2ln.configuration.Storage;
+import dev.patri9ck.a2ln.R;
 
 public class NotificationReceiver extends NotificationListenerService {
 
@@ -80,15 +82,15 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        Configuration configuration = new Storage(this).loadConfiguration();
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences_key), Context.MODE_PRIVATE);
 
-        notificationSender = new NotificationSender(configuration.getAddresses());
-        disabledApps = configuration.getDisabledApps();
+        notificationSender = new NotificationSender(new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_addresses_key), new HashSet<>())));
+        disabledApps = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_disabled_apps_key), new HashSet<>()));
 
         initialized = true;
     }
 
-    public void setAddresses(List<Address> addresses) {
+    public void setAddresses(List<String> addresses) {
         notificationSender.setAddresses(addresses);
     }
 

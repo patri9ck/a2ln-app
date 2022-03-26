@@ -2,10 +2,13 @@ package dev.patri9ck.a2ln.main.ui;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +19,22 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.address.Address;
 import dev.patri9ck.a2ln.address.AddressesAdapter;
 import dev.patri9ck.a2ln.address.SwipeToDeleteCallback;
 import dev.patri9ck.a2ln.databinding.FragmentDevicesBinding;
-import dev.patri9ck.a2ln.main.MainActivity;
 import dev.patri9ck.a2ln.notification.NotificationReceiver;
 
 public class DevicesFragment extends Fragment {
 
-    private List<Address> addresses;
+    private List<String> addresses;
     private AddressesAdapter addressesAdapter;
+
+    private SharedPreferences sharedPreferences;
 
     private NotificationReceiver notificationReceiver;
     private boolean bound;
@@ -51,10 +56,8 @@ public class DevicesFragment extends Fragment {
     private FragmentDevicesBinding binding;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDevicesBinding.inflate(inflater, container, false);
-
-        loadAddressesRecyclerView();
 
         binding.floatingActionButton.setOnClickListener(view -> {
             View dialogView = getLayoutInflater().inflate(R.layout.add_dialog, null);
@@ -73,6 +76,12 @@ public class DevicesFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_key), Context.MODE_PRIVATE);
+
+        addresses = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_addresses_key), new HashSet<>()));
+
+        loadAddressesRecyclerView();
+
         bound = getContext().bindService(new Intent(getContext(), NotificationReceiver.class), serviceConnection, 0);
     }
 
@@ -80,20 +89,13 @@ public class DevicesFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        if (!bound) {
-            return;
+        sharedPreferences.edit().putStringSet(getString(R.string.preferences_addresses_key), new HashSet<>(addresses)).apply();
+
+        if (bound) {
+            getContext().unbindService(serviceConnection);
+
+            bound = false;
         }
-
-        getContext().unbindService(serviceConnection);
-
-        bound = false;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        binding = null;
     }
 
     private void onAdd(View view) {
@@ -104,13 +106,13 @@ public class DevicesFragment extends Fragment {
             return;
         }
 
-        for (Address address : addresses) {
-            if (address.getHost().equals(host)) {
-                return;
-            }
+        String address = host + ":" + port;
+
+        if (addresses.contains(address)) {
+            return;
         }
 
-        addresses.add(new Address(host, Integer.parseInt(port)));
+        addresses.add(address);
 
         addressesAdapter.notifyItemInserted(addresses.size());
 
@@ -122,7 +124,6 @@ public class DevicesFragment extends Fragment {
     }
 
     private void loadAddressesRecyclerView() {
-        addresses = MainActivity.configuration.getAddresses();
         addressesAdapter = new AddressesAdapter(addresses);
 
         binding.addressesRecyclerView.setAdapter(addressesAdapter);

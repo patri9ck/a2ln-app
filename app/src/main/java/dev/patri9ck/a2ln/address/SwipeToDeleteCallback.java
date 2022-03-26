@@ -2,6 +2,7 @@ package dev.patri9ck.a2ln.address;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,10 +15,10 @@ import dev.patri9ck.a2ln.R;
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private Activity addressesActivity;
-    private List<Address> addresses;
+    private List<String> addresses;
     private AddressesAdapter addressesAdapter;
 
-    public SwipeToDeleteCallback(Activity addressesActivity, List<Address> addresses, AddressesAdapter addressesAdapter) {
+    public SwipeToDeleteCallback(Activity addressesActivity, List<String> addresses, AddressesAdapter addressesAdapter) {
         super(0, ItemTouchHelper.LEFT);
 
         this.addressesActivity = addressesActivity;
@@ -34,7 +35,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
 
-        Address address = addresses.remove(position);
+        String address = addresses.remove(position);
 
         addressesAdapter.notifyItemRemoved(position);
 
