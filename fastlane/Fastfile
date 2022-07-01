@@ -1,0 +1,9 @@
+default_platform(:android)
+
+platform :android do
+  desc "Release to Google Play"
+  lane :play_store_release do
+    gradle(task: "clean bundleRelease")
+    upload_to_play_store
+  end
+end
