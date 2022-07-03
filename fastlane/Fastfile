@@ -1,9 +1,12 @@
 default_platform(:android)
 
 platform :android do
-  desc "Release to Google Play"
-  lane :play_store_release do
+  lane :build do
     gradle(task: "clean bundleRelease")
-    upload_to_play_store
+  end
+
+  lane :screenshots do
+    gradle(task: "clean assembleDebug assembleAndroidTest")
+    screengrab
   end
 end

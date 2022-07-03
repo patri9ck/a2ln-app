@@ -1,5 +1,8 @@
-/.idea
+.idea/
 .gradle
 local.properties
-/app/build
+app/build/
 keystore.properties
+fastlane/README.md
+fastlane/report.xml
+fastlane/metadata/android/**/screenshots.html
