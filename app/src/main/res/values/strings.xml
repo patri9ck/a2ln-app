@@ -7,6 +7,7 @@
     <string name="removed_address">Address removed</string>
     <string name="removed_address_undo">Undo</string>
     <string name="permission">Permission</string>
+    <string name="test">Send a test notification</string>
     <string name="help">Help</string>
     <string name="title_devices">Devices</string>
     <string name="title_apps">Apps</string>
