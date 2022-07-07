@@ -2,8 +2,8 @@
 <resources>
     <style name="Button"
         parent="Widget.AppCompat.Button">
-        <item name="android:textColor">@color/text</item>
-        <item name="android:background">@color/second_background</item>
+        <item name="android:textColor">@color/accent_text</item>
+        <item name="android:background">@color/accent</item>
     </style>
     <style name="EditText"
         parent="Widget.AppCompat.EditText">
@@ -23,14 +23,14 @@
     </style>
     <style name="Snackbar"
         parent="Widget.MaterialComponents.Snackbar">
-        <item name="android:background">@color/second_background</item>
+        <item name="android:background">@color/accent</item>
     </style>
     <style name="SnackbarButton"
         parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/accent_text</item>
     </style>
     <style name="SnackbarTextView"
         parent="Widget.MaterialComponents.Snackbar.TextView">
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/accent_text</item>
     </style>
 </resources>

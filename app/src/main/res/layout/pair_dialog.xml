@@ -5,20 +5,20 @@
     android:orientation="vertical"
     android:padding="?dialogPreferredPadding">
     <EditText style="@style/EditText"
-        android:id="@+id/host_edit_text"
+        android:id="@+id/server_ip_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/widget_margin"
         android:digits="0123456789."
-        android:hint="@string/host"
+        android:hint="@string/server_ip_hint"
         android:importantForAutofill="no"
         android:inputType="number"/>
     <EditText style="@style/EditText"
-        android:id="@+id/port_edit_text"
+        android:id="@+id/server_port_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/widget_margin"
-        android:hint="@string/port"
+        android:hint="@string/port_hint"
         android:importantForAutofill="no"
         android:inputType="number"/>
 </LinearLayout>

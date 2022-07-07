@@ -11,27 +11,27 @@ import java.util.List;
 
 import dev.patri9ck.a2ln.R;
 
-public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.AddressViewHolder> {
+public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.AddressViewHolder> {
 
-    private List<String> addresses;
+    private List<Device> devices;
 
-    public AddressesAdapter(List<String> addresses) {
-        this.addresses = addresses;
+    public DevicesAdapter(List<Device> devices) {
+        this.devices = devices;
     }
 
     @Override
     public AddressViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AddressViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.address_item, parent, false));
+        return new AddressViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.device_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(AddressViewHolder holder, int position) {
-        holder.addressTextView.setText(addresses.get(position));
+        holder.addressTextView.setText(devices.get(position).getAddress());
     }
 
     @Override
     public int getItemCount() {
-        return addresses.size();
+        return devices.size();
     }
 
     protected static class AddressViewHolder extends RecyclerView.ViewHolder {

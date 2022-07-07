@@ -10,11 +10,13 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
+import dev.patri9ck.a2ln.address.Device;
 
 public class NotificationReceiver extends NotificationListenerService {
 
@@ -82,16 +84,28 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        notificationSender = new NotificationSender(new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_addresses_key), new HashSet<>())));
-        disabledApps = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_disabled_apps_key), new HashSet<>()));
+        String clientPublicKey = sharedPreferences.getString(getString(R.string.preferences_client_public_key), null);
+        String clientSecretKey = sharedPreferences.getString(getString(R.string.preferences_client_secret_key), null);
+
+        if (clientPublicKey == null || clientSecretKey == null) {
+            Log.e(TAG, "Client keys not saved in preferences properly");
+
+            return;
+        }
+
+        notificationSender = new NotificationSender(Device.fromJson(sharedPreferences.getString(getString(R.string.preferences_devices), null)),
+                Base64.getDecoder().decode(clientPublicKey),
+                Base64.getDecoder().decode(clientSecretKey));
+
+        disabledApps = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_disabled_apps), new HashSet<>()));
 
         initialized = true;
     }
 
-    public void setAddresses(List<String> addresses) {
-        notificationSender.setAddresses(addresses);
+    public void setDevices(List<Device> devices) {
+        notificationSender.setDevices(devices);
     }
 
     public void setDisabledApps(List<String> disabledApps) {

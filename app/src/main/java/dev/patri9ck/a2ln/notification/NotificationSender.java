@@ -15,36 +15,38 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import dev.patri9ck.a2ln.address.Device;
+
 public class NotificationSender implements AutoCloseable {
 
     private static final String TAG = "A2LNNS";
 
     private static final int TIMEOUT_SECONDS = 5;
     private static final int CLOSE_SECONDS = 10;
-
+    byte[] clientPublicKey;
+    byte[] clientSecretKey;
     private ExecutorService executorService = Executors.newCachedThreadPool();
-
     private ZContext zContext;
-
-    private List<ZMQ.Socket> sockets;
-
+    private List<ZMQ.Socket> clients;
     private Timer closeTimer;
+    private List<Device> devices;
 
-    private List<String> addresses;
+    public NotificationSender(List<Device> devices, byte[] clientPublicKey, byte[] clientSecretKey) {
+        this.devices = devices;
 
-    public NotificationSender(List<String> addresses) {
-        this.addresses = addresses;
+        this.clientPublicKey = clientPublicKey;
+        this.clientSecretKey = clientSecretKey;
     }
 
-    public synchronized void setAddresses(List<String> addresses) {
+    public synchronized void setDevices(List<Device> devices) {
         close();
 
-        this.addresses = addresses;
+        this.devices = devices;
     }
 
     public synchronized void sendParsedNotification(ParsedNotification parsedNotification) {
-        if (addresses.isEmpty()) {
-            Log.v(TAG, "No addresses given, will not start sockets");
+        if (devices.isEmpty()) {
+            Log.v(TAG, "No devices given, will not start sockets");
 
             return;
         }
@@ -63,12 +65,12 @@ public class NotificationSender implements AutoCloseable {
             zMsg.add(icon);
         }
 
-        CountDownLatch countDownLatch = new CountDownLatch(sockets.size());
+        CountDownLatch countDownLatch = new CountDownLatch(clients.size());
 
-        sockets.forEach(socket -> executorService.execute(() -> {
-            Log.v(TAG, "Trying to send notification to " + socket.getLastEndpoint() + " (" + countDownLatch.getCount() + ")");
+        clients.forEach(client -> executorService.execute(() -> {
+            Log.v(TAG, "Trying to send notification to " + client.getLastEndpoint() + " (" + countDownLatch.getCount() + ")");
 
-            zMsg.send(socket);
+            zMsg.send(client);
 
             countDownLatch.countDown();
         }));
@@ -89,16 +91,18 @@ public class NotificationSender implements AutoCloseable {
 
         zContext = new ZContext();
 
-        sockets = new ArrayList<>();
+        clients = new ArrayList<>();
 
-        addresses.forEach(address -> {
-            ZMQ.Socket socket = zContext.createSocket(SocketType.PUSH);
+        devices.forEach(device -> {
+            ZMQ.Socket client = zContext.createSocket(SocketType.PUSH);
 
-            socket.setSendTimeOut(TIMEOUT_SECONDS * 1000);
-            socket.setImmediate(false);
-            socket.connect("tcp://" + address);
+            client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
+            client.setImmediate(false);
+            client.setCurvePublicKey(clientPublicKey);
+            client.setCurveSecretKey(clientSecretKey);
+            client.connect("tcp://" + device.getAddress());
 
-            sockets.add(socket);
+            clients.add(client);
         });
     }
 

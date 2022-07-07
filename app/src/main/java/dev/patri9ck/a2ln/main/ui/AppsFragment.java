@@ -61,30 +61,30 @@ public class AppsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_key), Context.MODE_PRIVATE);
+        sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        disabledApps = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_disabled_apps_key), new HashSet<>()));
+        disabledApps = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_disabled_apps), new HashSet<>()));
 
         loadAppsRecyclerView();
 
-        bound = getContext().bindService(new Intent(getContext(), NotificationReceiver.class), serviceConnection, 0);
+        bound = requireContext().bindService(new Intent(getContext(), NotificationReceiver.class), serviceConnection, 0);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        sharedPreferences.edit().putStringSet(getString(R.string.preferences_disabled_apps_key), new HashSet<>(disabledApps)).apply();
+        sharedPreferences.edit().putStringSet(getString(R.string.preferences_disabled_apps), new HashSet<>(disabledApps)).apply();
 
         if (bound) {
-            getContext().unbindService(serviceConnection);
+            requireContext().unbindService(serviceConnection);
 
             bound = false;
         }
     }
 
     private void loadAppsRecyclerView() {
-        appsAdapter = new AppsAdapter(disabledApps, null, getContext().getPackageManager());
+        appsAdapter = new AppsAdapter(disabledApps, null, requireContext().getPackageManager());
 
         binding.appsRecyclerView.setAdapter(appsAdapter);
         binding.appsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
