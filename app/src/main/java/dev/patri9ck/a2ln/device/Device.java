@@ -1,4 +1,4 @@
-package dev.patri9ck.a2ln.address;
+package dev.patri9ck.a2ln.device;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -14,14 +14,14 @@ public class Device {
     private static final Type DEVICES_TYPE = new TypeToken<ArrayList<Device>>() {}.getType();
 
     private String serverIp;
-    private int port;
+    private int serverPort;
     private String serverPublicKey;
 
     public Device() {}
 
-    public Device(String serverIp, int port, String serverPublicKey) {
+    public Device(String serverIp, int serverPort, String serverPublicKey) {
         this.serverIp = serverIp;
-        this.port = port;
+        this.serverPort = serverPort;
         this.serverPublicKey = serverPublicKey;
     }
 
@@ -41,12 +41,12 @@ public class Device {
         return serverIp;
     }
 
-    public int getPort() {
-        return port;
+    public int getServerPort() {
+        return serverPort;
     }
 
     public String getAddress() {
-        return serverIp + ":" + port;
+        return serverIp + ":" + serverPort;
     }
 
     public String getServerPublicKey() {

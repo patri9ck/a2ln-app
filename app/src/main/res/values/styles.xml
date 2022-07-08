@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Dialog"
+        parent="Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:background">@color/background</item>
+        <item name="android:buttonBarButtonStyle">@style/DialogButton</item>
+    </style>
+    <style name="DialogButton"
+        parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
     <style name="Button"
         parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/accent_text</item>
@@ -7,8 +19,7 @@
     </style>
     <style name="EditText"
         parent="Widget.AppCompat.EditText">
-        <item name="android:textCursorDrawable">@null</item>
-        <item name="android:background">@null</item>
+        <item name="android:backgroundTint">@color/accent</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textColorHint">@color/text</item>
     </style>
@@ -32,5 +43,10 @@
     <style name="SnackbarTextView"
         parent="Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/accent_text</item>
+    </style>
+    <style name="FloatingActionButton"
+        parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="srcCompat">@drawable/ic_pair</item>
+        <item name="tint">@color/accent_text</item>
     </style>
 </resources>

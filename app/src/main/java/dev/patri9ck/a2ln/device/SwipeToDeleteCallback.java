@@ -1,5 +1,6 @@
-package dev.patri9ck.a2ln.address;
+package dev.patri9ck.a2ln.device;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +26,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         return false;
     }
 
@@ -37,8 +38,8 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
         devicesAdapter.notifyItemRemoved(position);
 
-        Snackbar.make(devicesFragment.requireActivity().findViewById(android.R.id.content), R.string.removed_address, Snackbar.LENGTH_LONG)
-                .setAction(R.string.removed_address_undo, v -> {
+        Snackbar.make(devicesFragment.requireActivity().findViewById(android.R.id.content), R.string.removed_device, Snackbar.LENGTH_LONG)
+                .setAction(R.string.removed_device_undo, v -> {
                     devices.add(position, device);
 
                     devicesAdapter.notifyItemInserted(position);

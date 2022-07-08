@@ -1,10 +1,11 @@
-package dev.patri9ck.a2ln.address;
+package dev.patri9ck.a2ln.device;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.AddressV
         this.devices = devices;
     }
 
+    @NonNull
     @Override
     public AddressViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new AddressViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.device_item, parent, false));

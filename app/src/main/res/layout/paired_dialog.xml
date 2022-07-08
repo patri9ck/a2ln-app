@@ -14,4 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/widget_margin"/>
+    <TextView style="@style/TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/widget_margin"
+        android:text="@string/paired_information"/>
 </LinearLayout>

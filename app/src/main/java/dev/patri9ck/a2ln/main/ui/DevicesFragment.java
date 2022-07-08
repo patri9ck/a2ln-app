@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,10 +36,10 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.address.Device;
-import dev.patri9ck.a2ln.address.DevicesAdapter;
-import dev.patri9ck.a2ln.address.SwipeToDeleteCallback;
 import dev.patri9ck.a2ln.databinding.FragmentDevicesBinding;
+import dev.patri9ck.a2ln.device.Device;
+import dev.patri9ck.a2ln.device.DevicesAdapter;
+import dev.patri9ck.a2ln.device.SwipeToDeleteCallback;
 import dev.patri9ck.a2ln.notification.NotificationReceiver;
 
 public class DevicesFragment extends Fragment {
@@ -70,13 +71,13 @@ public class DevicesFragment extends Fragment {
     private FragmentDevicesBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDevicesBinding.inflate(inflater, container, false);
 
         binding.pairButton.setOnClickListener(view -> {
             View pairDialogView = getLayoutInflater().inflate(R.layout.pair_dialog, null);
 
-            new AlertDialog.Builder(view.getContext())
+            new AlertDialog.Builder(view.getContext(), R.style.Dialog)
                     .setView(pairDialogView)
                     .setPositiveButton(R.string.pair, (dialog, which) -> {
                         dialog.dismiss();
@@ -151,7 +152,7 @@ public class DevicesFragment extends Fragment {
         ((TextView) pairingDialogView.findViewById(R.id.client_ip_text_view)).setText(getString(R.string.client_ip, clientIp));
         ((TextView) pairingDialogView.findViewById(R.id.client_public_key_text_view)).setText(getString(R.string.client_public_key, clientPublicKey));
 
-        AlertDialog pairingDialog = new AlertDialog.Builder(view.getContext())
+        AlertDialog pairingDialog = new AlertDialog.Builder(view.getContext(), R.style.Dialog)
                 .setView(pairingDialogView)
                 .show();
 
@@ -171,7 +172,7 @@ public class DevicesFragment extends Fragment {
             ((TextView) pairedDialogView.findViewById(R.id.server_ip_text_view)).setText(getString(R.string.server_ip, serverIp));
             ((TextView) pairedDialogView.findViewById(R.id.server_public_key_text_view)).setText(getString(R.string.server_public_key, device.getServerPublicKey()));
 
-            new AlertDialog.Builder(view.getContext())
+            new AlertDialog.Builder(view.getContext(), R.style.Dialog)
                     .setView(pairedDialogView)
                     .setPositiveButton(R.string.pair, (dialog, which) -> {
                         devices.add(device);

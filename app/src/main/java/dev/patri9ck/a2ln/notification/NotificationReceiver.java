@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.address.Device;
+import dev.patri9ck.a2ln.device.Device;
 
 public class NotificationReceiver extends NotificationListenerService {
 

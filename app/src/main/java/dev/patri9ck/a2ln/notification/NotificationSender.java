@@ -15,7 +15,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import dev.patri9ck.a2ln.address.Device;
+import dev.patri9ck.a2ln.device.Device;
 
 public class NotificationSender implements AutoCloseable {
 
