@@ -25,6 +25,10 @@ public class ParsedNotification {
         this.icon = icon;
     }
 
+    public static ParsedNotification makeTestNotification() {
+        return new ParsedNotification("Test", "This is a test notification.", null);
+    }
+
     public static ParsedNotification parseNotification(Notification notification, Context context) {
         Object title = notification.extras.get(Notification.EXTRA_TITLE);
         Object text = notification.extras.get(Notification.EXTRA_TEXT);
