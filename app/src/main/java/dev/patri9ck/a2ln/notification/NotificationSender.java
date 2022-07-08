@@ -17,8 +17,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.device.Device;
@@ -29,16 +27,12 @@ public class NotificationSender implements AutoCloseable {
 
     private static final int TIMEOUT_SECONDS = 5;
     private static final int CLOSE_SECONDS = 10;
-
-    private ZContext zContext;
-    private List<ZMQ.Socket> clients;
-
-    private Timer closeTimer;
-
-    private List<Device> devices;
-
     byte[] clientPublicKey;
     byte[] clientSecretKey;
+    private ZContext zContext;
+    private List<ZMQ.Socket> clients;
+    private Timer closeTimer;
+    private List<Device> devices;
 
     public NotificationSender(List<Device> devices, byte[] clientPublicKey, byte[] clientSecretKey) {
         this.devices = devices;

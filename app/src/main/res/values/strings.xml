@@ -1,56 +1,40 @@
 <resources>
     <string name="app_name">Android 2 Linux Notifications</string>
-
     <string name="server_ip_hint">IP</string>
     <string name="server_port_hint">Port</string>
-
     <string name="pair">Pair</string>
-
     <string name="apply">Apply</string>
-
     <string name="cancel">Cancel</string>
-
     <string name="already_paired">Already paired</string>
     <string name="pairing_failed">Pairing failed</string>
     <string name="removed_device">Address removed</string>
     <string name="removed_device_undo">Undo</string>
-
     <string name="permission">Permission</string>
     <string name="test">Test Notification</string>
     <string name="help">Help</string>
-
     <string name="help_url">https://www.patri9ck.dev/a2ln/</string>
-
     <string name="test_title">A2LN Test</string>
     <string name="test_text">Test Notification</string>
-
     <string name="test_sent">A test notification was sent to every running device.</string>
-
     <string name="devices_title">Devices</string>
     <string name="apps_title">Apps</string>
     <string name="settings_title">Settings</string>
-
     <string name="client_ip">Your IP: %s</string>
     <string name="client_public_key">Your public key: %s</string>
-
     <string name="server_ip">Server IP: %s</string>
     <string name="server_public_key">Server public key: %s</string>
-
     <string name="pair_dialog_title">Pair a New Device</string>
-    <string name="pair_dialog_information">Enter the server IP and port of the pairing server.</string>
-
+    <string name="pair_dialog_information">Enter the server IP and port of the pairing server.
+    </string>
     <string name="pairing_dialog_title">Pairing…</string>
-    <string name="pairing_dialog_information">Accept the pairing request on the server. Verify the IP and
+    <string name="pairing_dialog_information">Accept the pairing request on the server. Verify the
+        IP and
         public key.
     </string>
-
     <string name="paired_dialog_title">Paired</string>
     <string name="paired_dialog_information">Verify the server IP and public key.</string>
-
     <string name="edit_port_dialog_title">Edit Port</string>
-
-    <string name="preferences">dev.patri9ck.a2ln.preferences</string>
-
+    <string name="preferences">dev.patri9ck.a2ln</string>
     <string name="preferences_devices">devices</string>
     <string name="preferences_disabled_apps">disabled_apps</string>
     <string name="preferences_client_public_key">public_key</string>
