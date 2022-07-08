@@ -41,10 +41,6 @@ public class Device {
         return serverIp;
     }
 
-    public void setServerIp(String serverIp) {
-        this.serverIp = serverIp;
-    }
-
     public int getServerPort() {
         return serverPort;
     }
