@@ -19,14 +19,14 @@ public class ParsedNotification {
     private String text;
     private byte[] icon;
 
-    private ParsedNotification(String title, String text, byte[] icon) {
+    public ParsedNotification(String title, String text) {
+        this(title, text, null);
+    }
+
+    public ParsedNotification(String title, String text, byte[] icon) {
         this.title = title;
         this.text = text;
         this.icon = icon;
-    }
-
-    public static ParsedNotification makeTestNotification() {
-        return new ParsedNotification("Test", "This is a test notification.", null);
     }
 
     public static ParsedNotification parseNotification(Notification notification, Context context) {
@@ -53,7 +53,7 @@ public class ParsedNotification {
             }
         }
 
-        return new ParsedNotification(title.toString(), text.toString(), null);
+        return new ParsedNotification(title.toString(), text.toString());
     }
 
     public String getTitle() {

@@ -80,13 +80,14 @@ public class DevicesFragment extends Fragment {
             View pairDialogView = getLayoutInflater().inflate(R.layout.pair_dialog, null);
 
             new AlertDialog.Builder(requireContext(), R.style.Dialog)
+                    .setTitle(R.string.pair_dialog_title)
                     .setView(pairDialogView)
-                    .setPositiveButton(R.string.pair, (dialog, which) -> {
-                        dialog.dismiss();
+                    .setPositiveButton(R.string.pair, (pairDialog, which) -> {
+                        pairDialog.dismiss();
 
                         startPairing(pairDialogView);
                     })
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                    .setNegativeButton(R.string.cancel, (pairDialog, which) -> pairDialog.dismiss())
                     .show();
         });
 
@@ -119,8 +120,48 @@ public class DevicesFragment extends Fragment {
         }
     }
 
-    private void startPairing(View view) {
-        String serverIp = ((EditText) view.findViewById(R.id.server_ip_edit_text)).getText().toString();
+    public Device removeDevice(int position) {
+        if (position >= devices.size()) {
+            return null;
+        }
+
+        Device device = devices.remove(position);
+
+        devicesAdapter.notifyItemRemoved(devices.size());
+
+        updateNotificationReceiver();
+
+        return device;
+    }
+
+    public void updateDevice(int position) {
+        devicesAdapter.notifyItemChanged(position);
+
+        updateNotificationReceiver();
+    }
+
+    public void addDevice(Device device) {
+        addDevice(device, devices.size());
+    }
+
+    public void addDevice(Device device, int position) {
+        devices.add(position, device);
+
+        devicesAdapter.notifyItemInserted(position);
+
+        updateNotificationReceiver();
+    }
+
+    private void updateNotificationReceiver() {
+        if (notificationReceiver == null) {
+            return;
+        }
+
+        notificationReceiver.setDevices(devices);
+    }
+
+    private void startPairing(View pairDialogView) {
+        String serverIp = ((EditText) pairDialogView.findViewById(R.id.server_ip_edit_text)).getText().toString();
 
         if (serverIp.isEmpty()) {
             return;
@@ -129,7 +170,7 @@ public class DevicesFragment extends Fragment {
         int serverPort;
 
         try {
-            serverPort = Integer.parseInt(((EditText) view.findViewById(R.id.server_port_edit_text)).getText().toString());
+            serverPort = Integer.parseInt(((EditText) pairDialogView.findViewById(R.id.server_port_edit_text)).getText().toString());
         } catch (NumberFormatException exception) {
             return;
         }
@@ -155,10 +196,10 @@ public class DevicesFragment extends Fragment {
         ((TextView) pairingDialogView.findViewById(R.id.client_public_key_text_view)).setText(getString(R.string.client_public_key, clientPublicKey));
 
         AlertDialog pairingDialog = new AlertDialog.Builder(requireContext(), R.style.Dialog)
+                .setTitle(R.string.pairing_dialog_title)
+                .setCancelable(false)
                 .setView(pairingDialogView)
                 .show();
-
-        pairingDialog.setCanceledOnTouchOutside(false);
 
         CompletableFuture.supplyAsync(() -> pairDevice(serverIp, serverPort, clientIp, clientPublicKey)).thenAccept(device -> requireActivity().runOnUiThread(() -> {
             pairingDialog.dismiss();
@@ -175,19 +216,10 @@ public class DevicesFragment extends Fragment {
             ((TextView) pairedDialogView.findViewById(R.id.server_public_key_text_view)).setText(getString(R.string.server_public_key, device.getServerPublicKey()));
 
             new AlertDialog.Builder(requireContext(), R.style.Dialog)
+                    .setTitle(R.string.paired_dialog_title)
                     .setView(pairedDialogView)
-                    .setPositiveButton(R.string.pair, (dialog, which) -> {
-                        devices.add(device);
-
-                        devicesAdapter.notifyItemInserted(devices.size());
-
-                        if (notificationReceiver == null) {
-                            return;
-                        }
-
-                        notificationReceiver.setDevices(devices);
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
+                    .setPositiveButton(R.string.pair, (dialog, which) -> addDevice(device))
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                     .show();
         }));
     }
@@ -241,7 +273,7 @@ public class DevicesFragment extends Fragment {
     }
 
     private void loadAddressesRecyclerView() {
-        devicesAdapter = new DevicesAdapter(devices);
+        devicesAdapter = new DevicesAdapter(this, devices);
 
         binding.devicesRecyclerView.setAdapter(devicesAdapter);
         binding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

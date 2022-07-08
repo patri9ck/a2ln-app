@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="?dialogPreferredPadding">
+    android:orientation="vertical">
     <com.google.android.material.progressindicator.CircularProgressIndicator android:id="@+id/pairing_progress_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,5 +23,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/widget_margin"
-        android:text="@string/pairing_information"/>
+        android:text="@string/pairing_dialog_information"/>
 </LinearLayout>

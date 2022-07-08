@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="?dialogPreferredPadding">
+    android:orientation="vertical">
     <TextView style="@style/TextView"
         android:id="@+id/server_ip_text_view"
         android:layout_width="match_parent"
@@ -18,5 +17,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/widget_margin"
-        android:text="@string/paired_information"/>
+        android:text="@string/paired_dialog_information"/>
 </LinearLayout>

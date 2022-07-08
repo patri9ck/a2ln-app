@@ -41,15 +41,27 @@ public class Device {
         return serverIp;
     }
 
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
+    }
+
     public int getServerPort() {
         return serverPort;
     }
 
-    public String getAddress() {
-        return serverIp + ":" + serverPort;
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
     }
 
     public String getServerPublicKey() {
         return serverPublicKey;
+    }
+
+    public void setServerPublicKey(String serverPublicKey) {
+        this.serverPublicKey = serverPublicKey;
+    }
+
+    public String getAddress() {
+        return serverIp + ":" + serverPort;
     }
 }

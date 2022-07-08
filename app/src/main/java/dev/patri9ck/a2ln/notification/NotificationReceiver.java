@@ -2,7 +2,6 @@ package dev.patri9ck.a2ln.notification;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
@@ -10,7 +9,6 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -33,6 +31,10 @@ public class NotificationReceiver extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification statusBarNotification) {
+        if (!initialized) {
+            return;
+        }
+
         Log.v(TAG, "Notification posted");
 
         notificationSpamHandler.cleanUp();
@@ -84,31 +86,30 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+        notificationSender = NotificationSender.loadNotificationSender(this);
 
-        String clientPublicKey = sharedPreferences.getString(getString(R.string.preferences_client_public_key), null);
-        String clientSecretKey = sharedPreferences.getString(getString(R.string.preferences_client_secret_key), null);
-
-        if (clientPublicKey == null || clientSecretKey == null) {
-            Log.e(TAG, "Client keys not saved in preferences properly");
-
+        if (notificationSender == null) {
             return;
         }
 
-        notificationSender = new NotificationSender(Device.fromJson(sharedPreferences.getString(getString(R.string.preferences_devices), null)),
-                Base64.getDecoder().decode(clientPublicKey),
-                Base64.getDecoder().decode(clientSecretKey));
-
-        disabledApps = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_disabled_apps), new HashSet<>()));
+        disabledApps = new ArrayList<>(getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE).getStringSet(getString(R.string.preferences_disabled_apps), new HashSet<>()));
 
         initialized = true;
     }
 
     public void setDevices(List<Device> devices) {
+        if (!initialized) {
+            return;
+        }
+
         notificationSender.setDevices(devices);
     }
 
     public void setDisabledApps(List<String> disabledApps) {
+        if (!initialized) {
+            return;
+        }
+
         this.disabledApps = disabledApps;
     }
 

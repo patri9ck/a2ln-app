@@ -1,7 +1,5 @@
 package dev.patri9ck.a2ln.main.ui;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,12 +7,12 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.FragmentSettingsBinding;
@@ -23,14 +21,13 @@ import dev.patri9ck.a2ln.notification.ParsedNotification;
 
 public class SettingsFragment extends Fragment {
 
+    private NotificationSender notificationSender;
+
     private void sendTestNotification() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_key), Context.MODE_PRIVATE);
+        CompletableFuture.runAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.test_title),
+                getString(R.string.test_text))));
 
-        NotificationSender notificationSender = new NotificationSender(new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_addresses_key), new HashSet<>())));
-
-        ParsedNotification notification = ParsedNotification.makeTestNotification();
-
-        notificationSender.sendParsedNotification(notification);
+        Toast.makeText(requireContext(), R.string.test_sent, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -42,5 +39,19 @@ public class SettingsFragment extends Fragment {
         binding.testButton.setOnClickListener(view -> sendTestNotification());
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        notificationSender = NotificationSender.loadNotificationSender(requireContext());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        notificationSender.close();
     }
 }

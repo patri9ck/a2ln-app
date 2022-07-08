@@ -34,15 +34,10 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
 
-        Device device = devices.remove(position);
-
-        devicesAdapter.notifyItemRemoved(position);
+        Device device = devicesFragment.removeDevice(position);
 
         Snackbar.make(devicesFragment.requireActivity().findViewById(android.R.id.content), R.string.removed_device, Snackbar.LENGTH_LONG)
-                .setAction(R.string.removed_device_undo, v -> {
-                    devices.add(position, device);
-
-                    devicesAdapter.notifyItemInserted(position);
-                }).show();
+                .setAction(R.string.removed_device_undo, v -> devicesFragment.addDevice(device, position))
+                .show();
     }
 }
