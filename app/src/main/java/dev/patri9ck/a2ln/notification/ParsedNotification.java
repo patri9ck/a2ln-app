@@ -13,6 +13,8 @@ import java.io.IOException;
 
 public class ParsedNotification {
 
+    private static final String TAG = "A2LN";
+
     private String title;
     private String text;
     private byte[] icon;
@@ -43,7 +45,7 @@ public class ParsedNotification {
                     return new ParsedNotification(title.toString(), text.toString(), byteArrayOutputStream.toByteArray());
                 }
             } catch (IOException exception) {
-                Log.e("A2LN", "Failed to convert picture to bytes", exception);
+                Log.e(TAG, "Failed to convert picture to bytes", exception);
             }
         }
 

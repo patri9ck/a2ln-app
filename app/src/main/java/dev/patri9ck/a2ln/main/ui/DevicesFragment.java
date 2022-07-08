@@ -44,6 +44,8 @@ import dev.patri9ck.a2ln.notification.NotificationReceiver;
 
 public class DevicesFragment extends Fragment {
 
+    private static final String TAG = "A2LN";
+
     private static final int TIMEOUT_SECONDS = 30;
 
     private List<Device> devices;
@@ -77,12 +79,12 @@ public class DevicesFragment extends Fragment {
         binding.pairButton.setOnClickListener(view -> {
             View pairDialogView = getLayoutInflater().inflate(R.layout.pair_dialog, null);
 
-            new AlertDialog.Builder(view.getContext(), R.style.Dialog)
+            new AlertDialog.Builder(requireContext(), R.style.Dialog)
                     .setView(pairDialogView)
                     .setPositiveButton(R.string.pair, (dialog, which) -> {
                         dialog.dismiss();
 
-                        onPair(pairDialogView);
+                        startPairing(pairDialogView);
                     })
                     .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                     .show();
@@ -101,7 +103,7 @@ public class DevicesFragment extends Fragment {
 
         loadAddressesRecyclerView();
 
-        bound = requireContext().bindService(new Intent(getContext(), NotificationReceiver.class), serviceConnection, 0);
+        bound = requireContext().bindService(new Intent(requireContext(), NotificationReceiver.class), serviceConnection, 0);
     }
 
     @Override
@@ -117,7 +119,7 @@ public class DevicesFragment extends Fragment {
         }
     }
 
-    private void onPair(View view) {
+    private void startPairing(View view) {
         String serverIp = ((EditText) view.findViewById(R.id.server_ip_edit_text)).getText().toString();
 
         if (serverIp.isEmpty()) {
@@ -152,7 +154,7 @@ public class DevicesFragment extends Fragment {
         ((TextView) pairingDialogView.findViewById(R.id.client_ip_text_view)).setText(getString(R.string.client_ip, clientIp));
         ((TextView) pairingDialogView.findViewById(R.id.client_public_key_text_view)).setText(getString(R.string.client_public_key, clientPublicKey));
 
-        AlertDialog pairingDialog = new AlertDialog.Builder(view.getContext(), R.style.Dialog)
+        AlertDialog pairingDialog = new AlertDialog.Builder(requireContext(), R.style.Dialog)
                 .setView(pairingDialogView)
                 .show();
 
@@ -172,7 +174,7 @@ public class DevicesFragment extends Fragment {
             ((TextView) pairedDialogView.findViewById(R.id.server_ip_text_view)).setText(getString(R.string.server_ip, serverIp));
             ((TextView) pairedDialogView.findViewById(R.id.server_public_key_text_view)).setText(getString(R.string.server_public_key, device.getServerPublicKey()));
 
-            new AlertDialog.Builder(view.getContext(), R.style.Dialog)
+            new AlertDialog.Builder(requireContext(), R.style.Dialog)
                     .setView(pairedDialogView)
                     .setPositiveButton(R.string.pair, (dialog, which) -> {
                         devices.add(device);
@@ -232,7 +234,7 @@ public class DevicesFragment extends Fragment {
                     .putInt(((WifiManager) requireContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE)).getConnectionInfo().getIpAddress())
                     .array()).getHostAddress();
         } catch (UnknownHostException exception) {
-            Log.e("A2LN", "Failed to get client IP", exception);
+            Log.e(TAG, "Failed to get client IP", exception);
 
             return null;
         }
@@ -242,7 +244,7 @@ public class DevicesFragment extends Fragment {
         devicesAdapter = new DevicesAdapter(devices);
 
         binding.devicesRecyclerView.setAdapter(devicesAdapter);
-        binding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         new ItemTouchHelper(new SwipeToDeleteCallback(this, devices, devicesAdapter)).attachToRecyclerView(binding.devicesRecyclerView);
     }

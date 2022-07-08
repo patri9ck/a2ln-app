@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -51,7 +52,7 @@ public class AppsFragment extends Fragment {
     private FragmentAppsBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAppsBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
@@ -67,7 +68,7 @@ public class AppsFragment extends Fragment {
 
         loadAppsRecyclerView();
 
-        bound = requireContext().bindService(new Intent(getContext(), NotificationReceiver.class), serviceConnection, 0);
+        bound = requireContext().bindService(new Intent(requireContext(), NotificationReceiver.class), serviceConnection, 0);
     }
 
     @Override
@@ -87,6 +88,6 @@ public class AppsFragment extends Fragment {
         appsAdapter = new AppsAdapter(disabledApps, null, requireContext().getPackageManager());
 
         binding.appsRecyclerView.setAdapter(appsAdapter);
-        binding.appsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.appsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
 }
