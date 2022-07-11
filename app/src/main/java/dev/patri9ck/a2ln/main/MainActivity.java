@@ -12,8 +12,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import org.zeromq.ZCert;
 
-import java.util.Base64;
-
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.ActivityMainBinding;
 
