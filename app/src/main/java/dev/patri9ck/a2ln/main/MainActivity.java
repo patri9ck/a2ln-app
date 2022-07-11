@@ -8,14 +8,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.gson.Gson;
-
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
-    private Gson gson = new Gson();
 
     private ActivityMainBinding binding;
 
