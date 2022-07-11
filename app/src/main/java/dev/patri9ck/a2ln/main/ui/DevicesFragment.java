@@ -18,8 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import org.zeromq.ZCert;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -33,8 +31,8 @@ import dev.patri9ck.a2ln.databinding.FragmentDevicesBinding;
 import dev.patri9ck.a2ln.device.Device;
 import dev.patri9ck.a2ln.device.DevicesAdapter;
 import dev.patri9ck.a2ln.device.SwipeToDeleteCallback;
-import dev.patri9ck.a2ln.notification.NotificationReceiver;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
+import dev.patri9ck.a2ln.notification.NotificationReceiver;
 import dev.patri9ck.a2ln.notification.NotificationReceiverUpdater;
 import dev.patri9ck.a2ln.pair.Pairing;
 import dev.patri9ck.a2ln.util.JsonListConverter;

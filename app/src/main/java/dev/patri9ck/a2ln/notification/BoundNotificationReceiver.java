@@ -8,9 +8,10 @@ import android.os.IBinder;
 
 public class BoundNotificationReceiver {
 
-    private NotificationReceiver notificationReceiver;
+    private final NotificationReceiverUpdater notificationReceiverUpdater;
+    private final Context context;
 
-    private boolean bound;
+    private NotificationReceiver notificationReceiver;
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -26,8 +27,7 @@ public class BoundNotificationReceiver {
         }
     };
 
-    private final NotificationReceiverUpdater notificationReceiverUpdater;
-    private final Context context;
+    private boolean bound;
 
     public BoundNotificationReceiver(NotificationReceiverUpdater notificationReceiverUpdater, Context context) {
         this.notificationReceiverUpdater = notificationReceiverUpdater;

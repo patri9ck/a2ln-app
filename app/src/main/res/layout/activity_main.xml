@@ -12,7 +12,8 @@
         android:layout_weight="1"
         app:defaultNavHost="true"
         app:navGraph="@navigation/navigation_mobile"/>
-    <com.google.android.material.bottomnavigation.BottomNavigationView style="@style/BottomNavigationView" android:id="@+id/main_bottom_navigation_view"
+    <com.google.android.material.bottomnavigation.BottomNavigationView style="@style/BottomNavigationView"
+        android:id="@+id/main_bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

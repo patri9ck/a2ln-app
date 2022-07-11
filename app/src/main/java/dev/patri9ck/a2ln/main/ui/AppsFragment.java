@@ -16,15 +16,14 @@ import java.util.List;
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.app.AppsAdapter;
 import dev.patri9ck.a2ln.databinding.FragmentAppsBinding;
-import dev.patri9ck.a2ln.notification.NotificationReceiver;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
+import dev.patri9ck.a2ln.notification.NotificationReceiver;
 import dev.patri9ck.a2ln.notification.NotificationReceiverUpdater;
 import dev.patri9ck.a2ln.util.JsonListConverter;
 
 public class AppsFragment extends Fragment implements NotificationReceiverUpdater {
 
     private List<String> disabledApps;
-    private AppsAdapter appsAdapter;
 
     private SharedPreferences sharedPreferences;
 
@@ -69,7 +68,7 @@ public class AppsFragment extends Fragment implements NotificationReceiverUpdate
     }
 
     private void loadAppsRecyclerView() {
-        appsAdapter = new AppsAdapter(disabledApps, boundNotificationReceiver, requireContext().getPackageManager());
+        AppsAdapter appsAdapter = new AppsAdapter(disabledApps, boundNotificationReceiver, requireContext().getPackageManager());
 
         binding.appsRecyclerView.setAdapter(appsAdapter);
         binding.appsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
