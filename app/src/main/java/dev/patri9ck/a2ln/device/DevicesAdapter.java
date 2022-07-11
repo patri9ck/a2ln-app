@@ -2,21 +2,23 @@ package dev.patri9ck.a2ln.device;
 
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.List;
 
 import dev.patri9ck.a2ln.R;
+import dev.patri9ck.a2ln.databinding.DialogEditPortBinding;
+import dev.patri9ck.a2ln.databinding.ItemDeviceBinding;
 import dev.patri9ck.a2ln.main.ui.DevicesFragment;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 
-public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.AddressViewHolder> {
+public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DeviceViewHolder> {
 
     private final DevicesFragment devicesFragment;
     private final BoundNotificationReceiver boundNotificationReceiver;
@@ -30,27 +32,28 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.AddressV
 
     @NonNull
     @Override
-    public AddressViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AddressViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_device, parent, false));
+    public DeviceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new DeviceViewHolder(ItemDeviceBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
-    public void onBindViewHolder(AddressViewHolder holder, int position) {
+    public void onBindViewHolder(DeviceViewHolder holder, int position) {
         Device device = devices.get(position);
 
         holder.addressTextView.setText(device.getAddress());
 
         holder.addressTextView.setOnClickListener(view -> {
-            View editPortDialogView = devicesFragment.getLayoutInflater().inflate(R.layout.dialog_edit_port, null);
 
-            new AlertDialog.Builder(devicesFragment.requireContext())
+            DialogEditPortBinding dialogEditPortBinding = DialogEditPortBinding.inflate(devicesFragment.getLayoutInflater());
+
+            new MaterialAlertDialogBuilder(devicesFragment.requireContext(), R.style.Dialog)
                     .setTitle(R.string.edit_port_dialog_title)
-                    .setView(editPortDialogView)
+                    .setView(dialogEditPortBinding.getRoot())
                     .setPositiveButton(R.string.apply, (editPortDialog, which) -> {
                         int devicePort;
 
                         try {
-                            devicePort = Integer.parseInt(((EditText) editPortDialogView.findViewById(R.id.device_edit_port_edit_text)).getText().toString());
+                            devicePort = Integer.parseInt(dialogEditPortBinding.deviceEditPortEditText.getText().toString());
                         } catch (NumberFormatException exception) {
                             return;
                         }
@@ -61,7 +64,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.AddressV
 
                         boundNotificationReceiver.updateNotificationReceiver();
                     })
-                    .setNegativeButton(R.string.cancel, (editPortDialog, which) -> editPortDialog.dismiss())
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
         });
     }
@@ -71,14 +74,14 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.AddressV
         return devices.size();
     }
 
-    protected static class AddressViewHolder extends RecyclerView.ViewHolder {
+    protected static class DeviceViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView addressTextView;
 
-        public AddressViewHolder(View itemView) {
-            super(itemView);
+        public DeviceViewHolder(ItemDeviceBinding itemDeviceBinding) {
+            super(itemDeviceBinding.getRoot());
 
-            addressTextView = itemView.findViewById(R.id.address_text_view);
+            addressTextView = itemDeviceBinding.addressTextView;
         }
     }
 }

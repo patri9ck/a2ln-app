@@ -5,6 +5,8 @@
     <string name="pair">Pair</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
+    <string name="grant">Grant</string>
+    <string name="deny">Deny</string>
     <string name="already_paired">Already paired</string>
     <string name="pairing_failed">Pairing failed</string>
     <string name="removed_device">Address removed</string>
@@ -13,9 +15,10 @@
     <string name="test">Test Notification</string>
     <string name="help">Help</string>
     <string name="help_url">https://www.patri9ck.dev/a2ln/</string>
+    <string name="version">%s (%d)</string>
     <string name="test_title">A2LN Test</string>
     <string name="test_text">Test Notification</string>
-    <string name="test_sent">A test notification was sent to every running device.</string>
+    <string name="test_done">A test notification was sent to every running device.</string>
     <string name="devices_title">Devices</string>
     <string name="apps_title">Apps</string>
     <string name="settings_title">Settings</string>
@@ -33,6 +36,10 @@
     </string>
     <string name="paired_dialog_title">Paired</string>
     <string name="paired_dialog_information">Verify the server IP and public key.</string>
+    <string name="permission_request_dialog_title">Permission Needed</string>
+    <string name="permission_request_dialog_information">To be able to listen to notifications, a
+        permission is needed.
+    </string>
     <string name="edit_port_dialog_title">Edit Port</string>
     <string name="preferences">dev.patri9ck.a2ln</string>
     <string name="preferences_devices">devices</string>

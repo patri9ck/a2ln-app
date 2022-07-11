@@ -29,13 +29,13 @@ public class AppsFragment extends Fragment implements NotificationReceiverUpdate
 
     private BoundNotificationReceiver boundNotificationReceiver;
 
-    private FragmentAppsBinding binding;
+    private FragmentAppsBinding fragmentAppsBinding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentAppsBinding.inflate(inflater, container, false);
+        fragmentAppsBinding = FragmentAppsBinding.inflate(inflater, container, false);
 
-        return binding.getRoot();
+        return fragmentAppsBinding.getRoot();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class AppsFragment extends Fragment implements NotificationReceiverUpdate
     private void loadAppsRecyclerView() {
         AppsAdapter appsAdapter = new AppsAdapter(disabledApps, boundNotificationReceiver, requireContext().getPackageManager());
 
-        binding.appsRecyclerView.setAdapter(appsAdapter);
-        binding.appsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        fragmentAppsBinding.appsRecyclerView.setAdapter(appsAdapter);
+        fragmentAppsBinding.appsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
 }

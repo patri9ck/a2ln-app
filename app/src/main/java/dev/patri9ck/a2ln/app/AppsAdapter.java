@@ -2,7 +2,6 @@ package dev.patri9ck.a2ln.app;
 
 import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import dev.patri9ck.a2ln.R;
+import dev.patri9ck.a2ln.databinding.ItemAppBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder> {
@@ -37,8 +36,8 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
 
     @NonNull
     @Override
-    public AppViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AppViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false));
+    public AppViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new AppViewHolder(ItemAppBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -73,16 +72,16 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
 
     protected static class AppViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView nameTextView;
-        private CheckBox appCheckBox;
-        private ImageView iconImageView;
+        private final TextView nameTextView;
+        private final CheckBox appCheckBox;
+        private final ImageView iconImageView;
 
-        public AppViewHolder(View itemView) {
-            super(itemView);
+        public AppViewHolder(ItemAppBinding itemAppBinding) {
+            super(itemAppBinding.getRoot());
 
-            nameTextView = itemView.findViewById(R.id.name_text_view);
-            appCheckBox = itemView.findViewById(R.id.app_check_box);
-            iconImageView = itemView.findViewById(R.id.icon_image_view);
+            nameTextView = itemAppBinding.nameTextView;
+            appCheckBox = itemAppBinding.appCheckBox;
+            iconImageView = itemAppBinding.iconImageView;
         }
     }
 }

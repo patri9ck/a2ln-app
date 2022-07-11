@@ -1,6 +1,5 @@
 package dev.patri9ck.a2ln.main.ui;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
@@ -9,14 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.R;
+import dev.patri9ck.a2ln.databinding.DialogPairBinding;
+import dev.patri9ck.a2ln.databinding.DialogPairedBinding;
+import dev.patri9ck.a2ln.databinding.DialogPairingBinding;
 import dev.patri9ck.a2ln.databinding.FragmentDevicesBinding;
 import dev.patri9ck.a2ln.device.Device;
 import dev.patri9ck.a2ln.device.DevicesAdapter;
@@ -48,28 +51,28 @@ public class DevicesFragment extends Fragment implements NotificationReceiverUpd
 
     private BoundNotificationReceiver boundNotificationReceiver;
 
-    private FragmentDevicesBinding binding;
+    private FragmentDevicesBinding fragmentDevicesBinding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentDevicesBinding.inflate(inflater, container, false);
+        fragmentDevicesBinding = FragmentDevicesBinding.inflate(inflater, container, false);
 
-        binding.pairButton.setOnClickListener(view -> {
-            View pairDialogView = getLayoutInflater().inflate(R.layout.dialog_pair, null);
+        fragmentDevicesBinding.pairButton.setOnClickListener(view -> {
+            DialogPairBinding dialogPairBinding = DialogPairBinding.inflate(inflater);
 
-            new AlertDialog.Builder(requireContext(), R.style.Dialog)
+            new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                     .setTitle(R.string.pair_dialog_title)
-                    .setView(pairDialogView)
+                    .setView(dialogPairBinding.getRoot())
                     .setPositiveButton(R.string.pair, (pairDialog, which) -> {
                         pairDialog.dismiss();
 
-                        startPairing(pairDialogView);
+                        startPairing(dialogPairBinding);
                     })
-                    .setNegativeButton(R.string.cancel, (pairDialog, which) -> pairDialog.dismiss())
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
         });
 
-        return binding.getRoot();
+        return fragmentDevicesBinding.getRoot();
     }
 
     @Override
@@ -104,14 +107,14 @@ public class DevicesFragment extends Fragment implements NotificationReceiverUpd
     private void loadDevicesRecyclerView() {
         devicesAdapter = new DevicesAdapter(this, boundNotificationReceiver, devices);
 
-        binding.devicesRecyclerView.setAdapter(devicesAdapter);
-        binding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        fragmentDevicesBinding.devicesRecyclerView.setAdapter(devicesAdapter);
+        fragmentDevicesBinding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        new ItemTouchHelper(new SwipeToDeleteCallback(this, boundNotificationReceiver, devices, devicesAdapter)).attachToRecyclerView(binding.devicesRecyclerView);
+        new ItemTouchHelper(new SwipeToDeleteCallback(this, boundNotificationReceiver, devices, devicesAdapter)).attachToRecyclerView(fragmentDevicesBinding.devicesRecyclerView);
     }
 
-    private void startPairing(View pairDialogView) {
-        String deviceIp = ((EditText) pairDialogView.findViewById(R.id.device_ip_edit_text)).getText().toString();
+    private void startPairing(DialogPairBinding dialogPairBinding) {
+        String deviceIp = dialogPairBinding.deviceIpEditText.getText().toString();
 
         if (deviceIp.isEmpty()) {
             return;
@@ -120,7 +123,7 @@ public class DevicesFragment extends Fragment implements NotificationReceiverUpd
         int devicePort;
 
         try {
-            devicePort = Integer.parseInt(((EditText) pairDialogView.findViewById(R.id.device_port_edit_text)).getText().toString());
+            devicePort = Integer.parseInt(dialogPairBinding.devicePortEditText.getText().toString());
         } catch (NumberFormatException exception) {
             return;
         }
@@ -140,15 +143,15 @@ public class DevicesFragment extends Fragment implements NotificationReceiverUpd
             return;
         }
 
-        View pairingDialogView = getLayoutInflater().inflate(R.layout.dialog_pairing, null);
+        DialogPairingBinding dialogPairingBinding = DialogPairingBinding.inflate(getLayoutInflater());
 
-        ((TextView) pairingDialogView.findViewById(R.id.client_ip_text_view)).setText(getString(R.string.client_ip, clientIp));
-        ((TextView) pairingDialogView.findViewById(R.id.client_public_key_text_view)).setText(getString(R.string.client_public_key, clientPublicKey));
+        dialogPairingBinding.clientIpTextView.setText(getString(R.string.client_ip, clientIp));
+        dialogPairingBinding.clientPublicKeyTextView.setText(getString(R.string.client_public_key, clientPublicKey));
 
-        AlertDialog pairingDialog = new AlertDialog.Builder(requireContext(), R.style.Dialog)
+        AlertDialog pairingDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                 .setTitle(R.string.pairing_dialog_title)
+                .setView(dialogPairingBinding.getRoot())
                 .setCancelable(false)
-                .setView(pairingDialogView)
                 .show();
 
         CompletableFuture.supplyAsync(() -> new Pairing(deviceIp, devicePort, clientIp, clientPublicKey).pair()).thenAccept(device -> requireActivity().runOnUiThread(() -> {
@@ -160,15 +163,15 @@ public class DevicesFragment extends Fragment implements NotificationReceiverUpd
                 return;
             }
 
-            View pairedDialogView = getLayoutInflater().inflate(R.layout.dialog_paired, null);
+            DialogPairedBinding dialogPairedBinding = DialogPairedBinding.inflate(getLayoutInflater());
 
-            ((TextView) pairedDialogView.findViewById(R.id.device_ip_text_view)).setText(getString(R.string.device_ip, deviceIp));
-            ((TextView) pairedDialogView.findViewById(R.id.device_public_key_text_view)).setText(getString(R.string.device_public_key, new String(device.getPublicKey(), StandardCharsets.UTF_8)));
+            dialogPairedBinding.deviceIpTextView.setText(getString(R.string.device_ip, deviceIp));
+            dialogPairedBinding.devicePublicKeyTextView.setText(getString(R.string.device_public_key, new String(device.getPublicKey(), StandardCharsets.UTF_8)));
 
-            new AlertDialog.Builder(requireContext(), R.style.Dialog)
+            new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                     .setTitle(R.string.paired_dialog_title)
-                    .setView(pairedDialogView)
-                    .setPositiveButton(R.string.pair, (dialog, which) -> {
+                    .setView(dialogPairedBinding.getRoot())
+                    .setPositiveButton(R.string.pair, (pairedDialog, which) -> {
                         int position = devices.size();
 
                         devices.add(device);
@@ -177,7 +180,7 @@ public class DevicesFragment extends Fragment implements NotificationReceiverUpd
 
                         boundNotificationReceiver.updateNotificationReceiver();
                     })
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
         }));
     }

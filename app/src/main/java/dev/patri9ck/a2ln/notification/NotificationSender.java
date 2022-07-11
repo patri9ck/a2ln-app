@@ -44,9 +44,7 @@ public class NotificationSender implements AutoCloseable {
         this.clientSecretKey = clientSecretKey;
     }
 
-    public static NotificationSender loadNotificationSender(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preferences), Context.MODE_PRIVATE);
-
+    public static NotificationSender fromSharedPreferences(Context context, SharedPreferences sharedPreferences) {
         String clientPublicKey = sharedPreferences.getString(context.getString(R.string.preferences_client_public_key), null);
         String clientSecretKey = sharedPreferences.getString(context.getString(R.string.preferences_client_secret_key), null);
 

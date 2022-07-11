@@ -5,4 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/widget_margin"
-    android:textSize="30sp"/>
+    android:textSize="28sp"/>

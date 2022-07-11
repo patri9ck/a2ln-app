@@ -2,6 +2,7 @@ package dev.patri9ck.a2ln.notification;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
@@ -88,13 +89,15 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        notificationSender = NotificationSender.loadNotificationSender(this);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+
+        notificationSender = NotificationSender.fromSharedPreferences(this, sharedPreferences);
 
         if (notificationSender == null) {
             return;
         }
 
-        disabledApps = JsonListConverter.fromJson(getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE).getString(getString(R.string.preferences_disabled_apps), null), String.class);
+        disabledApps = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
         initialized = true;
     }
 
