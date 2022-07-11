@@ -10,17 +10,20 @@ import java.util.List;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.main.ui.DevicesFragment;
+import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
-    private DevicesFragment devicesFragment;
-    private List<Device> devices;
-    private DevicesAdapter devicesAdapter;
+    private final DevicesFragment devicesFragment;
+    private final BoundNotificationReceiver boundNotificationReceiver;
+    private final List<Device> devices;
+    private final DevicesAdapter devicesAdapter;
 
-    public SwipeToDeleteCallback(DevicesFragment devicesFragment, List<Device> devices, DevicesAdapter devicesAdapter) {
+    public SwipeToDeleteCallback(DevicesFragment devicesFragment, BoundNotificationReceiver boundNotificationReceiver, List<Device> devices, DevicesAdapter devicesAdapter) {
         super(0, ItemTouchHelper.LEFT);
 
         this.devicesFragment = devicesFragment;
+        this.boundNotificationReceiver = boundNotificationReceiver;
         this.devices = devices;
         this.devicesAdapter = devicesAdapter;
     }
@@ -34,10 +37,20 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
 
-        Device device = devicesFragment.removeDevice(position);
+        Device device = devices.remove(position);
+
+        devicesAdapter.notifyItemRemoved(position);
+
+        boundNotificationReceiver.updateNotificationReceiver();
 
         Snackbar.make(devicesFragment.requireActivity().findViewById(android.R.id.content), R.string.removed_device, Snackbar.LENGTH_LONG)
-                .setAction(R.string.removed_device_undo, v -> devicesFragment.addDevice(device, position))
+                .setAction(R.string.removed_device_undo, buttonView -> {
+                    devices.add(position, device);
+
+                    devicesAdapter.notifyItemInserted(position);
+
+                    boundNotificationReceiver.updateNotificationReceiver();
+                })
                 .show();
     }
 }

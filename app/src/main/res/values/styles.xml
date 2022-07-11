@@ -7,6 +7,10 @@
         <item name="android:background">@color/background</item>
         <item name="android:buttonBarButtonStyle">@style/DialogButton</item>
     </style>
+    <style name="BottomNavigationView"
+        parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/background</item>
+    </style>
     <style name="DialogButton"
         parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/accent</item>
@@ -15,7 +19,7 @@
     <style name="Button"
         parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/accent_text</item>
-        <item name="android:background">@color/accent</item>
+        <item name="android:background">@drawable/rounded_button</item>
     </style>
     <style name="EditText"
         parent="Widget.AppCompat.EditText">

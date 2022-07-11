@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Android 2 Linux Notifications</string>
-    <string name="server_ip_hint">IP</string>
-    <string name="server_port_hint">Port</string>
+    <string name="device_ip_hint">IP</string>
+    <string name="device_port_hint">Port</string>
     <string name="pair">Pair</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
@@ -20,9 +20,9 @@
     <string name="apps_title">Apps</string>
     <string name="settings_title">Settings</string>
     <string name="client_ip">Your IP: %s</string>
-    <string name="client_public_key">Your public key: %s</string>
-    <string name="server_ip">Server IP: %s</string>
-    <string name="server_public_key">Server public key: %s</string>
+    <string name="client_public_key">Your Public Key: %s</string>
+    <string name="device_ip">Device IP: %s</string>
+    <string name="device_public_key">Device Public Key: %s</string>
     <string name="pair_dialog_title">Pair a New Device</string>
     <string name="pair_dialog_information">Enter the server IP and port of the pairing server.
     </string>

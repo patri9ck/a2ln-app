@@ -9,9 +9,7 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMsg;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +18,8 @@ import java.util.concurrent.CountDownLatch;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.device.Device;
+import dev.patri9ck.a2ln.util.JsonListConverter;
+import zmq.util.Z85;
 
 public class NotificationSender implements AutoCloseable {
 
@@ -27,11 +27,14 @@ public class NotificationSender implements AutoCloseable {
 
     private static final int TIMEOUT_SECONDS = 5;
     private static final int CLOSE_SECONDS = 10;
+
     byte[] clientPublicKey;
     byte[] clientSecretKey;
+
     private ZContext zContext;
     private List<ZMQ.Socket> clients;
     private Timer closeTimer;
+
     private List<Device> devices;
 
     public NotificationSender(List<Device> devices, byte[] clientPublicKey, byte[] clientSecretKey) {
@@ -53,9 +56,9 @@ public class NotificationSender implements AutoCloseable {
             return null;
         }
 
-        return new NotificationSender(Device.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_devices), null)),
-                Base64.getDecoder().decode(clientPublicKey),
-                Base64.getDecoder().decode(clientSecretKey));
+        return new NotificationSender(JsonListConverter.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_devices), null), Device.class),
+                Z85.decode(clientPublicKey),
+                Z85.decode(clientSecretKey));
     }
 
     public synchronized void setDevices(List<Device> devices) {
@@ -71,7 +74,7 @@ public class NotificationSender implements AutoCloseable {
             return;
         }
 
-        startSockets();
+        startClients();
         startCloseTimer();
 
         ZMsg zMsg = new ZMsg();
@@ -102,12 +105,12 @@ public class NotificationSender implements AutoCloseable {
         Log.v(TAG, "Finished trying to send notification");
     }
 
-    private synchronized void startSockets() {
+    private synchronized void startClients() {
         if (zContext != null && !zContext.isClosed()) {
             return;
         }
 
-        Log.v(TAG, "Starting sockets");
+        Log.v(TAG, "Starting clients");
 
         zContext = new ZContext();
 
@@ -120,19 +123,19 @@ public class NotificationSender implements AutoCloseable {
             client.setImmediate(false);
             client.setCurvePublicKey(clientPublicKey);
             client.setCurveSecretKey(clientSecretKey);
-            client.setCurveServerKey(device.getServerPublicKey().getBytes(StandardCharsets.UTF_8));
+            client.setCurveServerKey(device.getPublicKey());
             client.connect("tcp://" + device.getAddress());
 
             clients.add(client);
         });
     }
 
-    private synchronized void stopSockets() {
+    private synchronized void stopClients() {
         if (zContext == null || zContext.isClosed()) {
             return;
         }
 
-        Log.v(TAG, "Stopping sockets");
+        Log.v(TAG, "Stopping clients");
 
         zContext.close();
     }
@@ -145,7 +148,7 @@ public class NotificationSender implements AutoCloseable {
         closeTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                stopSockets();
+                stopClients();
 
                 closeTimer = null;
             }
@@ -164,7 +167,7 @@ public class NotificationSender implements AutoCloseable {
 
     @Override
     public synchronized void close() {
-        stopSockets();
+        stopClients();
         stopCloseTimer();
     }
 }

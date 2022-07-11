@@ -1,63 +1,38 @@
 package dev.patri9ck.a2ln.device;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
 public class Device {
 
-    private static final Gson GSON = new Gson();
+    private String ip;
+    private int port;
+    private byte[] publicKey;
 
-    private static final Type DEVICES_TYPE = new TypeToken<ArrayList<Device>>() {}.getType();
-
-    private String serverIp;
-    private int serverPort;
-    private String serverPublicKey;
-
-    public Device() {}
-
-    public Device(String serverIp, int serverPort, String serverPublicKey) {
-        this.serverIp = serverIp;
-        this.serverPort = serverPort;
-        this.serverPublicKey = serverPublicKey;
+    public Device() {
+        // Gson
     }
 
-    public static String toJson(List<Device> devices) {
-        return GSON.toJson(devices);
+    public Device(String ip, int port, byte[] publicKey) {
+        this.ip = ip;
+        this.port = port;
+        this.publicKey = publicKey;
     }
 
-    public static List<Device> fromJson(String json) {
-        if (json == null) {
-            return new ArrayList<>();
-        }
-
-        return GSON.fromJson(json, DEVICES_TYPE);
+    public String getIp() {
+        return ip;
     }
 
-    public String getServerIp() {
-        return serverIp;
+    public int getPort() {
+        return port;
     }
 
-    public int getServerPort() {
-        return serverPort;
+    public void setPort(int port) {
+        this.port = port;
     }
 
-    public void setServerPort(int serverPort) {
-        this.serverPort = serverPort;
-    }
-
-    public String getServerPublicKey() {
-        return serverPublicKey;
-    }
-
-    public void setServerPublicKey(String serverPublicKey) {
-        this.serverPublicKey = serverPublicKey;
+    public byte[] getPublicKey() {
+        return publicKey;
     }
 
     public String getAddress() {
-        return serverIp + ":" + serverPort;
+        return ip + ":" + port;
     }
 }

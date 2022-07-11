@@ -1,14 +1,10 @@
 package dev.patri9ck.a2ln.main.ui;
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import org.zeromq.SocketType;
-import org.zeromq.ZContext;
-import org.zeromq.ZMQ;
-import org.zeromq.ZMsg;
+import org.zeromq.ZCert;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -41,34 +34,21 @@ import dev.patri9ck.a2ln.device.Device;
 import dev.patri9ck.a2ln.device.DevicesAdapter;
 import dev.patri9ck.a2ln.device.SwipeToDeleteCallback;
 import dev.patri9ck.a2ln.notification.NotificationReceiver;
+import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
+import dev.patri9ck.a2ln.notification.NotificationReceiverUpdater;
+import dev.patri9ck.a2ln.pair.Pairing;
+import dev.patri9ck.a2ln.util.JsonListConverter;
 
-public class DevicesFragment extends Fragment {
+public class DevicesFragment extends Fragment implements NotificationReceiverUpdater {
 
     private static final String TAG = "A2LN";
-
-    private static final int TIMEOUT_SECONDS = 30;
 
     private List<Device> devices;
     private DevicesAdapter devicesAdapter;
 
     private SharedPreferences sharedPreferences;
 
-    private NotificationReceiver notificationReceiver;
-    private boolean bound;
-
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            notificationReceiver = ((NotificationReceiver.NotificationReceiverBinder) service).getNotificationReceiver();
-
-            notificationReceiver.setDevices(devices);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            notificationReceiver = null;
-        }
-    };
+    private BoundNotificationReceiver boundNotificationReceiver;
 
     private FragmentDevicesBinding binding;
 
@@ -77,7 +57,7 @@ public class DevicesFragment extends Fragment {
         binding = FragmentDevicesBinding.inflate(inflater, container, false);
 
         binding.pairButton.setOnClickListener(view -> {
-            View pairDialogView = getLayoutInflater().inflate(R.layout.pair_dialog, null);
+            View pairDialogView = getLayoutInflater().inflate(R.layout.dialog_pair, null);
 
             new AlertDialog.Builder(requireContext(), R.style.Dialog)
                     .setTitle(R.string.pair_dialog_title)
@@ -100,97 +80,69 @@ public class DevicesFragment extends Fragment {
 
         sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        devices = Device.fromJson(sharedPreferences.getString(getString(R.string.preferences_devices), null));
+        devices = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_devices), null), Device.class);
 
-        loadAddressesRecyclerView();
+        boundNotificationReceiver = new BoundNotificationReceiver(this, requireContext());
 
-        bound = requireContext().bindService(new Intent(requireContext(), NotificationReceiver.class), serviceConnection, 0);
+        boundNotificationReceiver.bind();
+
+        loadDevicesRecyclerView();
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        sharedPreferences.edit().putString(getString(R.string.preferences_devices), Device.toJson(devices)).apply();
+        sharedPreferences.edit().putString(getString(R.string.preferences_devices), JsonListConverter.toJson(devices)).apply();
 
-        if (bound) {
-            requireContext().unbindService(serviceConnection);
-
-            bound = false;
-        }
+        boundNotificationReceiver.unbind();
     }
 
-    public Device removeDevice(int position) {
-        if (position >= devices.size()) {
-            return null;
-        }
-
-        Device device = devices.remove(position);
-
-        devicesAdapter.notifyItemRemoved(devices.size());
-
-        updateNotificationReceiver();
-
-        return device;
-    }
-
-    public void updateDevice(int position) {
-        devicesAdapter.notifyItemChanged(position);
-
-        updateNotificationReceiver();
-    }
-
-    public void addDevice(Device device) {
-        addDevice(device, devices.size());
-    }
-
-    public void addDevice(Device device, int position) {
-        devices.add(position, device);
-
-        devicesAdapter.notifyItemInserted(position);
-
-        updateNotificationReceiver();
-    }
-
-    private void updateNotificationReceiver() {
-        if (notificationReceiver == null) {
-            return;
-        }
-
+    @Override
+    public void update(NotificationReceiver notificationReceiver) {
         notificationReceiver.setDevices(devices);
     }
 
-    private void startPairing(View pairDialogView) {
-        String serverIp = ((EditText) pairDialogView.findViewById(R.id.server_ip_edit_text)).getText().toString();
+    private void loadDevicesRecyclerView() {
+        devicesAdapter = new DevicesAdapter(this, boundNotificationReceiver, devices);
 
-        if (serverIp.isEmpty()) {
+        binding.devicesRecyclerView.setAdapter(devicesAdapter);
+        binding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        new ItemTouchHelper(new SwipeToDeleteCallback(this, boundNotificationReceiver, devices, devicesAdapter)).attachToRecyclerView(binding.devicesRecyclerView);
+    }
+
+    private void startPairing(View pairDialogView) {
+        String deviceIp = ((EditText) pairDialogView.findViewById(R.id.device_ip_edit_text)).getText().toString();
+
+        if (deviceIp.isEmpty()) {
             return;
         }
 
-        int serverPort;
+        int devicePort;
 
         try {
-            serverPort = Integer.parseInt(((EditText) pairDialogView.findViewById(R.id.server_port_edit_text)).getText().toString());
+            devicePort = Integer.parseInt(((EditText) pairDialogView.findViewById(R.id.device_port_edit_text)).getText().toString());
         } catch (NumberFormatException exception) {
             return;
         }
 
         for (Device device : devices) {
-            if (device.getServerIp().equals(serverIp)) {
+            if (device.getIp().equals(deviceIp)) {
                 Toast.makeText(requireContext(), R.string.already_paired, Toast.LENGTH_LONG).show();
 
                 return;
             }
         }
 
-        String clientIp = getClientIp();
+        String clientIp = getIp();
         String clientPublicKey = sharedPreferences.getString(getString(R.string.preferences_client_public_key), null);
 
         if (clientIp == null || clientPublicKey == null) {
             return;
         }
 
-        View pairingDialogView = getLayoutInflater().inflate(R.layout.pairing_dialog, null);
+        View pairingDialogView = getLayoutInflater().inflate(R.layout.dialog_pairing, null);
 
         ((TextView) pairingDialogView.findViewById(R.id.client_ip_text_view)).setText(getString(R.string.client_ip, clientIp));
         ((TextView) pairingDialogView.findViewById(R.id.client_public_key_text_view)).setText(getString(R.string.client_public_key, clientPublicKey));
@@ -201,7 +153,7 @@ public class DevicesFragment extends Fragment {
                 .setView(pairingDialogView)
                 .show();
 
-        CompletableFuture.supplyAsync(() -> pairDevice(serverIp, serverPort, clientIp, clientPublicKey)).thenAccept(device -> requireActivity().runOnUiThread(() -> {
+        CompletableFuture.supplyAsync(() -> new Pairing(deviceIp, devicePort, clientIp, clientPublicKey).pair()).thenAccept(device -> requireActivity().runOnUiThread(() -> {
             pairingDialog.dismiss();
 
             if (device == null) {
@@ -210,55 +162,29 @@ public class DevicesFragment extends Fragment {
                 return;
             }
 
-            View pairedDialogView = getLayoutInflater().inflate(R.layout.paired_dialog, null);
+            View pairedDialogView = getLayoutInflater().inflate(R.layout.dialog_paired, null);
 
-            ((TextView) pairedDialogView.findViewById(R.id.server_ip_text_view)).setText(getString(R.string.server_ip, serverIp));
-            ((TextView) pairedDialogView.findViewById(R.id.server_public_key_text_view)).setText(getString(R.string.server_public_key, device.getServerPublicKey()));
+            ((TextView) pairedDialogView.findViewById(R.id.device_ip_text_view)).setText(getString(R.string.device_ip, deviceIp));
+            ((TextView) pairedDialogView.findViewById(R.id.device_public_key_text_view)).setText(getString(R.string.device_public_key, new String(device.getPublicKey(), StandardCharsets.UTF_8)));
 
             new AlertDialog.Builder(requireContext(), R.style.Dialog)
                     .setTitle(R.string.paired_dialog_title)
                     .setView(pairedDialogView)
-                    .setPositiveButton(R.string.pair, (dialog, which) -> addDevice(device))
+                    .setPositiveButton(R.string.pair, (dialog, which) -> {
+                        int position = devices.size();
+
+                        devices.add(device);
+
+                        devicesAdapter.notifyItemInserted(position);
+
+                        boundNotificationReceiver.updateNotificationReceiver();
+                    })
                     .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
                     .show();
         }));
     }
 
-    private Device pairDevice(String serverIp, int serverPort, String clientIp, String clientPublicKey) {
-        try (ZContext zContext = new ZContext(); ZMQ.Socket client = zContext.createSocket(SocketType.REQ)) {
-            client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
-            client.setReceiveTimeOut(TIMEOUT_SECONDS * 1000);
-
-            client.setImmediate(false);
-
-            if (!client.connect("tcp://" + serverIp + ":" + serverPort)) {
-                return null;
-            }
-
-            ZMsg zMsg = new ZMsg();
-
-            zMsg.add(clientIp);
-            zMsg.add(clientPublicKey);
-
-            if (!zMsg.send(client)) {
-                return null;
-            }
-
-            zMsg = ZMsg.recvMsg(client);
-
-            if (zMsg == null || zMsg.size() != 2) {
-                return null;
-            }
-
-            try {
-                return new Device(serverIp, Integer.parseInt(zMsg.pop().getString(StandardCharsets.UTF_8)), zMsg.pop().getString(StandardCharsets.UTF_8));
-            } catch (NumberFormatException exception) {
-                return null;
-            }
-        }
-    }
-
-    private String getClientIp() {
+    private String getIp() {
         try {
             return InetAddress.getByAddress(ByteBuffer
                     .allocate(Integer.BYTES)
@@ -270,14 +196,5 @@ public class DevicesFragment extends Fragment {
 
             return null;
         }
-    }
-
-    private void loadAddressesRecyclerView() {
-        devicesAdapter = new DevicesAdapter(this, devices);
-
-        binding.devicesRecyclerView.setAdapter(devicesAdapter);
-        binding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        new ItemTouchHelper(new SwipeToDeleteCallback(this, devices, devicesAdapter)).attachToRecyclerView(binding.devicesRecyclerView);
     }
 }

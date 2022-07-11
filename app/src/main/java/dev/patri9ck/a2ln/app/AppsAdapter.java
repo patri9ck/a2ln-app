@@ -15,18 +15,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.notification.NotificationReceiver;
+import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder> {
 
     private List<String> disabledApps;
-    private NotificationReceiver notificationReceiver;
+    private BoundNotificationReceiver boundNotificationReceiver;
 
     private List<App> apps;
 
-    public AppsAdapter(List<String> disabledApps, NotificationReceiver notificationReceiver, PackageManager packageManager) {
+    public AppsAdapter(List<String> disabledApps, BoundNotificationReceiver boundNotificationReceiver, PackageManager packageManager) {
         this.disabledApps = disabledApps;
-        this.notificationReceiver = notificationReceiver;
+        this.boundNotificationReceiver = boundNotificationReceiver;
 
         apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
                 .stream()
@@ -38,7 +38,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
     @NonNull
     @Override
     public AppViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AppViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.app_item, parent, false));
+        return new AppViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false));
     }
 
     @Override
@@ -58,11 +58,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
                 disabledApps.add(packageName);
             }
 
-            if (notificationReceiver == null) {
-                return;
-            }
-
-            notificationReceiver.setDisabledApps(disabledApps);
+            boundNotificationReceiver.updateNotificationReceiver();
         });
 
         holder.appCheckBox.setChecked(app.isEnabled());
@@ -73,10 +69,6 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
     @Override
     public int getItemCount() {
         return apps.size();
-    }
-
-    public void setNotificationReceiver(NotificationReceiver notificationReceiver) {
-        this.notificationReceiver = notificationReceiver;
     }
 
     protected static class AppViewHolder extends RecyclerView.ViewHolder {

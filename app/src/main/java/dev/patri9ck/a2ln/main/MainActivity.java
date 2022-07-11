@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupActionBarWithNavController(this, navController, new AppBarConfiguration.Builder(R.id.navigation_devices, R.id.navigation_apps, R.id.navigation_settings)
                 .build());
-        NavigationUI.setupWithNavController(binding.mainNavigationView, navController);
+        NavigationUI.setupWithNavController(binding.mainBottomNavigationView, navController);
     }
 
     private void generateCertificates() {
@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         ZCert zCert = new ZCert();
 
         sharedPreferences.edit()
-                .putString(getString(R.string.preferences_client_public_key), Base64.getEncoder().encodeToString(zCert.getPublicKey()))
-                .putString(getString(R.string.preferences_client_secret_key), Base64.getEncoder().encodeToString(zCert.getSecretKey()))
+                .putString(getString(R.string.preferences_client_public_key), zCert.getPublicKeyAsZ85())
+                .putString(getString(R.string.preferences_client_secret_key), zCert.getSecretKeyAsZ85())
                 .apply();
     }
 }

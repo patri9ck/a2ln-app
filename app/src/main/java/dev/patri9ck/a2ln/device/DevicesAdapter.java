@@ -14,21 +14,24 @@ import java.util.List;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.main.ui.DevicesFragment;
+import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 
 public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.AddressViewHolder> {
 
-    private DevicesFragment devicesFragment;
-    private List<Device> devices;
+    private final DevicesFragment devicesFragment;
+    private final BoundNotificationReceiver boundNotificationReceiver;
+    private final List<Device> devices;
 
-    public DevicesAdapter(DevicesFragment devicesFragment, List<Device> devices) {
+    public DevicesAdapter(DevicesFragment devicesFragment, BoundNotificationReceiver boundNotificationReceiver, List<Device> devices) {
         this.devicesFragment = devicesFragment;
+        this.boundNotificationReceiver = boundNotificationReceiver;
         this.devices = devices;
     }
 
     @NonNull
     @Override
     public AddressViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AddressViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.device_item, parent, false));
+        return new AddressViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_device, parent, false));
     }
 
     @Override
@@ -38,23 +41,25 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.AddressV
         holder.addressTextView.setText(device.getAddress());
 
         holder.addressTextView.setOnClickListener(view -> {
-            View editPortDialogView = devicesFragment.getLayoutInflater().inflate(R.layout.edit_port_dialog, null);
+            View editPortDialogView = devicesFragment.getLayoutInflater().inflate(R.layout.dialog_edit_port, null);
 
             new AlertDialog.Builder(devicesFragment.requireContext())
                     .setTitle(R.string.edit_port_dialog_title)
                     .setView(editPortDialogView)
                     .setPositiveButton(R.string.apply, (editPortDialog, which) -> {
-                        int serverPort;
+                        int devicePort;
 
                         try {
-                            serverPort = Integer.parseInt(((EditText) editPortDialogView.findViewById(R.id.server_edit_port_edit_text)).getText().toString());
+                            devicePort = Integer.parseInt(((EditText) editPortDialogView.findViewById(R.id.device_edit_port_edit_text)).getText().toString());
                         } catch (NumberFormatException exception) {
                             return;
                         }
 
-                        device.setServerPort(serverPort);
+                        device.setPort(devicePort);
 
-                        devicesFragment.updateDevice(position);
+                        notifyItemChanged(position);
+
+                        boundNotificationReceiver.updateNotificationReceiver();
                     })
                     .setNegativeButton(R.string.cancel, (editPortDialog, which) -> editPortDialog.dismiss())
                     .show();

@@ -4,12 +4,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <TextView style="@style/TextView"
-        android:id="@+id/server_ip_text_view"
+        android:id="@+id/device_ip_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/widget_margin"/>
     <TextView style="@style/TextView"
-        android:id="@+id/server_public_key_text_view"
+        android:id="@+id/device_public_key_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/widget_margin"/>
