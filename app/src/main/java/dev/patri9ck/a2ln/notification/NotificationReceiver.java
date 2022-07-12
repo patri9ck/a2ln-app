@@ -9,20 +9,19 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
+import dev.patri9ck.a2ln.device.Device;
+import dev.patri9ck.a2ln.util.JsonListConverter;
 
 public class NotificationReceiver extends NotificationListenerService {
 
     private static final String TAG = "A2LNNR";
 
-    private NotificationReceiverBinder notificationReceiverBinder = new NotificationReceiverBinder();
-
-    private NotificationSpamHandler notificationSpamHandler = new NotificationSpamHandler();
+    private final NotificationReceiverBinder notificationReceiverBinder = new NotificationReceiverBinder();
+    private final NotificationSpamHandler notificationSpamHandler = new NotificationSpamHandler();
 
     private boolean initialized;
 
@@ -31,6 +30,10 @@ public class NotificationReceiver extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification statusBarNotification) {
+        if (!initialized) {
+            return;
+        }
+
         Log.v(TAG, "Notification posted");
 
         notificationSpamHandler.cleanUp();
@@ -63,6 +66,10 @@ public class NotificationReceiver extends NotificationListenerService {
     public void onListenerDisconnected() {
         Log.v(TAG, "NotificationReceiver disconnected");
 
+        if (!initialized) {
+            return;
+        }
+
         notificationSender.close();
     }
 
@@ -82,19 +89,31 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        notificationSender = new NotificationSender(new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_addresses_key), new HashSet<>())));
-        disabledApps = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_disabled_apps_key), new HashSet<>()));
+        notificationSender = NotificationSender.fromSharedPreferences(this, sharedPreferences);
 
+        if (notificationSender == null) {
+            return;
+        }
+
+        disabledApps = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
         initialized = true;
     }
 
-    public void setAddresses(List<String> addresses) {
-        notificationSender.setAddresses(addresses);
+    public void setDevices(List<Device> devices) {
+        if (!initialized) {
+            return;
+        }
+
+        notificationSender.setDevices(devices);
     }
 
     public void setDisabledApps(List<String> disabledApps) {
+        if (!initialized) {
+            return;
+        }
+
         this.disabledApps = disabledApps;
     }
 
