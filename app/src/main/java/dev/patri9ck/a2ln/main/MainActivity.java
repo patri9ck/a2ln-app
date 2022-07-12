@@ -1,6 +1,5 @@
 package dev.patri9ck.a2ln.main;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,18 +21,19 @@ import org.zeromq.ZCert;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.ActivityMainBinding;
+import dev.patri9ck.a2ln.databinding.DialogPermissionRequestBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    private ActivityMainBinding activityMainBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
 
-        setContentView(binding.getRoot());
+        setContentView(activityMainBinding.getRoot());
 
         generateKeys();
 
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupActionBarWithNavController(this, navController, new AppBarConfiguration.Builder(R.id.navigation_devices, R.id.navigation_apps, R.id.navigation_settings)
                 .build());
-        NavigationUI.setupWithNavController(binding.mainBottomNavigationView, navController);
+        NavigationUI.setupWithNavController(activityMainBinding.mainBottomNavigationView, navController);
     }
 
     private void requestPermission() {
@@ -76,13 +76,13 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        View permissionRequestDialogView = getLayoutInflater().inflate(R.layout.dialog_permission_request, null);
+        DialogPermissionRequestBinding dialogPermissionRequestBinding = DialogPermissionRequestBinding.inflate(getLayoutInflater());
 
-        ((TextView) permissionRequestDialogView.findViewById(R.id.permission_request_text_view)).setText(R.string.permission_request_dialog_information);
+        dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_information);
 
         new MaterialAlertDialogBuilder(this, R.style.Dialog)
                 .setTitle(R.string.permission_request_dialog_title)
-                .setView(permissionRequestDialogView)
+                .setView(dialogPermissionRequestBinding.getRoot())
                 .setPositiveButton(R.string.grant, (requestPermissionDialog, which) -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)))
                 .setNegativeButton(R.string.deny, null)
                 .show();

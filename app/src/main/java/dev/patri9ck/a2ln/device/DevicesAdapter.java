@@ -1,6 +1,5 @@
 package dev.patri9ck.a2ln.device;
 
-import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -43,7 +42,6 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DeviceVi
         holder.addressTextView.setText(device.getAddress());
 
         holder.addressTextView.setOnClickListener(view -> {
-
             DialogEditPortBinding dialogEditPortBinding = DialogEditPortBinding.inflate(devicesFragment.getLayoutInflater());
 
             new MaterialAlertDialogBuilder(devicesFragment.requireContext(), R.style.Dialog)

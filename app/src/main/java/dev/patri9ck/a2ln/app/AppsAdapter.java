@@ -18,10 +18,10 @@ import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder> {
 
-    private List<String> disabledApps;
-    private BoundNotificationReceiver boundNotificationReceiver;
+    private final List<String> disabledApps;
+    private final BoundNotificationReceiver boundNotificationReceiver;
 
-    private List<App> apps;
+    private final List<App> apps;
 
     public AppsAdapter(List<String> disabledApps, BoundNotificationReceiver boundNotificationReceiver, PackageManager packageManager) {
         this.disabledApps = disabledApps;
@@ -46,7 +46,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
 
         holder.nameTextView.setText(app.getName());
 
-        holder.appCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        holder.appCheckBox.setOnCheckedChangeListener((appCheckBoxView, isChecked) -> {
             app.setEnabled(isChecked);
 
             String packageName = app.getPackageName();
