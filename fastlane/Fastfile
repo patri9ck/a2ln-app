@@ -1,7 +1,12 @@
 default_platform(:android)
 
 platform :android do
-  lane :build do
+  lane :google_play_store do |options|
     gradle(task: "clean bundleRelease")
+
+    upload_to_play_store(
+      json_key: options[:json_key],
+      version_code: options[:version_code]
+    )
   end
 end
