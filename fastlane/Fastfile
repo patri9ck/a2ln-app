@@ -2,11 +2,16 @@ default_platform(:android)
 
 platform :android do
   lane :google_play_store do |options|
-    gradle(task: "clean bundleRelease")
+    aab = options[:aab] || true
+
+    if aab
+      gradle(task: "clean bundleRelease")
+    end
 
     upload_to_play_store(
       json_key: options[:json_key],
-      version_code: options[:version_code]
+      version_code: options[:version_code],
+      skip_upload_aab: !aab
     )
   end
 end
