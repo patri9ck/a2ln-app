@@ -23,10 +23,8 @@
     <string name="devices_title">Devices</string>
     <string name="apps_title">Apps</string>
     <string name="settings_title">Settings</string>
-    <string name="client_ip">Your IP: %s</string>
-    <string name="client_public_key">Your Public Key: %s</string>
-    <string name="device_ip">Device IP: %s</string>
-    <string name="device_public_key">Device Public Key: %s</string>
+    <string name="ip">IP: %s</string>
+    <string name="public_key">Public Key: %s</string>
     <string name="pair_dialog_title">Pair a New Device</string>
     <string name="pair_dialog_information">Alternatively, enter the IP and port of the device
         manually.

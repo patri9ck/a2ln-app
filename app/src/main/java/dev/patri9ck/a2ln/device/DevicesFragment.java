@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -223,8 +222,8 @@ public class DevicesFragment extends Fragment {
 
         DialogPairingBinding dialogPairingBinding = DialogPairingBinding.inflate(getLayoutInflater());
 
-        dialogPairingBinding.clientIpTextView.setText(getString(R.string.client_ip, clientIp));
-        dialogPairingBinding.clientPublicKeyTextView.setText(getString(R.string.client_public_key, clientPublicKey));
+        dialogPairingBinding.clientIpTextView.setText(getString(R.string.ip, clientIp));
+        dialogPairingBinding.clientPublicKeyTextView.setText(getString(R.string.public_key, clientPublicKey));
 
         AlertDialog pairingDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                 .setTitle(R.string.pairing_dialog_title)
@@ -243,8 +242,8 @@ public class DevicesFragment extends Fragment {
 
             DialogPairedBinding dialogPairedBinding = DialogPairedBinding.inflate(getLayoutInflater());
 
-            dialogPairedBinding.deviceIpTextView.setText(getString(R.string.device_ip, deviceIp));
-            dialogPairedBinding.devicePublicKeyTextView.setText(getString(R.string.device_public_key, new String(device.getPublicKey(), StandardCharsets.UTF_8)));
+            dialogPairedBinding.deviceIpTextView.setText(getString(R.string.ip, deviceIp));
+            dialogPairedBinding.devicePublicKeyTextView.setText(getString(R.string.public_key, new String(device.getPublicKey(), StandardCharsets.UTF_8)));
 
             new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                     .setTitle(R.string.paired_dialog_title)
