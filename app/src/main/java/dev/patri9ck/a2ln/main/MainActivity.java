@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
@@ -78,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         DialogPermissionRequestBinding dialogPermissionRequestBinding = DialogPermissionRequestBinding.inflate(getLayoutInflater());
 
-        dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_information);
+        dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_information_notification);
 
         new MaterialAlertDialogBuilder(this, R.style.Dialog)
                 .setTitle(R.string.permission_request_dialog_title)

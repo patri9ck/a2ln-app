@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="?dialogPreferredPadding">
+        <androidx.camera.view.PreviewView android:id="@+id/preview_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/widget_margin"
+            android:layout_weight="1"
+            android:visibility="invisible"/>
+        <Button style="@style/Button"
+            android:id="@+id/cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/widget_margin"
+            android:layout_weight="0"
+            android:text="@string/cancel"
+            android:visibility="invisible"
+            app:icon="@drawable/ic_cancel"/>
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView android:id="@+id/devices_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

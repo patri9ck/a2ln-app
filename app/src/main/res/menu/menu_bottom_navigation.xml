@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/navigation_devices"
-        android:icon="@drawable/ic_computer"
+        android:icon="@drawable/ic_devices"
         android:title="@string/devices_title"/>
     <item android:id="@+id/navigation_apps"
         android:icon="@drawable/ic_apps"
