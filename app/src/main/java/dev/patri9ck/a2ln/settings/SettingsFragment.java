@@ -48,19 +48,14 @@ public class SettingsFragment extends Fragment {
         notificationSender = NotificationSender.fromSharedPreferences(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE));
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        notificationSender.close();
-    }
-
     private void sendNotification() {
         if (notificationSender == null) {
             return;
         }
 
         CompletableFuture.runAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.notification_title),
-                getString(R.string.notification_text)))).thenRun(() -> Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_sent, Snackbar.LENGTH_SHORT).show());
+                getString(R.string.notification_text))));
+
+        Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_sent, Snackbar.LENGTH_SHORT).show();
     }
 }

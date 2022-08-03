@@ -53,7 +53,9 @@ public class DevicesFragment extends Fragment {
     private BoundNotificationReceiver boundNotificationReceiver;
 
     private CameraScanner cameraScanner;
+
     private FragmentDevicesBinding fragmentDevicesBinding;
+
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
         if (granted) {
             startCamera();
@@ -156,13 +158,21 @@ public class DevicesFragment extends Fragment {
     private void startCamera() {
         cameraScanner.startCamera();
 
-        setPreviewViewVisibility(View.VISIBLE);
+        fragmentDevicesBinding.previewView.setVisibility(View.VISIBLE);
+        fragmentDevicesBinding.cancelButton.setVisibility(View.VISIBLE);
+
+        fragmentDevicesBinding.devicesRecyclerView.setVisibility(View.INVISIBLE);
+        fragmentDevicesBinding.pairButton.setVisibility(View.INVISIBLE);
     }
 
     private void stopCamera() {
         cameraScanner.stopCamera();
 
-        setPreviewViewVisibility(View.INVISIBLE);
+        fragmentDevicesBinding.previewView.setVisibility(View.INVISIBLE);
+        fragmentDevicesBinding.cancelButton.setVisibility(View.INVISIBLE);
+
+        fragmentDevicesBinding.devicesRecyclerView.setVisibility(View.VISIBLE);
+        fragmentDevicesBinding.pairButton.setVisibility(View.VISIBLE);
     }
 
     private boolean requestPermission() {
@@ -192,16 +202,6 @@ public class DevicesFragment extends Fragment {
 
     private void launchRequestPermissionLauncher() {
         requestPermissionLauncher.launch(Manifest.permission.CAMERA);
-    }
-
-    private void setPreviewViewVisibility(int visibility) {
-        fragmentDevicesBinding.previewView.setVisibility(visibility);
-        fragmentDevicesBinding.cancelButton.setVisibility(visibility);
-
-        visibility = visibility == View.VISIBLE ? View.INVISIBLE : View.VISIBLE;
-
-        fragmentDevicesBinding.devicesRecyclerView.setVisibility(visibility);
-        fragmentDevicesBinding.pairButton.setVisibility(visibility);
     }
 
     private void startPairing(String deviceIp, int devicePort) {
