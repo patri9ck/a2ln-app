@@ -4,15 +4,17 @@ import android.graphics.drawable.Drawable;
 
 public class App {
 
-    private String name;
-    private String packageName;
-    private Drawable icon;
+    private final String name;
+    private final String packageName;
+    private final Drawable icon;
+
     private boolean enabled;
 
     public App(String name, String packageName, Drawable icon, boolean enabled) {
         this.name = name;
         this.packageName = packageName;
         this.icon = icon;
+
         this.enabled = enabled;
     }
 
