@@ -1,39 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 Patrick Zwick and contributors
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="?dialogPreferredPadding">
-        <Button style="@style/Button"
+        android:layout_marginHorizontal="@dimen/space"
+        android:orientation="vertical">
+        <Button
             android:id="@+id/permission_button"
+            style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/widget_margin"
+            android:layout_marginBottom="@dimen/space"
             android:text="@string/permission"
-            app:icon="@drawable/ic_permission"/>
-        <Button style="@style/Button"
+            app:icon="@drawable/ic_permission" />
+        <Button
             android:id="@+id/notification_button"
+            style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/widget_margin"
+            android:layout_marginBottom="@dimen/space"
             android:text="@string/notification"
-            app:icon="@drawable/ic_notification"/>
-        <Button style="@style/Button"
+            app:icon="@drawable/ic_notification" />
+        <Button
             android:id="@+id/help_button"
+            style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/widget_margin"
             android:text="@string/help"
-            app:icon="@drawable/ic_help"/>
+            app:icon="@drawable/ic_help" />
     </LinearLayout>
-    <TextView style="@style/TextView"
+    <TextView
         android:id="@+id/version_text_view"
+        style="@style/TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="@dimen/widget_margin"
-        android:gravity="center"/>
+        android:layout_margin="@dimen/space"
+        android:gravity="center" />
 </FrameLayout>

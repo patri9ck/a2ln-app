@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2022 Patrick Zwick and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package dev.patri9ck.a2ln.notification;
 
 import android.content.Context;
@@ -13,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.device.Device;
+import dev.patri9ck.a2ln.server.Server;
 import dev.patri9ck.a2ln.util.JsonListConverter;
 
 public class NotificationReceiver extends NotificationListenerService {
@@ -26,6 +42,7 @@ public class NotificationReceiver extends NotificationListenerService {
     private boolean initialized;
 
     private NotificationSender notificationSender;
+
     private List<String> disabledApps;
 
     @Override
@@ -92,15 +109,16 @@ public class NotificationReceiver extends NotificationListenerService {
         }
 
         disabledApps = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
+
         initialized = true;
     }
 
-    public void setDevices(List<Device> devices) {
+    public void setServers(List<Server> servers) {
         if (!initialized) {
             return;
         }
 
-        notificationSender.setDevices(devices);
+        notificationSender.setServers(servers);
     }
 
     public void setDisabledApps(List<String> disabledApps) {
