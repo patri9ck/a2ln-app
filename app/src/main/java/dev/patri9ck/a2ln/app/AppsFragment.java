@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2022 Patrick Zwick and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package dev.patri9ck.a2ln.app;
 
 import android.content.Context;
@@ -33,13 +49,13 @@ public class AppsFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentAppsBinding = FragmentAppsBinding.inflate(inflater, container, false);
-
         sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
         disabledApps = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
 
         boundNotificationReceiver = new BoundNotificationReceiver(notificationReceiver -> notificationReceiver.setDisabledApps(disabledApps), requireContext());
+
+        fragmentAppsBinding = FragmentAppsBinding.inflate(inflater, container, false);
 
         loadAppsRecyclerView();
 
@@ -60,6 +76,13 @@ public class AppsFragment extends Fragment {
         sharedPreferences.edit().putString(getString(R.string.preferences_disabled_apps), JsonListConverter.toJson(disabledApps)).apply();
 
         boundNotificationReceiver.unbind();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        fragmentAppsBinding = null;
     }
 
     private void loadAppsRecyclerView() {

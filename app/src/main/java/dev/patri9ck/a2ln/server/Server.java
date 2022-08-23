@@ -14,12 +14,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
+package dev.patri9ck.a2ln.server;
+
+public class Server {
+
+    private String ip;
+    private int port;
+    private byte[] publicKey;
+
+    public Server() {
+        // Gson
+    }
+
+    public Server(String ip, int port, byte[] publicKey) {
+        this.ip = ip;
+        this.port = port;
+        this.publicKey = publicKey;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public byte[] getPublicKey() {
+        return publicKey;
+    }
+
+    public String getAddress() {
+        return ip + ":" + port;
     }
 }
-rootProject.name = "a2ln"
-include(":app")
