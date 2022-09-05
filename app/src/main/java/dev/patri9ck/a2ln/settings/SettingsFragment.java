@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.FragmentSettingsBinding;
 import dev.patri9ck.a2ln.notification.NotificationSender;
 import dev.patri9ck.a2ln.notification.ParsedNotification;
+import dev.patri9ck.a2ln.util.Util;
 
 public class SettingsFragment extends Fragment {
 
@@ -63,7 +64,7 @@ public class SettingsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        notificationSender = NotificationSender.fromSharedPreferences(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE));
+        notificationSender = NotificationSender.fromSharedPreferences(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE)).orElse(null);
     }
 
     @Override
@@ -76,11 +77,7 @@ public class SettingsFragment extends Fragment {
     private String getInstaller() {
         PackageManager packageManager = requireContext().getPackageManager();
 
-        try {
-            return (String) packageManager.getApplicationLabel(packageManager.getApplicationInfo(packageManager.getInstallerPackageName(requireContext().getPackageName()), 0));
-        } catch (PackageManager.NameNotFoundException exception) {
-            return UNKNOWN_INSTALLER;
-        }
+        return Util.getAppName(packageManager, packageManager.getInstallerPackageName(requireContext().getPackageName())).orElse(UNKNOWN_INSTALLER);
     }
 
     private void sendNotification() {
@@ -88,7 +85,8 @@ public class SettingsFragment extends Fragment {
             return;
         }
 
-        CompletableFuture.runAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.notification_title),
+        CompletableFuture.runAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.app_name),
+                getString(R.string.notification_title),
                 getString(R.string.notification_text))));
 
         Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_sent, Snackbar.LENGTH_SHORT).show();

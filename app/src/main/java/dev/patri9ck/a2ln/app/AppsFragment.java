@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.FragmentAppsBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.util.JsonListConverter;
+import dev.patri9ck.a2ln.util.Util;
 
 public class AppsFragment extends Fragment {
 
@@ -51,7 +51,7 @@ public class AppsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        disabledApps = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
+        disabledApps = Util.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
 
         boundNotificationReceiver = new BoundNotificationReceiver(notificationReceiver -> notificationReceiver.setDisabledApps(disabledApps), requireContext());
 
@@ -73,7 +73,7 @@ public class AppsFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        sharedPreferences.edit().putString(getString(R.string.preferences_disabled_apps), JsonListConverter.toJson(disabledApps)).apply();
+        sharedPreferences.edit().putString(getString(R.string.preferences_disabled_apps), Util.toJson(disabledApps)).apply();
 
         boundNotificationReceiver.unbind();
     }

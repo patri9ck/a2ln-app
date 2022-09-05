@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,12 +27,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.DialogEditServerBinding;
 import dev.patri9ck.a2ln.databinding.ItemServerBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.util.PortParser;
+import dev.patri9ck.a2ln.util.Util;
 
 public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerViewHolder> {
 
@@ -75,14 +76,14 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerVi
                             return;
                         }
 
-                        int serverPort = serversFragment.validateIpAndPort(serverIp, dialogEditServerBinding.editServerPortEditText.getText().toString());
+                        Optional<Integer> serverPort = serversFragment.validateIpAndPort(serverIp, dialogEditServerBinding.editServerPortEditText.getText().toString());
 
-                        if (serverPort == PortParser.INVALID_PORT) {
+                        if (!serverPort.isPresent()) {
                             return;
                         }
 
                         server.setIp(serverIp);
-                        server.setPort(serverPort);
+                        server.setPort(serverPort.get());
 
                         notifyItemChanged(position);
 

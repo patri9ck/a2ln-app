@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package dev.patri9ck.a2ln.notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
@@ -26,11 +27,13 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.server.Server;
-import dev.patri9ck.a2ln.util.JsonListConverter;
+import dev.patri9ck.a2ln.util.Util;
 
 public class NotificationReceiver extends NotificationListenerService {
 
@@ -55,19 +58,25 @@ public class NotificationReceiver extends NotificationListenerService {
 
         notificationSpamHandler.cleanUp();
 
+        PackageManager packageManager = getPackageManager();
+
         String packageName = statusBarNotification.getPackageName();
 
-        ParsedNotification parsedNotification = ParsedNotification.parseNotification(statusBarNotification.getNotification(), this);
+        if (packageManager.getLaunchIntentForPackage(packageName) == null || disabledApps.contains(packageName)) {
+            return;
+        }
 
-        if (getPackageManager().getLaunchIntentForPackage(packageName) == null || disabledApps.contains(packageName) || parsedNotification == null || notificationSpamHandler.isSpammed(parsedNotification)) {
-            Log.v(TAG, "Notification will not be sent (not an actual app/disabled/incomplete/spam)");
+        ParsedNotification parsedNotification = ParsedNotification.parseNotification(Util.getAppName(packageManager, packageName).orElse(""),
+                statusBarNotification.getNotification(),
+                this);
 
+        if (parsedNotification == null || notificationSpamHandler.isSpammed(parsedNotification)) {
             return;
         }
 
         notificationSpamHandler.addParsedNotification(parsedNotification);
 
-        Executors.newSingleThreadExecutor().execute(() -> notificationSender.sendParsedNotification(parsedNotification));
+        CompletableFuture.runAsync(() -> notificationSender.sendParsedNotification(parsedNotification));
 
         Log.v(TAG, "Notification given to NotificationSender");
     }
@@ -102,15 +111,13 @@ public class NotificationReceiver extends NotificationListenerService {
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        notificationSender = NotificationSender.fromSharedPreferences(this, sharedPreferences);
+        NotificationSender.fromSharedPreferences(this, sharedPreferences).ifPresent(notificationSender -> {
+            this.notificationSender = notificationSender;
 
-        if (notificationSender == null) {
-            return;
-        }
+            disabledApps = Util.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
 
-        disabledApps = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
-
-        initialized = true;
+            initialized = true;
+        });
     }
 
     public void setServers(List<Server> servers) {
