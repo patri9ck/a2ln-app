@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.DialogPairBinding;
@@ -52,9 +53,8 @@ import dev.patri9ck.a2ln.databinding.DialogPairedBinding;
 import dev.patri9ck.a2ln.databinding.DialogPairingBinding;
 import dev.patri9ck.a2ln.databinding.FragmentServersBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.util.JsonListConverter;
 import dev.patri9ck.a2ln.util.Pairing;
-import dev.patri9ck.a2ln.util.PortParser;
+import dev.patri9ck.a2ln.util.Util;
 
 public class ServersFragment extends Fragment {
 
@@ -90,23 +90,23 @@ public class ServersFragment extends Fragment {
             return;
         }
 
-        int pairingPort = validateIpAndPort(serverIp, parts[1]);
+        Optional<Integer> pairingPort = validateIpAndPort(serverIp, parts[1]);
 
-        if (pairingPort == PortParser.INVALID_PORT) {
+        if (!pairingPort.isPresent()) {
             return;
         }
 
-        startPairing(serverIp, pairingPort);
+        startPairing(serverIp, pairingPort.get());
     });
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        servers = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_servers), null), Server.class);
+        servers = Util.fromJson(sharedPreferences.getString(getString(R.string.preferences_servers), null), Server.class);
 
         if (servers.isEmpty()) {
-            servers = JsonListConverter.fromJson(sharedPreferences.getString("devices", null), Server.class);
+            servers = Util.fromJson(sharedPreferences.getString("devices", null), Server.class);
         }
 
         boundNotificationReceiver = new BoundNotificationReceiver(notificationReceiver -> notificationReceiver.setServers(servers), requireContext());
@@ -126,15 +126,15 @@ public class ServersFragment extends Fragment {
                             return;
                         }
 
-                        int pairingPort = validateIpAndPort(serverIp, dialogPairBinding.pairingPortEditText.getText().toString());
+                        Optional<Integer> pairingPort = validateIpAndPort(serverIp, dialogPairBinding.pairingPortEditText.getText().toString());
 
-                        if (pairingPort == PortParser.INVALID_PORT) {
+                        if (!pairingPort.isPresent()) {
                             return;
                         }
 
                         pairDialog2.dismiss();
 
-                        startPairing(serverIp, pairingPort);
+                        startPairing(serverIp, pairingPort.get());
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -167,7 +167,7 @@ public class ServersFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        sharedPreferences.edit().putString(getString(R.string.preferences_servers), JsonListConverter.toJson(servers)).apply();
+        sharedPreferences.edit().putString(getString(R.string.preferences_servers), Util.toJson(servers)).apply();
 
         boundNotificationReceiver.unbind();
     }
@@ -179,19 +179,19 @@ public class ServersFragment extends Fragment {
         fragmentServersBinding = null;
     }
 
-    protected int validateIpAndPort(String ip, String port) {
+    protected Optional<Integer> validateIpAndPort(String ip, String port) {
         if (!Patterns.IP_ADDRESS.matcher(ip).matches()) {
             Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_ip), Snackbar.LENGTH_SHORT).show();
 
-            return -1;
+            return Optional.empty();
         }
 
-        int parsedPort = PortParser.parsePort(port);
+        Optional<Integer> parsedPort = dev.patri9ck.a2ln.util.Util.parsePort(port);
 
-        if (parsedPort == PortParser.INVALID_PORT) {
+        if (!parsedPort.isPresent()) {
             Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_port), Snackbar.LENGTH_SHORT).show();
 
-            return PortParser.INVALID_PORT;
+            return Optional.empty();
         }
 
         return parsedPort;

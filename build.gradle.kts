@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.2.1")
+        classpath("com.android.tools.build:gradle:7.2.2")
     }
 }
 
