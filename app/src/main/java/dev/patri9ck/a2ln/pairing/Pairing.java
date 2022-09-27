@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package dev.patri9ck.a2ln.util;
+package dev.patri9ck.a2ln.pairing;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -24,7 +24,9 @@ import org.zeromq.ZMsg;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+import dev.patri9ck.a2ln.log.KeptLog;
 import dev.patri9ck.a2ln.server.Server;
+import dev.patri9ck.a2ln.util.Util;
 
 public class Pairing {
 

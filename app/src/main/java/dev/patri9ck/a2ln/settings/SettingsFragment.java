@@ -38,7 +38,7 @@ import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.FragmentSettingsBinding;
 import dev.patri9ck.a2ln.notification.NotificationSender;
 import dev.patri9ck.a2ln.notification.ParsedNotification;
-import dev.patri9ck.a2ln.util.LogsDialogBuilder;
+import dev.patri9ck.a2ln.log.LogsDialogBuilder;
 import dev.patri9ck.a2ln.util.Util;
 
 public class SettingsFragment extends Fragment {

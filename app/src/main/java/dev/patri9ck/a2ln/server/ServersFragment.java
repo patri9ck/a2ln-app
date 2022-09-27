@@ -17,6 +17,7 @@
 package dev.patri9ck.a2ln.server;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -54,8 +55,8 @@ import dev.patri9ck.a2ln.databinding.DialogPairedBinding;
 import dev.patri9ck.a2ln.databinding.DialogPairingBinding;
 import dev.patri9ck.a2ln.databinding.FragmentServersBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.util.LogsDialogBuilder;
-import dev.patri9ck.a2ln.util.Pairing;
+import dev.patri9ck.a2ln.log.LogsDialogBuilder;
+import dev.patri9ck.a2ln.pairing.Pairing;
 import dev.patri9ck.a2ln.util.Util;
 
 public class ServersFragment extends Fragment {
@@ -114,10 +115,10 @@ public class ServersFragment extends Fragment {
         fragmentServersBinding.pairButton.setOnClickListener(pairButtonView -> {
             DialogPairBinding dialogPairBinding = DialogPairBinding.inflate(inflater);
 
-            AlertDialog pairDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
+            AlertDialog.Builder pairDialogBuilder = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                     .setTitle(R.string.pair_dialog_title)
                     .setView(dialogPairBinding.getRoot())
-                    .setPositiveButton(R.string.pair, (pairDialog2, which) -> {
+                    .setPositiveButton(R.string.pair, (pairDialog, which) -> {
                         String serverIp = dialogPairBinding.serverIpEditText.getText().toString();
 
                         if (validateAlreadyPaired(serverIp)) {
@@ -130,12 +131,13 @@ public class ServersFragment extends Fragment {
                             return;
                         }
 
-                        pairDialog2.dismiss();
+                        pairDialog.dismiss();
 
                         startPairing(serverIp, pairingPort.get());
                     })
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
+                    .setNegativeButton(R.string.cancel, null);
+
+            AlertDialog pairDialog = pairDialogBuilder.show();
 
             dialogPairBinding.qrCodeButton.setOnClickListener(qrCodeButtonView -> {
                 pairDialog.dismiss();

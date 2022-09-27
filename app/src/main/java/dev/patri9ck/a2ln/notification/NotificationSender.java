@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.server.Server;
-import dev.patri9ck.a2ln.util.KeptLog;
+import dev.patri9ck.a2ln.log.KeptLog;
 import dev.patri9ck.a2ln.util.Util;
 import zmq.util.Z85;
 
@@ -122,6 +122,7 @@ public class NotificationSender {
                 keptLog.log("Ran out of time");
             }
         } catch (InterruptedException ignored) {
+            // Ignored
         }
 
         return keptLog;

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.patri9ck.a2ln.util;
+package dev.patri9ck.a2ln.log;
 
 import android.content.Context;
 import android.view.LayoutInflater;
