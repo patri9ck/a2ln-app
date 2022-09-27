@@ -28,9 +28,12 @@ import org.zeromq.ZMsg;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.server.Server;
+import dev.patri9ck.a2ln.util.KeptLog;
 import dev.patri9ck.a2ln.util.Util;
 import zmq.util.Z85;
 
@@ -44,10 +47,10 @@ public class NotificationSender {
     private final byte[] clientSecretKey;
     private List<Server> servers;
 
-    public NotificationSender(List<Server> servers, byte[] clientPublicKey, byte[] clientSecretKey) {
-        this.servers = servers;
+    public NotificationSender(byte[] clientPublicKey, byte[] clientSecretKey, List<Server> servers) {
         this.clientPublicKey = clientPublicKey;
         this.clientSecretKey = clientSecretKey;
+        this.servers = servers;
     }
 
     public static Optional<NotificationSender> fromSharedPreferences(Context context, SharedPreferences sharedPreferences) {
@@ -60,23 +63,25 @@ public class NotificationSender {
             return Optional.empty();
         }
 
-        return Optional.of(new NotificationSender(Util.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_servers), null), Server.class),
-                Z85.decode(clientPublicKey),
-                Z85.decode(clientSecretKey)));
+        return Optional.of(new NotificationSender(Z85.decode(clientPublicKey),
+                Z85.decode(clientSecretKey),
+                Util.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_servers), null), Server.class)));
     }
 
     public synchronized void setServers(List<Server> servers) {
         this.servers = servers;
     }
 
-    public synchronized void sendParsedNotification(ParsedNotification parsedNotification) {
-        if (servers.isEmpty()) {
-            Log.v(TAG, "No servers given, will not start clients");
+    public synchronized KeptLog sendParsedNotification(ParsedNotification parsedNotification) {
+        KeptLog keptLog = new KeptLog(TAG);
 
-            return;
+        if (servers.isEmpty()) {
+            keptLog.log("No servers given, will not start clients");
+
+            return keptLog;
         }
 
-        Log.v(TAG, "Trying to send notification to clients");
+        keptLog.log("Trying to send notification to clients");
 
         ZMsg zMsg = new ZMsg();
 
@@ -85,6 +90,8 @@ public class NotificationSender {
         zMsg.add(parsedNotification.getText());
 
         parsedNotification.getIcon().ifPresent(zMsg::add);
+
+        CountDownLatch countDownLatch = new CountDownLatch(servers.size());
 
         try (ZContext zContext = new ZContext()) {
             servers.forEach(server -> CompletableFuture.runAsync(() -> {
@@ -95,15 +102,28 @@ public class NotificationSender {
                     client.setCurveSecretKey(clientSecretKey);
                     client.setCurveServerKey(server.getPublicKey());
 
-                    if (client.connect("tcp://" + server.getAddress()) && zMsg.send(client, false)) {
-                        Log.v(TAG, "Successfully sent notification to " + client.getLastEndpoint());
+                    String address = server.getAddress();
 
-                        return;
+                    if (!client.connect("tcp://" + address)) {
+                        keptLog.log("Failed to connect to " + address);
+                    } else if (!zMsg.send(client, false)) {
+                        keptLog.log("Failed to send notification to " + address);
+                    } else {
+                        keptLog.log("Successfully sent notification to " + client.getLastEndpoint());
                     }
 
-                    Log.v(TAG, "Failed to send notification to " + client.getLastEndpoint());
+                    countDownLatch.countDown();
                 }
             }));
         }
+
+        try {
+            if (!countDownLatch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                keptLog.log("Ran out of time");
+            }
+        } catch (InterruptedException ignored) {
+        }
+
+        return keptLog;
     }
 }

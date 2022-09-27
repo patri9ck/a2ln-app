@@ -16,8 +16,6 @@
  */
 package dev.patri9ck.a2ln.util;
 
-import android.util.Log;
-
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
@@ -25,7 +23,6 @@ import org.zeromq.ZMsg;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.server.Server;
 
@@ -35,64 +32,64 @@ public class Pairing {
 
     private static final int TIMEOUT_SECONDS = 20;
 
-    private final String deviceIp;
+    private final String serverIp;
     private final int pairingPort;
     private final String clientIp;
     private final String clientPublicKey;
 
-    public Pairing(String deviceIp, int pairingPort, String clientIp, String clientPublicKey) {
-        this.deviceIp = deviceIp;
+    public Pairing(String serverIp, int pairingPort, String clientIp, String clientPublicKey) {
+        this.serverIp = serverIp;
         this.pairingPort = pairingPort;
         this.clientIp = clientIp;
         this.clientPublicKey = clientPublicKey;
     }
 
-    public CompletableFuture<Server> pair() {
-        return CompletableFuture.supplyAsync(() -> {
-            String address = deviceIp + ":" + pairingPort;
+    public PairingResult pair() {
+        KeptLog keptLog = new KeptLog(TAG);
 
-            Log.v(TAG, "Trying to pair with " + address);
+        String address = serverIp + ":" + pairingPort;
 
-            try (ZContext zContext = new ZContext(); ZMQ.Socket client = zContext.createSocket(SocketType.REQ)) {
-                client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
-                client.setReceiveTimeOut(TIMEOUT_SECONDS * 1000);
-                client.setImmediate(false);
+        keptLog.log("Trying to pair with " + address);
 
-                if (!client.connect("tcp://" + address)) {
-                    Log.v(TAG, "Failed to connect to " + address);
+        try (ZContext zContext = new ZContext(); ZMQ.Socket client = zContext.createSocket(SocketType.REQ)) {
+            client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
+            client.setReceiveTimeOut(TIMEOUT_SECONDS * 1000);
+            client.setImmediate(false);
 
-                    return null;
-                }
+            if (!client.connect("tcp://" + address)) {
+                keptLog.log("Failed to connect to " + address);
 
-                ZMsg zMsg = new ZMsg();
-
-                zMsg.add(clientIp);
-                zMsg.add(clientPublicKey);
-
-                if (!zMsg.send(client)) {
-                    Log.v(TAG, "Failed to send own IP and public key to " + address);
-
-                    return null;
-                }
-
-                zMsg = ZMsg.recvMsg(client);
-
-                if (zMsg == null || zMsg.size() != 2) {
-                    Log.v(TAG, "Failed to receive port and public key from " + address);
-
-                    return null;
-                }
-
-                Optional<Integer> devicePort = Util.parsePort(zMsg.pop().getString(StandardCharsets.UTF_8));
-
-                if (!devicePort.isPresent()) {
-                    Log.v(TAG, "Received port is not valid");
-
-                    return null;
-                }
-
-                return new Server(deviceIp, devicePort.get(), zMsg.pop().getData());
+                return new PairingResult(keptLog);
             }
-        });
+
+            ZMsg zMsg = new ZMsg();
+
+            zMsg.add(clientIp);
+            zMsg.add(clientPublicKey);
+
+            if (!zMsg.send(client)) {
+                keptLog.log("Failed to send own IP and public key to " + address);
+
+                return new PairingResult(keptLog);
+            }
+
+            zMsg = ZMsg.recvMsg(client);
+
+            if (zMsg == null || zMsg.size() != 2) {
+                keptLog.log("Failed to receive port and public key from " + address);
+
+                return new PairingResult(keptLog);
+            }
+
+            Optional<Integer> serverPort = Util.parsePort(zMsg.pop().getString(StandardCharsets.UTF_8));
+
+            if (!serverPort.isPresent()) {
+                keptLog.log("Received port is not valid");
+
+                return new PairingResult(keptLog);
+            }
+
+            return new PairingResult(keptLog, new Server(serverIp, serverPort.get(), zMsg.pop().getData()));
+        }
     }
 }

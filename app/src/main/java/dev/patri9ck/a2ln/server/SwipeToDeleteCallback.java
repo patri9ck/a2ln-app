@@ -61,7 +61,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         boundNotificationReceiver.updateNotificationReceiver();
 
         Snackbar.make(rootView, R.string.removed_server, Snackbar.LENGTH_LONG)
-                .setAction(R.string.removed_server_undo, buttonView -> {
+                .setAction(R.string.removed_server_undo, view -> {
                     servers.add(position, server);
                     serversAdapter.notifyItemInserted(position);
 

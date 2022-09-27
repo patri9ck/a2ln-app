@@ -46,6 +46,7 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.DialogPairBinding;
@@ -53,6 +54,7 @@ import dev.patri9ck.a2ln.databinding.DialogPairedBinding;
 import dev.patri9ck.a2ln.databinding.DialogPairingBinding;
 import dev.patri9ck.a2ln.databinding.FragmentServersBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
+import dev.patri9ck.a2ln.util.LogsDialogBuilder;
 import dev.patri9ck.a2ln.util.Pairing;
 import dev.patri9ck.a2ln.util.Util;
 
@@ -104,10 +106,6 @@ public class ServersFragment extends Fragment {
         sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
         servers = Util.fromJson(sharedPreferences.getString(getString(R.string.preferences_servers), null), Server.class);
-
-        if (servers.isEmpty()) {
-            servers = Util.fromJson(sharedPreferences.getString("devices", null), Server.class);
-        }
 
         boundNotificationReceiver = new BoundNotificationReceiver(notificationReceiver -> notificationReceiver.setServers(servers), requireContext());
 
@@ -186,12 +184,10 @@ public class ServersFragment extends Fragment {
             return Optional.empty();
         }
 
-        Optional<Integer> parsedPort = dev.patri9ck.a2ln.util.Util.parsePort(port);
+        Optional<Integer> parsedPort = Util.parsePort(port);
 
         if (!parsedPort.isPresent()) {
             Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_port), Snackbar.LENGTH_SHORT).show();
-
-            return Optional.empty();
         }
 
         return parsedPort;
@@ -237,11 +233,15 @@ public class ServersFragment extends Fragment {
                 .setCancelable(false)
                 .show();
 
-        new Pairing(serverIp, pairingPort, ownIp, ownPublicKey).pair().thenAccept(server -> requireActivity().runOnUiThread(() -> {
+        CompletableFuture.supplyAsync(() -> new Pairing(serverIp, pairingPort, ownIp, ownPublicKey).pair()).thenAccept(pairingResult -> requireActivity().runOnUiThread(() -> {
             pairingDialog.dismiss();
 
+            Server server = pairingResult.getServer().orElse(null);
+
             if (server == null) {
-                Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.view_logs, view -> new LogsDialogBuilder(requireContext(), pairingResult.getKeptLog(), getLayoutInflater()).show())
+                        .show();
 
                 return;
             }
