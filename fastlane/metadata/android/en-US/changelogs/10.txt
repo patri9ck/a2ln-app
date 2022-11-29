@@ -1,0 +1,2 @@
+- Fixed app crashes
+- Added progress indicator when sending a test notification
