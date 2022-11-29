@@ -69,10 +69,10 @@ android {
 
 dependencies {
     implementation("com.google.code.gson:gson:2.9.1")
-    implementation("com.google.android.material:material:1.6.1")
+    implementation("com.google.android.material:material:1.7.0")
     implementation("org.zeromq:jeromq:0.5.2")
     implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("androidx.navigation:navigation-fragment:2.5.2")
-    implementation("androidx.navigation:navigation-ui:2.5.2")
+    implementation("androidx.navigation:navigation-fragment:2.5.3")
+    implementation("androidx.navigation:navigation-ui:2.5.3")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }
