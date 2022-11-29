@@ -28,6 +28,7 @@ import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.server.Server;
@@ -52,15 +53,23 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        Log.v(TAG, "Notification posted");
-
         notificationSpamHandler.cleanUp();
 
         PackageManager packageManager = getPackageManager();
 
         String packageName = statusBarNotification.getPackageName();
 
-        if (packageManager.getLaunchIntentForPackage(packageName) == null || disabledApps.contains(packageName)) {
+        Log.v(TAG, "Notification posted (" + packageName + ")");
+
+        if (packageManager.getLaunchIntentForPackage(packageName) == null) {
+            Log.v(TAG, "Not from an actual app");
+
+            return;
+        }
+
+        if (disabledApps.contains(packageName)) {
+            Log.v(TAG, "App is disabled");
+
             return;
         }
 
@@ -68,7 +77,15 @@ public class NotificationReceiver extends NotificationListenerService {
                 statusBarNotification.getNotification(),
                 this);
 
-        if (parsedNotification == null || notificationSpamHandler.isSpammed(parsedNotification)) {
+        if (parsedNotification == null) {
+            Log.v(TAG, "Notification cannot be parsed");
+
+            return;
+        }
+
+        if (notificationSpamHandler.isSpammed(parsedNotification)) {
+            Log.v(TAG, "Notification is spammed");
+
             return;
         }
 
