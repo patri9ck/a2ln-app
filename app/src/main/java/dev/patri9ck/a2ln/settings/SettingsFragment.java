@@ -100,7 +100,13 @@ public class SettingsFragment extends Fragment {
                     sending = false;
 
                     Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_sent, Snackbar.LENGTH_SHORT)
-                            .setAction(R.string.view_logs, view -> new LogsDialogBuilder(requireContext(), keptLog, getLayoutInflater()).show())
+                            .setAction(R.string.view_logs, view -> {
+                                if (!isVisible()) {
+                                    return;
+                                }
+
+                                new LogsDialogBuilder(keptLog, getLayoutInflater()).show();
+                            })
                             .show();
                 }));
     }

@@ -16,7 +16,6 @@
  */
 package dev.patri9ck.a2ln.log;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -26,8 +25,8 @@ import dev.patri9ck.a2ln.databinding.DialogLogsBinding;
 
 public class LogsDialogBuilder extends MaterialAlertDialogBuilder {
 
-    public LogsDialogBuilder(Context context, KeptLog keptLog, LayoutInflater layoutInflater) {
-        super(context, R.style.Dialog);
+    public LogsDialogBuilder(KeptLog keptLog, LayoutInflater layoutInflater) {
+        super(layoutInflater.getContext(), R.style.Dialog);
 
         DialogLogsBinding dialogLogsBinding = DialogLogsBinding.inflate(layoutInflater);
 
