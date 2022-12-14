@@ -18,6 +18,7 @@ package dev.patri9ck.a2ln.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -94,6 +96,7 @@ public class AppsFragment extends Fragment {
                         .stream()
                         .filter(applicationInfo -> packageManager.getLaunchIntentForPackage(applicationInfo.packageName) != null)
                         .map(applicationInfo -> new App(applicationInfo.loadLabel(packageManager).toString(), applicationInfo.packageName, applicationInfo.loadIcon(packageManager), !disabledApps.contains(applicationInfo.packageName)))
+                        .sorted(Comparator.comparing(App::isEnabled).thenComparing(App::getName))
                         .collect(Collectors.toList()))
                 .thenAccept(apps -> requireActivity().runOnUiThread(() -> {
                     fragmentAppsBinding.loadingProgressIndicator.setVisibility(View.INVISIBLE);
