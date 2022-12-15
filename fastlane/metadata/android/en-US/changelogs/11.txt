@@ -1,0 +1,2 @@
+- Fixed app crashes when logs are viewed in another fragment
+- Sorted app list
