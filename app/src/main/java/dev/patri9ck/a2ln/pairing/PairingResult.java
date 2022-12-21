@@ -24,10 +24,10 @@ import dev.patri9ck.a2ln.server.Server;
 public class PairingResult {
 
     private final KeptLog keptLog;
-    private Server server;
+    private final Server server;
 
     public PairingResult(KeptLog keptLog) {
-        this.keptLog = keptLog;
+        this(keptLog, null);
     }
 
     public PairingResult(KeptLog keptLog, Server server) {

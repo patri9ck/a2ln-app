@@ -36,14 +36,14 @@ public class Pairing {
 
     private final String serverIp;
     private final int pairingPort;
-    private final String clientIp;
-    private final String clientPublicKey;
+    private final String ownIp;
+    private final String ownPublicKey;
 
-    public Pairing(String serverIp, int pairingPort, String clientIp, String clientPublicKey) {
+    public Pairing(String serverIp, int pairingPort, String ownIp, String ownPublicKey) {
         this.serverIp = serverIp;
         this.pairingPort = pairingPort;
-        this.clientIp = clientIp;
-        this.clientPublicKey = clientPublicKey;
+        this.ownIp = ownIp;
+        this.ownPublicKey = ownPublicKey;
     }
 
     public PairingResult pair() {
@@ -66,8 +66,8 @@ public class Pairing {
 
             ZMsg zMsg = new ZMsg();
 
-            zMsg.add(clientIp);
-            zMsg.add(clientPublicKey);
+            zMsg.add(ownIp);
+            zMsg.add(ownPublicKey);
 
             if (!zMsg.send(client)) {
                 keptLog.log("Failed to send own IP and public key to " + address);
