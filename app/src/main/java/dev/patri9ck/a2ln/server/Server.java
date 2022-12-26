@@ -16,20 +16,28 @@
  */
 package dev.patri9ck.a2ln.server;
 
+import java.util.Optional;
+
 public class Server {
 
     private String ip;
     private int port;
     private byte[] publicKey;
+    private String alias;
 
     public Server() {
         // Gson
     }
 
-    public Server(String ip, int port, byte[] publicKey) {
+    public Server(String ip, int port, byte[] publicKey, String alias) {
         this.ip = ip;
         this.port = port;
         this.publicKey = publicKey;
+        this.alias = alias;
+    }
+
+    public Server(String ip, int port, byte[] publicKey) {
+        this(ip, port, publicKey, null);
     }
 
     public String getIp() {
@@ -50,6 +58,14 @@ public class Server {
 
     public byte[] getPublicKey() {
         return publicKey;
+    }
+
+    public Optional<String> getAlias() {
+        return Optional.ofNullable(alias);
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public String getAddress() {

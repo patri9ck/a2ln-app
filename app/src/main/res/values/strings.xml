@@ -18,13 +18,13 @@
     <string name="app_name">Android 2 Linux Notifications</string>
     <string name="ip">IP</string>
     <string name="port">Port</string>
+    <string name="alias">Alias</string>
     <string name="public_key">Public Key</string>
     <string name="pair">Pair</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="grant">Grant</string>
     <string name="deny">Deny</string>
-    <string name="already_paired">Already paired</string>
     <string name="invalid_ip">Invalid IP</string>
     <string name="invalid_port">Invalid Port</string>
     <string name="invalid_qr_code">Invalid QR Code</string>
