@@ -1,0 +1,2 @@
+- Drag and drop server order swapping
+- Toggling of servers
