@@ -28,18 +28,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import dev.patri9ck.a2ln.databinding.ItemAppBinding;
-import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
+import dev.patri9ck.a2ln.util.Storage;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder> {
 
     private final List<String> disabledApps;
-    private final BoundNotificationReceiver boundNotificationReceiver;
+    private final Storage storage;
     private final List<App> apps;
 
-    public AppsAdapter(List<String> disabledApps, List<App> apps, BoundNotificationReceiver boundNotificationReceiver) {
+    public AppsAdapter(List<String> disabledApps, List<App> apps, Storage storage) {
         this.disabledApps = disabledApps;
         this.apps = apps;
-        this.boundNotificationReceiver = boundNotificationReceiver;
+        this.storage = storage;
     }
 
     @NonNull
@@ -63,7 +63,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
                 disabledApps.add(packageName);
             }
 
-            boundNotificationReceiver.updateNotificationReceiver();
+            storage.saveDisabledApps(disabledApps);
         });
 
         holder.appCheckBox.setChecked(app.isEnabled());

@@ -16,12 +16,14 @@
  */
 package dev.patri9ck.a2ln.settings;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.common.primitives.Ints;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -39,34 +42,103 @@ import dev.patri9ck.a2ln.databinding.FragmentSettingsBinding;
 import dev.patri9ck.a2ln.log.LogsDialogBuilder;
 import dev.patri9ck.a2ln.notification.NotificationSender;
 import dev.patri9ck.a2ln.notification.ParsedNotification;
-import dev.patri9ck.a2ln.util.Util;
+import dev.patri9ck.a2ln.util.Storage;
 
 public class SettingsFragment extends Fragment {
 
-    private static final String UNKNOWN_INSTALLER = "Unknown Installer/APK";
+    private Storage storage;
 
-    private NotificationSender notificationSender;
     private boolean sending;
 
     private FragmentSettingsBinding fragmentSettingsBinding;
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        storage = new Storage(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE));
+
         fragmentSettingsBinding = FragmentSettingsBinding.inflate(inflater, container, false);
 
         fragmentSettingsBinding.permissionButton.setOnClickListener(permissionButtonView -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
-        fragmentSettingsBinding.helpButton.setOnClickListener(helpButtonView -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.help_url)))));
         fragmentSettingsBinding.notificationButton.setOnClickListener(notificationButtonView -> sendNotification());
-        fragmentSettingsBinding.versionTextView.setText(getString(R.string.version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, getInstaller()));
+
+        storage.loadSimilarity().ifPresent(similarity -> fragmentSettingsBinding.similarityEditText.setText(Integer.toString((int) (similarity * 100F))));
+        storage.loadDuration().ifPresent(duration -> fragmentSettingsBinding.similarityEditText.setText(Integer.toString(duration)));
+
+        fragmentSettingsBinding.similarityEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+                // Ignored
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+                // Ignored
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String rawSimilarity = editable.toString();
+
+                if (rawSimilarity.trim().isEmpty()) {
+                    storage.removeSimilarity();
+
+                    return;
+                }
+
+                Integer similarity = Ints.tryParse(rawSimilarity);
+
+                if (similarity == null || similarity < 0F || similarity > 100F) {
+                    fragmentSettingsBinding.similarityEditText.getText().clear();
+
+                    return;
+                }
+
+                storage.saveSimilarity(similarity / 100F);
+            }
+        });
+
+        fragmentSettingsBinding.durationEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+                // Ignored
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+                // Ignored
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String rawDuration = editable.toString();
+
+                if (rawDuration.trim().isEmpty()) {
+                    storage.removeDuration();
+
+                    return;
+                }
+
+                Integer duration = Ints.tryParse(rawDuration);
+
+                if (duration == null || duration < 0) {
+                    fragmentSettingsBinding.durationEditText.getText().clear();
+
+                    return;
+                }
+
+                storage.saveDuration(duration);
+            }
+        });
+
+        fragmentSettingsBinding.displayCheckBox.setChecked(storage.loadDisplay());
+        fragmentSettingsBinding.displayCheckBox.setOnCheckedChangeListener((displayCheckBoxView, isChecked) -> storage.saveDisplay(isChecked));
+
+        fragmentSettingsBinding.versionTextView.setText(getString(R.string.version, BuildConfig.VERSION_NAME));
+
+        fragmentSettingsBinding.helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         return fragmentSettingsBinding.getRoot();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        notificationSender = NotificationSender.fromSharedPreferences(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE)).orElse(null);
     }
 
     @Override
@@ -76,14 +148,8 @@ public class SettingsFragment extends Fragment {
         fragmentSettingsBinding = null;
     }
 
-    private String getInstaller() {
-        PackageManager packageManager = requireContext().getPackageManager();
-
-        return Util.getAppName(packageManager, packageManager.getInstallerPackageName(requireContext().getPackageName())).orElse(UNKNOWN_INSTALLER);
-    }
-
     private void sendNotification() {
-        if (notificationSender == null || sending) {
+        if (sending) {
             return;
         }
 
@@ -91,23 +157,19 @@ public class SettingsFragment extends Fragment {
 
         sending = true;
 
-        CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.app_name),
-                        getString(R.string.notification_title),
-                        getString(R.string.notification_text))))
-                .thenAccept(keptLog -> requireActivity().runOnUiThread(() -> {
-                    fragmentSettingsBinding.sendingProgressIndicator.setVisibility(View.INVISIBLE);
+        NotificationSender.fromStorage(requireContext(), storage).ifPresent(notificationSender -> CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.app_name),
+                getString(R.string.notification_title),
+                getString(R.string.notification_text)))).thenAccept(keptLog -> requireActivity().runOnUiThread(() -> {
+            fragmentSettingsBinding.sendingProgressIndicator.setVisibility(View.INVISIBLE);
 
-                    sending = false;
+            sending = false;
 
-                    Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_sent, Snackbar.LENGTH_SHORT)
-                            .setAction(R.string.view_logs, view -> {
-                                if (!isVisible()) {
-                                    return;
-                                }
-
-                                new LogsDialogBuilder(keptLog, getLayoutInflater()).show();
-                            })
-                            .show();
-                }));
+            Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_sent, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.view_logs, view -> {
+                        if (isVisible()) {
+                            new LogsDialogBuilder(keptLog, getLayoutInflater()).show();
+                        }
+                    }).show();
+        })));
     }
 }

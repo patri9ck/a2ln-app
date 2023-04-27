@@ -18,8 +18,11 @@ package dev.patri9ck.a2ln.util;
 
 import android.content.pm.PackageManager;
 
+import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.apache.commons.text.similarity.JaroWinklerDistance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +33,11 @@ public class Util {
     private static final int MINIMUM_PORT = 1;
     private static final int MAXIMUM_PORT = 65535;
 
+    private static final JaroWinklerDistance JARO_WINKLER_DISTANCE = new JaroWinklerDistance();
     private static final Gson GSON = new Gson();
 
     private Util() {
+        // Singleton
     }
 
     public static String toJson(List<?> data) {
@@ -47,24 +52,25 @@ public class Util {
         return GSON.fromJson(json, TypeToken.getParameterized(ArrayList.class, type).getType());
     }
 
-    public static Optional<Integer> parsePort(String port) {
-        try {
-            int parsedPort = Integer.parseInt(port);
+    public static Optional<Integer> parsePort(String rawPort) {
+        Integer port = Ints.tryParse(rawPort);
 
-            if (parsedPort >= MINIMUM_PORT && parsedPort <= MAXIMUM_PORT) {
-                return Optional.of(parsedPort);
-            }
-        } catch (NumberFormatException ignored) {
+        if (port == null || port < MINIMUM_PORT || port > MAXIMUM_PORT) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        return Optional.of(port);
     }
 
     public static Optional<String> getAppName(PackageManager packageManager, String packageName) {
         try {
             return Optional.of((String) packageManager.getApplicationLabel(packageManager.getApplicationInfo(packageName, 0)));
-        } catch (PackageManager.NameNotFoundException exception) {
+        } catch (PackageManager.NameNotFoundException ignored) {
             return Optional.empty();
         }
+    }
+
+    public static float getSimilarity(String first, String second) {
+        return JARO_WINKLER_DISTANCE.apply(first, second).floatValue();
     }
 }

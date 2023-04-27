@@ -28,22 +28,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
-import java.util.Optional;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.DialogEditServerBinding;
 import dev.patri9ck.a2ln.databinding.ItemServerBinding;
-import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
+import dev.patri9ck.a2ln.util.Storage;
 
 public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerViewHolder> {
 
     private final ServersFragment serversFragment;
-    private final BoundNotificationReceiver boundNotificationReceiver;
+    private final Storage storage;
     private final List<Server> servers;
 
-    public ServersAdapter(ServersFragment serversFragment, BoundNotificationReceiver boundNotificationReceiver, List<Server> servers) {
+    public ServersAdapter(ServersFragment serversFragment, Storage storage, List<Server> servers) {
         this.serversFragment = serversFragment;
-        this.boundNotificationReceiver = boundNotificationReceiver;
+        this.storage = storage;
         this.servers = servers;
     }
 
@@ -72,34 +71,29 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerVi
                     .setTitle(R.string.edit_server_dialog_title)
                     .setView(dialogEditServerBinding.getRoot())
                     .setPositiveButton(R.string.apply, (editPortDialog, which) -> {
-                        String serverIp = dialogEditServerBinding.editServerIpEditText.getText().toString();
+                        String ip = dialogEditServerBinding.editServerIpEditText.getText().toString();
 
-                        if (!serversFragment.notifyValidIp(serverIp) || (!server.getIp().equals(serverIp) && serversFragment.isAlreadyPaired(serverIp))) {
-                            return;
-                        }
+                        serversFragment.validate(ip, dialogEditServerBinding.editServerPortEditText.getText().toString(), !ip.equals(server.getIp())).ifPresent(destination -> {
+                            String alias = dialogEditServerBinding.editServerAliasEditText.getText().toString();
 
-                        Optional<Integer> serverPort = serversFragment.notifyValidPort(dialogEditServerBinding.editServerPortEditText.getText().toString());
+                            server.setAlias(alias.trim().isEmpty() ? null : alias);
+                            server.setIp(destination.getIp());
+                            server.setPort(destination.getPort());
 
-                        if (!serverPort.isPresent()) {
-                            return;
-                        }
+                            notifyItemChanged(position);
 
-                        server.setIp(serverIp);
-                        server.setPort(serverPort.get());
-
-                        String alias = dialogEditServerBinding.editServerAliasEditText.getText().toString();
-
-                        server.setAlias(alias.trim().isEmpty() ? null : alias);
-
-                        notifyItemChanged(position);
-
-                        boundNotificationReceiver.updateNotificationReceiver();
+                            storage.saveServers(servers);
+                        });
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
         });
 
-        holder.serverCheckBox.setOnCheckedChangeListener((serverCheckBoxView, isChecked) -> server.setEnabled(isChecked));
+        holder.serverCheckBox.setOnCheckedChangeListener((serverCheckBoxView, isChecked) -> {
+            server.setEnabled(isChecked);
+
+            storage.saveServers(servers);
+        });
 
         holder.serverCheckBox.setChecked(server.isEnabled());
     }

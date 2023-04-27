@@ -57,15 +57,15 @@ public class MainActivity extends AppCompatActivity {
     private void generateKeys() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        if (sharedPreferences.contains(getString(R.string.preferences_own_public_key)) && sharedPreferences.contains(getString(R.string.preferences_own_secret_key))) {
+        if (sharedPreferences.contains(getString(R.string.preferences_public_key)) && sharedPreferences.contains(getString(R.string.preferences_secret_key))) {
             return;
         }
 
         ZCert zCert = new ZCert();
 
         sharedPreferences.edit()
-                .putString(getString(R.string.preferences_own_public_key), zCert.getPublicKeyAsZ85())
-                .putString(getString(R.string.preferences_own_secret_key), zCert.getSecretKeyAsZ85())
+                .putString(getString(R.string.preferences_public_key), zCert.getPublicKeyAsZ85())
+                .putString(getString(R.string.preferences_secret_key), zCert.getSecretKeyAsZ85())
                 .apply();
     }
 

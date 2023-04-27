@@ -18,10 +18,8 @@ package dev.patri9ck.a2ln.server;
 
 import java.util.Optional;
 
-public class Server {
+public class Server extends Destination {
 
-    private String ip;
-    private int port;
     private byte[] publicKey;
     private String alias;
     private boolean enabled;
@@ -31,8 +29,8 @@ public class Server {
     }
 
     public Server(String ip, int port, byte[] publicKey, String alias, boolean enabled) {
-        this.ip = ip;
-        this.port = port;
+        super(ip, port);
+
         this.publicKey = publicKey;
         this.alias = alias;
         this.enabled = enabled;
@@ -40,22 +38,6 @@ public class Server {
 
     public Server(String ip, int port, byte[] publicKey) {
         this(ip, port, publicKey, null, true);
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
     }
 
     public byte[] getPublicKey() {
@@ -76,9 +58,5 @@ public class Server {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public String getAddress() {
-        return ip + ":" + port;
     }
 }

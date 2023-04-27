@@ -78,4 +78,6 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.5.3")
     implementation("androidx.navigation:navigation-ui:2.5.3")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("org.apache.commons:commons-text:1.10.0")
+    implementation("com.google.guava:guava:31.1-android")
 }

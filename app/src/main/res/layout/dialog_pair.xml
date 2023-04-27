@@ -36,7 +36,7 @@
         android:layout_marginBottom="@dimen/dialog_space"
         android:hint="@string/ip"
         android:importantForAutofill="no"
-        android:inputType="text"/>
+        android:inputType="text" />
     <EditText
         android:id="@+id/pairing_port_edit_text"
         style="@style/EditText"

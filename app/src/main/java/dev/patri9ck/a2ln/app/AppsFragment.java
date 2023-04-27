@@ -17,8 +17,6 @@
 package dev.patri9ck.a2ln.app;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,48 +34,27 @@ import java.util.stream.Collectors;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.FragmentAppsBinding;
-import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.util.Util;
+import dev.patri9ck.a2ln.util.Storage;
 
 public class AppsFragment extends Fragment {
 
-    private SharedPreferences sharedPreferences;
+    private Storage storage;
 
     private List<String> disabledApps;
-
-    private BoundNotificationReceiver boundNotificationReceiver;
 
     private FragmentAppsBinding fragmentAppsBinding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+        storage = new Storage(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE));
 
-        disabledApps = Util.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
-
-        boundNotificationReceiver = new BoundNotificationReceiver(notificationReceiver -> notificationReceiver.setDisabledApps(disabledApps), requireContext());
+        disabledApps = storage.loadDisabledApps();
 
         fragmentAppsBinding = FragmentAppsBinding.inflate(inflater, container, false);
 
         loadAppsRecyclerView();
 
         return fragmentAppsBinding.getRoot();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        boundNotificationReceiver.bind();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        sharedPreferences.edit().putString(getString(R.string.preferences_disabled_apps), Util.toJson(disabledApps)).apply();
-
-        boundNotificationReceiver.unbind();
     }
 
     @Override
@@ -101,7 +78,7 @@ public class AppsFragment extends Fragment {
                 .thenAccept(apps -> requireActivity().runOnUiThread(() -> {
                     fragmentAppsBinding.loadingProgressIndicator.setVisibility(View.INVISIBLE);
 
-                    fragmentAppsBinding.appsRecyclerView.setAdapter(new AppsAdapter(disabledApps, apps, boundNotificationReceiver));
+                    fragmentAppsBinding.appsRecyclerView.setAdapter(new AppsAdapter(disabledApps, apps, storage));
                     fragmentAppsBinding.appsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
                 }));
     }

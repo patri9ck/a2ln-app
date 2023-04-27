@@ -15,7 +15,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <resources>
-    <string name="app_name">Android 2 Linux Notifications</string>
     <string name="ip">IP</string>
     <string name="port">Port</string>
     <string name="alias">Alias</string>
@@ -25,6 +24,7 @@
     <string name="cancel">Cancel</string>
     <string name="grant">Grant</string>
     <string name="deny">Deny</string>
+    <string name="already_paired">Already paired</string>
     <string name="invalid_ip">Invalid IP</string>
     <string name="invalid_port">Invalid Port</string>
     <string name="invalid_qr_code">Invalid QR Code</string>
@@ -34,11 +34,9 @@
     <string name="permission">Permission</string>
     <string name="scan_qr_code">Scan a QR Code</string>
     <string name="notification">Notification</string>
-    <string name="help">Help</string>
+    <string name="help"><a href="https://www.patri9ck.dev/a2ln/">Help</a></string>
     <string name="view_logs">View Logs</string>
-    <string name="help_url">https://www.patri9ck.dev/a2ln/</string>
-    <string name="version">%s/%d (%s)</string>
-    <string name="notification_title">A2LN</string>
+    <string name="unknown_installer">Unknown Installer</string>
     <string name="notification_text">Test Notification</string>
     <string name="notification_sent">A test notification was sent to every running server.</string>
     <string name="servers_title">Servers</string>
@@ -60,9 +58,9 @@
     </string>
     <string name="edit_server_dialog_title">Edit Server</string>
     <string name="logs_dialog_title">Logs</string>
-    <string name="preferences">dev.patri9ck.a2ln</string>
-    <string name="preferences_servers">servers</string>
-    <string name="preferences_disabled_apps">disabled_apps</string>
-    <string name="preferences_own_public_key">public_key</string>
-    <string name="preferences_own_secret_key">secret_key</string>
+    <string name="spam_information">Two consecutive notifications can be blocked for a certain duration if they exceed a certain similarity.</string>
+    <string name="similarity">Similarity in %</string>
+    <string name="duration">Duration in Seconds</string>
+    <string name="spam">Spam</string>
+    <string name="display_information">Do not send notifications if the display is enabled</string>
 </resources>

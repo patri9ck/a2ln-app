@@ -16,26 +16,34 @@
  */
 package dev.patri9ck.a2ln.log;
 
+import android.content.Context;
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class KeptLog {
 
     private final List<String> messages = new ArrayList<>();
 
+    private final Context context;
     private final String tag;
 
-    public KeptLog(String tag) {
+    public KeptLog(Context context, String tag) {
+        this.context = context;
         this.tag = tag;
     }
 
-    public void log(String message) {
-        messages.add(message);
+    public void log(int priority, int id, Object... arguments) {
+        String message = context.getString(id, arguments);
 
-        Log.v(tag, message);
+        messages.add(DateFormat.getTimeInstance().format(new Date()) + ": " + message);
+
+        Log.println(priority, tag, message);
     }
+
 
     public List<String> getMessages() {
         return messages;
