@@ -61,7 +61,7 @@ import dev.patri9ck.a2ln.util.Storage;
 
 public class SettingsFragment extends Fragment {
 
-    private static final int TIMEOUT = 6;
+    private static final int TIMEOUT_SECONDS = 5;
 
     private SharedPreferences sharedPreferences;
     private Storage storage;
@@ -226,7 +226,7 @@ public class SettingsFragment extends Fragment {
 
                     Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_timed_out, Snackbar.LENGTH_SHORT).show();
                 }
-            }), TIMEOUT, TimeUnit.SECONDS);
+            }), TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
             return;
         }

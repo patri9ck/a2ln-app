@@ -42,7 +42,7 @@ public class NotificationSender {
 
     private static final String TAG = "A2LNNS";
 
-    private static final int TIMEOUT = 5;
+    private static final int TIMEOUT_SECONDS = 3;
 
     private final Context context;
     private final byte[] publicKey;
@@ -120,7 +120,7 @@ public class NotificationSender {
         try (ZContext zContext = new ZContext()) {
             servers.forEach(server -> CompletableFuture.runAsync(() -> {
                 try (ZMQ.Socket client = zContext.createSocket(SocketType.PUSH)) {
-                    client.setSendTimeOut(TIMEOUT * 1000);
+                    client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
                     client.setImmediate(false);
                     client.setCurvePublicKey(publicKey);
                     client.setCurveSecretKey(secretKey);
@@ -141,7 +141,7 @@ public class NotificationSender {
             }));
         } finally {
             try {
-                if (!countDownLatch.await(TIMEOUT + 1, TimeUnit.SECONDS)) {
+                if (!countDownLatch.await(TIMEOUT_SECONDS + 1, TimeUnit.SECONDS)) {
                     keptLog.log(Log.ERROR, R.string.log_notification_timed_out);
                 }
             } catch (InterruptedException ignored) {
