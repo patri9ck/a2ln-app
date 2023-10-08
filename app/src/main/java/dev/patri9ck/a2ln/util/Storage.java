@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2023  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,5 +103,13 @@ public class Storage {
 
     public void saveDisplay(boolean display) {
         sharedPreferences.edit().putBoolean(context.getString(R.string.preferences_display), display).apply();
+    }
+
+    public Optional<String> loadLog() {
+        return Optional.ofNullable(sharedPreferences.getString(context.getString(R.string.preferences_log), null));
+    }
+
+    public void saveLog(String log) {
+        sharedPreferences.edit().putString(context.getString(R.string.preferences_log), log).apply();
     }
 }

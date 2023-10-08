@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,41 +46,43 @@ public class NotificationReceiver extends NotificationListenerService {
     private NotificationSender notificationSender;
 
     private NotificationSpamHandler notificationSpamHandler;
+
     private List<String> disabledApps;
+
     private boolean display;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = (sharedPreferences, key) -> {
-        if (key.equals(getString(R.string.preferences_servers))) {
+        if (getString(R.string.preferences_servers).equals(key)) {
             notificationSender.setServers(storage.loadServers());
 
             return;
         }
 
-        if (key.equals(getString(R.string.preferences_similarity))) {
+        if (getString(R.string.preferences_similarity).equals(key)) {
             notificationSpamHandler.setSimilarity(storage.loadSimilarityOrDefault());
 
             return;
         }
 
-        if (key.equals(getString(R.string.preferences_duration))) {
+        if (getString(R.string.preferences_duration).equals(key)) {
             notificationSpamHandler.setDuration(storage.loadDurationOrDefault());
 
             return;
         }
 
-        if (key.equals(getString(R.string.preferences_disabled_apps))) {
+        if (getString(R.string.preferences_disabled_apps).equals(key)) {
             disabledApps = storage.loadDisabledApps();
 
             return;
         }
 
-        if (key.equals(getString(R.string.preferences_display))) {
+        if (getString(R.string.preferences_display).equals(key)) {
             display = storage.loadDisplay();
         }
     };
 
     @Override
-    public void onNotificationPosted(StatusBarNotification statusBarNotification) {
+    public synchronized void onNotificationPosted(StatusBarNotification statusBarNotification) {
         if (!initialized) {
             return;
         }
@@ -128,7 +131,11 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        CompletableFuture.runAsync(() -> notificationSender.sendParsedNotification(parsedNotification));
+        CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(parsedNotification)).thenAccept(keptLog -> {
+            if (getPackageName().equals(packageName)) {
+                storage.saveLog(keptLog.format());
+            }
+        });
 
         Log.v(TAG, "Notification given to NotificationSender");
     }

@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +53,7 @@ import dev.patri9ck.a2ln.databinding.DialogPairBinding;
 import dev.patri9ck.a2ln.databinding.DialogPairedBinding;
 import dev.patri9ck.a2ln.databinding.DialogPairingBinding;
 import dev.patri9ck.a2ln.databinding.FragmentServersBinding;
-import dev.patri9ck.a2ln.log.LogsDialogBuilder;
+import dev.patri9ck.a2ln.log.LogDialogBuilder;
 import dev.patri9ck.a2ln.pairing.Pairing;
 import dev.patri9ck.a2ln.util.Storage;
 import dev.patri9ck.a2ln.util.Util;
@@ -62,11 +63,10 @@ public class ServersFragment extends Fragment {
     private static final String TAG = "A2LN";
 
     private Storage storage;
-
     private List<Server> servers;
-    private ServersAdapter serversAdapter;
-
     private FragmentServersBinding fragmentServersBinding;
+
+    private ServersAdapter serversAdapter;
 
     private final ActivityResultLauncher<ScanOptions> launcher = registerForActivityResult(new ScanContract(), result -> {
         String address = result.getContents();
@@ -89,9 +89,7 @@ public class ServersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         storage = new Storage(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE));
-
         servers = storage.loadServers();
-
         fragmentServersBinding = FragmentServersBinding.inflate(inflater, container, false);
 
         fragmentServersBinding.pairButton.setOnClickListener(pairButtonView -> {
@@ -172,16 +170,16 @@ public class ServersFragment extends Fragment {
     }
 
     private void startPairing(Destination destination) {
-        String ownIp = getIp();
+        String ip = getIp();
 
-        if (ownIp == null) {
+        if (ip == null) {
             return;
         }
 
         storage.loadRawPublicKey().ifPresent(rawPublicKey -> {
             DialogPairingBinding dialogPairingBinding = DialogPairingBinding.inflate(getLayoutInflater());
 
-            dialogPairingBinding.ownIpTextView.setText(ownIp);
+            dialogPairingBinding.ownIpTextView.setText(ip);
             dialogPairingBinding.ownPublicKeyTextView.setText(rawPublicKey);
 
             AlertDialog pairingDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
@@ -190,16 +188,16 @@ public class ServersFragment extends Fragment {
                     .setCancelable(false)
                     .show();
 
-            CompletableFuture.supplyAsync(() -> new Pairing(requireContext(), destination, ownIp, rawPublicKey).pair()).thenAccept(pairingResult -> requireActivity().runOnUiThread(() -> {
+            CompletableFuture.supplyAsync(() -> new Pairing(requireContext(), destination, ip, rawPublicKey).pair()).thenAccept(pairingResult -> requireActivity().runOnUiThread(() -> {
                 pairingDialog.dismiss();
 
                 Server server = pairingResult.getServer().orElse(null);
 
                 if (server == null) {
-                    Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_SHORT)
-                            .setAction(R.string.view_logs, view -> {
+                    Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.view_log, view -> {
                                 if (isVisible()) {
-                                    new LogsDialogBuilder(pairingResult.getKeptLog(), getLayoutInflater()).show();
+                                    new LogDialogBuilder(pairingResult.getKeptLog(), getLayoutInflater()).show();
                                 }
                             })
                             .show();

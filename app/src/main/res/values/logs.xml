@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2023  Patrick Zwick and contributors
+  ~ Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+  ~ Copyright (C) 2023  patri9ck and contributors
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -15,14 +16,14 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <resources>
-    <string name="log_failed_connection">Failed to connect to %s</string>
-    <string name="log_pairing_trying">Trying to pair with %s</string>
-    <string name="log_pairing_failed_sending">Failed to send own IP and public key to %s</string>
-    <string name="log_pairing_failed_receiving">Failed to receive port and public key from %s</string>
-    <string name="log_pairing_invalid_port">Failed to receive port and public key from %s</string>
-    <string name="log_notification_no_servers">No servers given</string>
-    <string name="log_notification_trying">Trying to send notification to servers</string>
-    <string name="log_notification_failed_sending">Failed to send notification to %s</string>
-    <string name="log_notification_success">Successfully sent notification to %s</string>
-    <string name="log_notification_timed_out">Timed out</string>
+    <string name="log_failed_connection">Failed to connect to %s.</string>
+    <string name="log_pairing_trying">Trying to pair with %s…</string>
+    <string name="log_pairing_failed_sending">Failed to send own IP and public key to %s.</string>
+    <string name="log_pairing_failed_receiving">Failed to receive port and public key from %s.</string>
+    <string name="log_pairing_invalid_port">Invalid port received from %s.</string>
+    <string name="log_notification_no_servers">No servers given.</string>
+    <string name="log_notification_trying">Trying to send notification to servers.</string>
+    <string name="log_notification_failed_sending">Failed to send notification to %s.</string>
+    <string name="log_notification_success">Successfully sent notification to %s.</string>
+    <string name="log_notification_timed_out">Timed out.</string>
 </resources>

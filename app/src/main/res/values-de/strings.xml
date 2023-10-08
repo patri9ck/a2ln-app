@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+  ~ Copyright (C) 2023  patri9ck and contributors
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="ip">IP</string>
+    <string name="port">Port</string>
+    <string name="alias">Alias</string>
+    <string name="public_key">Öffentlicher Schlüssel</string>
+    <string name="pair">Koppeln</string>
+    <string name="apply">Anwenden</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="grant">Erlauben</string>
+    <string name="already_paired">Bereits gekoppelt</string>
+    <string name="invalid_ip">Ungültige IP</string>
+    <string name="invalid_port">Ungültiger Port</string>
+    <string name="invalid_qr_code">Ungültiger QR-Code</string>
+    <string name="pairing_failed">Kopplung fehlgeschlagen</string>
+    <string name="removed_server">Server entfernt</string>
+    <string name="removed_server_undo">Wiederherstellen</string>
+    <string name="permission">Berechtigung</string>
+    <string name="scan_qr_code">QR-Code scannen</string>
+    <string name="notification">Benachrichtigung</string>
+    <string name="help"><a href="https://www.patri9ck.dev/a2ln/">Hilfe</a></string>
+    <string name="view_log">Log ansehen</string>
+    <string name="notification_text">Test-Benachrichtigung</string>
+    <string name="notification_sent">Eine Test-Benachrichtigung wurde zu jedem laufenden Server gesendet.</string>
+    <string name="servers_title">Server</string>
+    <string name="apps_title">Apps</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="pair_dialog_title">Neuen Server koppeln</string>
+    <string name="pair_dialog_information">Alternativ können Sie hier die IP und den Port des Servers manuell eintragen.</string>
+    <string name="pairing_dialog_title">Koppeln…</string>
+    <string name="pairing_dialog_information">Akzeptieren sie die Kopplungs-Anfrage beim Server und verifizieren Sie die IP und den öffentlichen Schlüssel.</string>
+    <string name="paired_dialog_title">Erfolgreich gekoppelt</string>
+    <string name="paired_dialog_information">Verifizieren Sie die IP und den öffentlichen Schlüssel des Servers.</string>
+    <string name="permission_request_dialog_title">Berechtigung benötigt</string>
+    <string name="permission_request_dialog_listener_information">Es wird eine Berechtigung benötigt, um Benachrichtigungen abfangen zu können.</string>
+    <string name="permission_request_dialog_notification_information">Es wird eine Berechtigung benötigt, um eine Test-Benachrichtigung zu senden, welche anschließend abgefangen und zum Server gesendet wird.</string>
+    <string name="notification_timed_out">Es konnte keine Test-Benachrichtung abgefangen werden.</string>
+    <string name="edit_server_dialog_title">Server bearbeiten</string>
+    <string name="logs_dialog_title">Logs</string>
+    <string name="spam_information">Eine Benachrichtigung kann für eine bestimmte Zeit blockiert werden, falls sie eine gewisse Ähnlichkeit mit einer vorherigen überschreitet.</string>
+    <string name="similarity">Ähnlichkeit in %</string>
+    <string name="duration">Dauer in Sekunden</string>
+    <string name="display_information">Keine Benachrichtigungen senden, falls das Display angeschaltet ist</string>
+    <string name="channel_name">Test-Benachrichtigungen</string>
+    <string name="channel_description">Wird für Test-Benachrichtigungen genutzt.</string>
+</resources>

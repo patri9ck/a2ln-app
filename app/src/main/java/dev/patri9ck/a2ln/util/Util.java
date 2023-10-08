@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,23 +23,20 @@ import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.text.similarity.JaroWinklerDistance;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 public class Util {
 
     private static final int MINIMUM_PORT = 1;
     private static final int MAXIMUM_PORT = 65535;
 
-    private static final JaroWinklerDistance JARO_WINKLER_DISTANCE = new JaroWinklerDistance();
     private static final Gson GSON = new Gson();
 
-    private Util() {
-        // Singleton
-    }
+    private Util() {}
 
     public static String toJson(List<?> data) {
         return GSON.toJson(data);
@@ -71,6 +69,6 @@ public class Util {
     }
 
     public static float getSimilarity(String first, String second) {
-        return JARO_WINKLER_DISTANCE.apply(first, second).floatValue();
+        return (float) FuzzySearch.ratio(first, second) / 100F;
     }
 }

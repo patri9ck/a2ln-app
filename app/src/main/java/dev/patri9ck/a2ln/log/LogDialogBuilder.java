@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,17 +24,21 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.DialogLogsBinding;
 
-public class LogsDialogBuilder extends MaterialAlertDialogBuilder {
+public class LogDialogBuilder extends MaterialAlertDialogBuilder {
 
-    public LogsDialogBuilder(KeptLog keptLog, LayoutInflater layoutInflater) {
+    public LogDialogBuilder(String log, LayoutInflater layoutInflater) {
         super(layoutInflater.getContext(), R.style.Dialog);
 
         DialogLogsBinding dialogLogsBinding = DialogLogsBinding.inflate(layoutInflater);
 
-        dialogLogsBinding.logsTextView.setText(String.join("\n", keptLog.getMessages()));
+        dialogLogsBinding.logsTextView.setText(log);
 
         setTitle(R.string.logs_dialog_title);
         setView(dialogLogsBinding.getRoot());
         setNegativeButton(R.string.cancel, null);
+    }
+
+    public LogDialogBuilder(KeptLog keptLog, LayoutInflater layoutInflater) {
+        this(keptLog.format(), layoutInflater);
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2022  Patrick Zwick and contributors
+  ~ Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+  ~ Copyright (C) 2023  patri9ck and contributors
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space"
     android:orientation="horizontal">
+
     <ImageView
         android:id="@+id/icon_image_view"
         android:layout_width="48dp"
@@ -27,6 +29,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/space"
         tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/name_text_view"
         style="@style/TextView"
@@ -36,6 +39,7 @@
         android:layout_marginEnd="@dimen/space"
         android:layout_weight="1"
         android:singleLine="true" />
+
     <CheckBox
         android:id="@+id/app_check_box"
         android:layout_width="wrap_content"

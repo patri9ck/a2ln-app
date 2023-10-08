@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2023  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,13 +22,13 @@ import java.util.Objects;
 
 import dev.patri9ck.a2ln.notification.ParsedNotification;
 
-public class SimpleNotification {
+public class StrippedNotification {
 
     private final String appName;
     private final String title;
     private final String text;
 
-    public SimpleNotification(ParsedNotification parsedNotification) {
+    public StrippedNotification(ParsedNotification parsedNotification) {
         this.appName = parsedNotification.getAppName();
         this.title = parsedNotification.getTitle();
         this.text = parsedNotification.getText();
@@ -55,9 +56,9 @@ public class SimpleNotification {
             return false;
         }
 
-        SimpleNotification simpleNotification = (SimpleNotification) object;
+        StrippedNotification strippedNotification = (StrippedNotification) object;
 
-        return appName.equals(simpleNotification.appName) && title.equals(simpleNotification.title) && text.equals(simpleNotification.text);
+        return appName.equals(strippedNotification.appName) && title.equals(strippedNotification.title) && text.equals(strippedNotification.text);
     }
 
     @Override

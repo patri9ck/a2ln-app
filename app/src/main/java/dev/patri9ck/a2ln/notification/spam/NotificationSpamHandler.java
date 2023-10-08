@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2023  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +27,7 @@ import dev.patri9ck.a2ln.util.Util;
 
 public class NotificationSpamHandler {
 
-    private Cache<SimpleNotification, Object> simpleNotifications;
+    private Cache<StrippedNotification, Object> strippedNotifications;
 
     private float similarity;
 
@@ -41,34 +42,32 @@ public class NotificationSpamHandler {
     }
 
     public void setDuration(int duration) {
-        simpleNotifications = CacheBuilder.newBuilder()
+        strippedNotifications = CacheBuilder.newBuilder()
                 .expireAfterWrite(duration, TimeUnit.SECONDS)
                 .build();
     }
 
     public boolean isSpammed(ParsedNotification parsedNotification) {
-        SimpleNotification simpleNotification = new SimpleNotification(parsedNotification);
+        StrippedNotification strippedNotification = new StrippedNotification(parsedNotification);
 
-        if (simpleNotifications.asMap().containsKey(simpleNotification)) {
+        if (strippedNotifications.asMap().containsKey(strippedNotification)) {
             return true;
         }
 
-        boolean spammed = false;
-
         if (similarity < 1F) {
-            for (SimpleNotification spammedSimpleNotification : simpleNotifications.asMap().keySet()) {
-                if (spammedSimpleNotification.getAppName().equals(simpleNotification.getAppName())
-                        && spammedSimpleNotification.getTitle().equals(simpleNotification.getTitle())
-                        && Util.getSimilarity(spammedSimpleNotification.getText(), simpleNotification.getText()) >= similarity) {
-                    spammed = true;
+            for (StrippedNotification spammedStrippedNotification : strippedNotifications.asMap().keySet()) {
+                if (spammedStrippedNotification.getAppName().equals(strippedNotification.getAppName())
+                        && spammedStrippedNotification.getTitle().equals(strippedNotification.getTitle())
+                        && Util.getSimilarity(spammedStrippedNotification.getText(), strippedNotification.getText()) >= similarity) {
+                    strippedNotifications.put(spammedStrippedNotification, new Object());
 
-                    break;
+                    return true;
                 }
             }
         }
 
-        simpleNotifications.put(simpleNotification, new Object());
+        strippedNotifications.put(strippedNotification, new Object());
 
-        return spammed;
+        return false;
     }
 }

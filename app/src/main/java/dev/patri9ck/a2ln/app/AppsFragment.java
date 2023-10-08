@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,17 +40,13 @@ import dev.patri9ck.a2ln.util.Storage;
 public class AppsFragment extends Fragment {
 
     private Storage storage;
-
     private List<String> disabledApps;
-
     private FragmentAppsBinding fragmentAppsBinding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         storage = new Storage(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE));
-
         disabledApps = storage.loadDisabledApps();
-
         fragmentAppsBinding = FragmentAppsBinding.inflate(inflater, container, false);
 
         loadAppsRecyclerView();
