@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +18,6 @@
 package dev.patri9ck.a2ln.notification;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.zeromq.SocketType;
@@ -33,40 +33,63 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.server.Server;
 import dev.patri9ck.a2ln.log.KeptLog;
-import dev.patri9ck.a2ln.util.Util;
+import dev.patri9ck.a2ln.server.Server;
+import dev.patri9ck.a2ln.util.Storage;
 import zmq.util.Z85;
 
 public class NotificationSender {
 
     private static final String TAG = "A2LNNS";
 
-    private static final int TIMEOUT_SECONDS = 5;
+    private static final int TIMEOUT_SECONDS = 3;
 
-    private final byte[] clientPublicKey;
-    private final byte[] clientSecretKey;
+    private final Context context;
+    private final byte[] publicKey;
+    private final byte[] secretKey;
     private List<Server> servers;
 
-    public NotificationSender(byte[] clientPublicKey, byte[] clientSecretKey, List<Server> servers) {
-        this.clientPublicKey = clientPublicKey;
-        this.clientSecretKey = clientSecretKey;
+    public NotificationSender(Context context, byte[] publicKey, byte[] secretKey, List<Server> servers) {
+        this.context = context;
+        this.publicKey = publicKey;
+        this.secretKey = secretKey;
         this.servers = filterServers(servers);
     }
 
-    public static Optional<NotificationSender> fromSharedPreferences(Context context, SharedPreferences sharedPreferences) {
-        String clientPublicKey = sharedPreferences.getString(context.getString(R.string.preferences_own_public_key), null);
-        String clientSecretKey = sharedPreferences.getString(context.getString(R.string.preferences_own_secret_key), null);
+    public static Optional<NotificationSender> fromStorage(Context context, Storage storage) {
+        String rawPublicKey = storage.loadRawPublicKey().orElse(null);
 
-        if (clientPublicKey == null || clientSecretKey == null) {
-            Log.e(TAG, "Client keys not saved in preferences properly");
+        if (rawPublicKey == null) {
+            Log.e(TAG, "Own public key does not exist");
 
             return Optional.empty();
         }
 
-        return Optional.of(new NotificationSender(Z85.decode(clientPublicKey),
-                Z85.decode(clientSecretKey),
-                Util.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_servers), null), Server.class)));
+        String rawSecretKey = storage.loadRawSecretKey().orElse(null);
+
+        if (rawSecretKey == null) {
+            Log.e(TAG, "Own secret key does not exist");
+
+            return Optional.empty();
+        }
+
+        byte[] publicKey = Z85.decode(rawPublicKey);
+
+        if (publicKey == null) {
+            Log.e(TAG, "Cannot decode own public key");
+
+            return Optional.empty();
+        }
+
+        byte[] secretKey = Z85.decode(rawSecretKey);
+
+        if (secretKey == null) {
+            Log.e(TAG, "Cannot decode own secret key");
+
+            return Optional.empty();
+        }
+
+        return Optional.of(new NotificationSender(context, publicKey, secretKey, storage.loadServers()));
     }
 
     public void setServers(List<Server> servers) {
@@ -74,15 +97,15 @@ public class NotificationSender {
     }
 
     public KeptLog sendParsedNotification(ParsedNotification parsedNotification) {
-        KeptLog keptLog = new KeptLog(TAG);
+        KeptLog keptLog = new KeptLog(context, TAG);
 
         if (servers.isEmpty()) {
-            keptLog.log("No servers given, will not start clients");
+            keptLog.log(Log.INFO, R.string.log_notification_no_servers);
 
             return keptLog;
         }
 
-        keptLog.log("Trying to send notification to servers");
+        keptLog.log(Log.INFO, R.string.log_notification_trying);
 
         ZMsg zMsg = new ZMsg();
 
@@ -99,18 +122,18 @@ public class NotificationSender {
                 try (ZMQ.Socket client = zContext.createSocket(SocketType.PUSH)) {
                     client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
                     client.setImmediate(false);
-                    client.setCurvePublicKey(clientPublicKey);
-                    client.setCurveSecretKey(clientSecretKey);
+                    client.setCurvePublicKey(publicKey);
+                    client.setCurveSecretKey(secretKey);
                     client.setCurveServerKey(server.getPublicKey());
 
                     String address = server.getAddress();
 
                     if (!client.connect("tcp://" + address)) {
-                        keptLog.log("Failed to connect to " + address);
+                        keptLog.log(Log.ERROR, R.string.log_failed_connection, address);
                     } else if (!zMsg.send(client, false)) {
-                        keptLog.log("Failed to send notification to " + address);
+                        keptLog.log(Log.ERROR, R.string.log_notification_failed_sending, address);
                     } else {
-                        keptLog.log("Successfully sent notification to " + address);
+                        keptLog.log(Log.INFO, R.string.log_notification_success, address);
                     }
 
                     countDownLatch.countDown();
@@ -119,7 +142,7 @@ public class NotificationSender {
         } finally {
             try {
                 if (!countDownLatch.await(TIMEOUT_SECONDS + 1, TimeUnit.SECONDS)) {
-                    keptLog.log("Timed out");
+                    keptLog.log(Log.ERROR, R.string.log_notification_timed_out);
                 }
             } catch (InterruptedException ignored) {
                 // Ignored

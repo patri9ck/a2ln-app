@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Android 2 Linux Notifications - A way to display Android phone notifications on Linux
   ~ Copyright (C) 2023  patri9ck and contributors
   ~
@@ -16,9 +16,8 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <resources>
-
-    <style name="Theme" parent="ThemeBase">
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
-    </style>
+    <string name="app_name" translatable="false">Android 2 Linux Notifications</string>
+    <string name="version" translatable="false">%s</string>
+    <string name="notification_title" translatable="false">A2LN</string>
+    <string name="channel_id" translatable="false">test_notifications</string>
 </resources>
