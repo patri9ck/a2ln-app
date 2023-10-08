@@ -52,7 +52,7 @@
     <string name="permission_request_dialog_notification_information">A permission is required to send a test notification which will be picked up by the notification listener and sent to the server.</string>
     <string name="notification_timed_out">No notification was picked up by the notification listener.</string>
     <string name="edit_server_dialog_title">Edit Server</string>
-    <string name="logs_dialog_title">Logs</string>
+    <string name="log_dialog_title">Log</string>
     <string name="spam_information">A notification can be blocked for a certain duration if it exceeds a certain similarity with a previous one.</string>
     <string name="similarity">Similarity in %</string>
     <string name="duration">Duration in Seconds</string>

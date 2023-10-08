@@ -33,7 +33,7 @@ public class LogDialogBuilder extends MaterialAlertDialogBuilder {
 
         dialogLogsBinding.logsTextView.setText(log);
 
-        setTitle(R.string.logs_dialog_title);
+        setTitle(R.string.log_dialog_title);
         setView(dialogLogsBinding.getRoot());
         setNegativeButton(R.string.cancel, null);
     }

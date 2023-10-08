@@ -44,7 +44,7 @@
     <string name="pair_dialog_title">Neuen Server koppeln</string>
     <string name="pair_dialog_information">Alternativ können Sie hier die IP und den Port des Servers manuell eintragen.</string>
     <string name="pairing_dialog_title">Koppeln…</string>
-    <string name="pairing_dialog_information">Akzeptieren sie die Kopplungs-Anfrage beim Server und verifizieren Sie die IP und den öffentlichen Schlüssel.</string>
+    <string name="pairing_dialog_information">Akzeptieren Sie die Kopplungs-Anfrage beim Server und verifizieren Sie die IP und den öffentlichen Schlüssel.</string>
     <string name="paired_dialog_title">Erfolgreich gekoppelt</string>
     <string name="paired_dialog_information">Verifizieren Sie die IP und den öffentlichen Schlüssel des Servers.</string>
     <string name="permission_request_dialog_title">Berechtigung benötigt</string>
@@ -52,7 +52,7 @@
     <string name="permission_request_dialog_notification_information">Es wird eine Berechtigung benötigt, um eine Test-Benachrichtigung zu senden, welche anschließend abgefangen und zum Server gesendet wird.</string>
     <string name="notification_timed_out">Es konnte keine Test-Benachrichtung abgefangen werden.</string>
     <string name="edit_server_dialog_title">Server bearbeiten</string>
-    <string name="logs_dialog_title">Logs</string>
+    <string name="log_dialog_title">Log</string>
     <string name="spam_information">Eine Benachrichtigung kann für eine bestimmte Zeit blockiert werden, falls sie eine gewisse Ähnlichkeit mit einer vorherigen überschreitet.</string>
     <string name="similarity">Ähnlichkeit in %</string>
     <string name="duration">Dauer in Sekunden</string>
