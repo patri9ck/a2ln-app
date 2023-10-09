@@ -1,0 +1,4 @@
+- Option, ähnliche Benachrichtigungen zu blockieren
+- Um eine Test-Benachrichtigung zu senden wird nun eine richtige Benachrichtigung erstellt
+- Möglichkeit, keine Benachrichtigungen senden zu lassen, falls das Display eingeschaltet ist
+- Deutsche Übersetzung
