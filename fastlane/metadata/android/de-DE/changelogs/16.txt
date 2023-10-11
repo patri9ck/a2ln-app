@@ -1,0 +1,1 @@
+- Korrekte Darstellung der Einstellungen im Querformat
