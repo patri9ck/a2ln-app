@@ -22,100 +22,107 @@
     android:layout_marginHorizontal="@dimen/space"
     android:layout_marginBottom="@dimen/space">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/permission_button"
-            style="@style/Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space"
-            android:text="@string/permission"
-            app:icon="@drawable/ic_permission" />
-
-        <Button
-            android:id="@+id/notification_button"
-            style="@style/Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space"
-            android:text="@string/notification"
-            app:icon="@drawable/ic_notification" />
-
-        <TextView
-            style="@style/TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space"
-            android:text="@string/spam_information" />
-
-        <EditText
-            android:id="@+id/similarity_edit_text"
-            style="@style/EditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space"
-            android:hint="@string/similarity"
-            android:importantForAutofill="no"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/duration_edit_text"
-            style="@style/EditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space"
-            android:hint="@string/duration"
-            android:importantForAutofill="no"
-            android:inputType="number" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/permission_button"
+                style="@style/Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space"
+                android:text="@string/permission"
+                app:icon="@drawable/ic_permission" />
+
+            <Button
+                android:id="@+id/notification_button"
+                style="@style/Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space"
+                android:text="@string/notification"
+                app:icon="@drawable/ic_notification" />
 
             <TextView
                 style="@style/TextView"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/space"
+                android:layout_marginBottom="@dimen/space"
+                android:text="@string/spam_information" />
+
+            <EditText
+                android:id="@+id/similarity_edit_text"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space"
+                android:hint="@string/similarity"
+                android:importantForAutofill="no"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/duration_edit_text"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space"
+                android:hint="@string/duration"
+                android:importantForAutofill="no"
+                android:inputType="number" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/space"
+                    android:layout_weight="1"
+                    android:text="@string/display_information" />
+
+                <CheckBox
+                    android:id="@+id/display_check_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/display_information" />
+                android:gravity="bottom"
+                android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/display_check_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
+                <TextView
+                    android:id="@+id/version_text_view"
+                    style="@style/TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/help_text_view"
+                    style="@style/TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/help" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/version_text_view"
-            style="@style/TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/help_text_view"
-            style="@style/TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/help" />
-    </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/sending_progress_indicator"
