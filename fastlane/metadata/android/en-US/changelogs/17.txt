@@ -1,0 +1,2 @@
+- Let test notifications bypass all settings
+- Option to send notifications which do not come from apps
