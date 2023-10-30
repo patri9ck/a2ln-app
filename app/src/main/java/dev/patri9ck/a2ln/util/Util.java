@@ -19,7 +19,6 @@ package dev.patri9ck.a2ln.util;
 
 import android.content.pm.PackageManager;
 
-import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -50,14 +49,16 @@ public class Util {
         return GSON.fromJson(json, TypeToken.getParameterized(ArrayList.class, type).getType());
     }
 
-    public static Optional<Integer> parsePort(String rawPort) {
-        Integer port = Ints.tryParse(rawPort);
-
-        if (port == null || port < MINIMUM_PORT || port > MAXIMUM_PORT) {
+    public static Optional<Integer> parseInteger(String raw) {
+        try {
+            return Optional.of(Integer.parseInt(raw));
+        } catch (NumberFormatException ignored) {
             return Optional.empty();
         }
+    }
 
-        return Optional.of(port);
+    public static Optional<Integer> parsePort(String rawPort) {
+        return parseInteger(rawPort).filter(port -> port >= MINIMUM_PORT && port <= MAXIMUM_PORT);
     }
 
     public static Optional<String> getAppName(PackageManager packageManager, String packageName) {

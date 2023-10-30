@@ -18,7 +18,6 @@
 package dev.patri9ck.a2ln.pairing;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -36,8 +35,6 @@ import dev.patri9ck.a2ln.util.Util;
 
 public class Pairing {
 
-    private static final String TAG = "A2LNP";
-
     private static final int TIMEOUT_SECONDS = 20;
 
     private final Context context;
@@ -53,11 +50,11 @@ public class Pairing {
     }
 
     public PairingResult pair() {
-        KeptLog keptLog = new KeptLog(context, TAG);
+        KeptLog keptLog = new KeptLog(context);
 
         String address = destination.getAddress();
 
-        keptLog.log(Log.INFO, R.string.log_pairing_trying, address);
+        keptLog.log(R.string.log_pairing_trying, address);
 
         try (ZContext zContext = new ZContext(); ZMQ.Socket client = zContext.createSocket(SocketType.REQ)) {
             client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
@@ -65,7 +62,7 @@ public class Pairing {
             client.setImmediate(false);
 
             if (!client.connect("tcp://" + address)) {
-                keptLog.log(Log.ERROR, R.string.log_failed_connection, address);
+                keptLog.log(R.string.log_failed_connection, address);
 
                 return new PairingResult(keptLog);
             }
@@ -76,7 +73,7 @@ public class Pairing {
             zMsg.add(rawPublicKey);
 
             if (!zMsg.send(client)) {
-                keptLog.log(Log.ERROR, R.string.log_pairing_failed_sending, address);
+                keptLog.log(R.string.log_pairing_failed_sending, address);
 
                 return new PairingResult(keptLog);
             }
@@ -84,7 +81,7 @@ public class Pairing {
             zMsg = ZMsg.recvMsg(client);
 
             if (zMsg == null || zMsg.size() != 2) {
-                keptLog.log(Log.ERROR, R.string.log_pairing_failed_receiving, address);
+                keptLog.log(R.string.log_pairing_failed_receiving, address);
 
                 return new PairingResult(keptLog);
             }
@@ -92,7 +89,7 @@ public class Pairing {
             Optional<Integer> port = Util.parsePort(zMsg.pop().getString(StandardCharsets.UTF_8));
 
             if (!port.isPresent()) {
-                keptLog.log(Log.ERROR, R.string.log_pairing_invalid_port);
+                keptLog.log(R.string.log_pairing_invalid_port);
 
                 return new PairingResult(keptLog);
             }

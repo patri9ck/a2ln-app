@@ -17,24 +17,28 @@
  */
 package dev.patri9ck.a2ln.notification.spam;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import net.jodah.expiringmap.ExpirationPolicy;
+import net.jodah.expiringmap.ExpiringMap;
 
 import java.util.concurrent.TimeUnit;
 
 import dev.patri9ck.a2ln.notification.ParsedNotification;
+import dev.patri9ck.a2ln.util.Storage;
 import dev.patri9ck.a2ln.util.Util;
 
 public class NotificationSpamHandler {
 
-    private Cache<StrippedNotification, Object> strippedNotifications;
+    private final ExpiringMap<StrippedNotification, Object> strippedNotifications = ExpiringMap.builder()
+            .variableExpiration()
+            .expirationPolicy(ExpirationPolicy.CREATED)
+            .build();
 
     private float similarity;
+    private int duration;
 
     public NotificationSpamHandler(float similarity, int duration) {
         this.similarity = similarity;
-
-        setDuration(duration);
+        this.duration = duration;
     }
 
     public void setSimilarity(float similarity) {
@@ -42,31 +46,29 @@ public class NotificationSpamHandler {
     }
 
     public void setDuration(int duration) {
-        strippedNotifications = CacheBuilder.newBuilder()
-                .expireAfterWrite(duration, TimeUnit.SECONDS)
-                .build();
+        this.duration = duration;
     }
 
-    public boolean isSpammed(ParsedNotification parsedNotification) {
+    public boolean isSpammed(ParsedNotification parsedNotification, boolean simple) {
         StrippedNotification strippedNotification = new StrippedNotification(parsedNotification);
 
-        if (strippedNotifications.asMap().containsKey(strippedNotification)) {
+        if (strippedNotifications.containsKey(strippedNotification)) {
             return true;
         }
 
-        if (similarity < 1F) {
-            for (StrippedNotification spammedStrippedNotification : strippedNotifications.asMap().keySet()) {
+        if (!simple && similarity < Storage.DEFAULT_SIMILARITY) {
+            for (StrippedNotification spammedStrippedNotification : strippedNotifications.keySet()) {
                 if (spammedStrippedNotification.getAppName().equals(strippedNotification.getAppName())
                         && spammedStrippedNotification.getTitle().equals(strippedNotification.getTitle())
                         && Util.getSimilarity(spammedStrippedNotification.getText(), strippedNotification.getText()) >= similarity) {
-                    strippedNotifications.put(spammedStrippedNotification, new Object());
+                    strippedNotifications.put(spammedStrippedNotification, new Object(), duration, TimeUnit.SECONDS);
 
                     return true;
                 }
             }
         }
 
-        strippedNotifications.put(strippedNotification, new Object());
+        strippedNotifications.put(strippedNotification, new Object(), simple ? Storage.DEFAULT_DURATION : duration, TimeUnit.SECONDS);
 
         return false;
     }
