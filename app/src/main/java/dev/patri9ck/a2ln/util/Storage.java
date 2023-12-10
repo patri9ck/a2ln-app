@@ -32,6 +32,8 @@ public class Storage {
     public static final float DEFAULT_SIMILARITY = 1F;
     public static final int DEFAULT_DURATION = 1;
 
+    public static final int DEFAULT_PORT = 23045;
+
     private final Context context;
     private final SharedPreferences sharedPreferences;
 

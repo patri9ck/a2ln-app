@@ -148,15 +148,17 @@ public class ServersFragment extends Fragment {
             return Optional.empty();
         }
 
-        Optional<Integer> port = Util.parsePort(rawPort);
+        return validatePort(rawPort).map(port -> new Destination(ip, port));
+    }
 
-        if (!port.isPresent()) {
+    private Optional<Integer> validatePort(String rawPort) {
+        Optional<Integer> optionalPort = Util.parsePort(rawPort);
+
+        if (!optionalPort.isPresent()) {
             Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_port), Snackbar.LENGTH_SHORT).show();
-
-            return Optional.empty();
         }
 
-        return Optional.of(new Destination(ip, port.get()));
+        return optionalPort;
     }
 
     private void loadServersRecyclerView() {
@@ -191,9 +193,9 @@ public class ServersFragment extends Fragment {
             CompletableFuture.supplyAsync(() -> new Pairing(requireContext(), destination, ip, rawPublicKey).pair()).thenAccept(pairingResult -> requireActivity().runOnUiThread(() -> {
                 pairingDialog.dismiss();
 
-                Server server = pairingResult.getServer().orElse(null);
+                Optional<byte[]> optionalPublicKey = pairingResult.getPublicKey();
 
-                if (server == null) {
+                if (!optionalPublicKey.isPresent()) {
                     Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_LONG)
                             .setAction(R.string.view_log, view -> {
                                 if (isVisible()) {
@@ -205,15 +207,19 @@ public class ServersFragment extends Fragment {
                     return;
                 }
 
+                byte[] publicKey = optionalPublicKey.get();
+
                 DialogPairedBinding dialogPairedBinding = DialogPairedBinding.inflate(getLayoutInflater());
 
                 dialogPairedBinding.serverIpTextView.setText(destination.getIp());
-                dialogPairedBinding.serverPublicKeyTextView.setText(new String(server.getPublicKey(), StandardCharsets.UTF_8));
+                dialogPairedBinding.serverPublicKeyTextView.setText(new String(publicKey, StandardCharsets.UTF_8));
 
                 new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                         .setTitle(R.string.paired_dialog_title)
                         .setView(dialogPairedBinding.getRoot())
                         .setPositiveButton(R.string.pair, (pairedDialog, which) -> {
+                            Server server = new Server(destination.getIp(), Storage.DEFAULT_PORT, publicKey);
+
                             int position = servers.size();
 
                             servers.add(server);
