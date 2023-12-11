@@ -172,13 +172,7 @@ public class ServersFragment extends Fragment {
     }
 
     private void startPairing(Destination destination) {
-        String ip = getIp();
-
-        if (ip == null) {
-            return;
-        }
-
-        storage.loadRawPublicKey().ifPresent(rawPublicKey -> {
+        getIp().ifPresent(ip -> storage.loadRawPublicKey().ifPresent(rawPublicKey -> {
             DialogPairingBinding dialogPairingBinding = DialogPairingBinding.inflate(getLayoutInflater());
 
             dialogPairingBinding.ownIpTextView.setText(ip);
@@ -230,20 +224,20 @@ public class ServersFragment extends Fragment {
                         .setNegativeButton(R.string.cancel, null)
                         .show();
             }));
-        });
+        }));
     }
 
-    private String getIp() {
+    private Optional<String> getIp() {
         try {
-            return InetAddress.getByAddress(ByteBuffer
+            return Optional.ofNullable(InetAddress.getByAddress(ByteBuffer
                     .allocate(Integer.BYTES)
                     .order(ByteOrder.LITTLE_ENDIAN)
                     .putInt(((WifiManager) requireContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE)).getConnectionInfo().getIpAddress())
-                    .array()).getHostAddress();
+                    .array()).getHostAddress());
         } catch (UnknownHostException exception) {
             Log.e(TAG, "Failed to get client IP", exception);
 
-            return null;
+            return Optional.empty();
         }
     }
 }
