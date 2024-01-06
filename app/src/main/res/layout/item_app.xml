@@ -28,7 +28,8 @@
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/space"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        tools:src="@tools:sample/avatars"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name_text_view"
@@ -38,7 +39,8 @@
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/space"
         android:layout_weight="1"
-        android:singleLine="true" />
+        android:singleLine="true"
+        tools:text="A cool app name" />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/app_check_box"

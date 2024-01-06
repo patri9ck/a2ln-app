@@ -16,6 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space"
@@ -30,7 +31,8 @@
         android:layout_marginEnd="@dimen/space"
         android:layout_weight="1"
         android:singleLine="true"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        tools:text="127.0.0.1"/>
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/server_check_box"

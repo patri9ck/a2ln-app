@@ -17,8 +17,10 @@
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/space"
     android:layout_marginHorizontal="@dimen/space"
     android:layout_marginBottom="@dimen/space">
 
@@ -92,6 +94,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space"
                 android:layout_marginBottom="@dimen/space"
                 android:orientation="horizontal">
 
@@ -114,6 +117,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space"
                 android:layout_marginBottom="@dimen/space"
                 android:orientation="horizontal">
 
@@ -145,7 +149,8 @@
                     style="@style/TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    tools:text="1.0.0" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/help_text_view"
