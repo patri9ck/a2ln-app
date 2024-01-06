@@ -28,7 +28,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/pair_button"
-        style="@style/FloatingActionButton"
+        android:src="@drawable/ic_pair"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

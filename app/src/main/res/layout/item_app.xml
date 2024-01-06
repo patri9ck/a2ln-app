@@ -30,7 +30,7 @@
         android:layout_marginEnd="@dimen/space"
         tools:ignore="ContentDescription" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name_text_view"
         style="@style/TextView"
         android:layout_width="0dp"
@@ -40,7 +40,7 @@
         android:layout_weight="1"
         android:singleLine="true" />
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/app_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -22,7 +22,7 @@
     android:orientation="vertical"
     android:padding="@dimen/dialog_space">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/qr_code_button"
         style="@style/Button"
         android:layout_width="match_parent"
@@ -31,27 +31,41 @@
         android:text="@string/scan_qr_code"
         app:icon="@drawable/ic_qr_code" />
 
-    <EditText
-        android:id="@+id/server_ip_edit_text"
-        style="@style/EditText"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dialog_space"
-        android:hint="@string/ip"
-        android:importantForAutofill="no"
-        android:inputType="text" />
+        style="@style/TextInput">
 
-    <EditText
-        android:id="@+id/pairing_port_edit_text"
-        style="@style/EditText"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/server_ip_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_space"
+            android:hint="@string/ip"
+            android:importantForAutofill="no"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dialog_space"
-        android:hint="@string/port"
-        android:importantForAutofill="no"
-        android:inputType="number" />
+        style="@style/TextInput">
 
-    <TextView
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pairing_port_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_space"
+            android:hint="@string/port"
+            android:importantForAutofill="no"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
         style="@style/TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

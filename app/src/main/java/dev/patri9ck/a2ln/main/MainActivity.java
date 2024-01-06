@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
 
+        setSupportActionBar(activityMainBinding.topAppBar);
         setContentView(activityMainBinding.getRoot());
 
         generateKeys();
