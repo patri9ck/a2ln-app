@@ -22,19 +22,13 @@ import android.view.LayoutInflater;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.databinding.DialogLogsBinding;
 
 public class LogDialogBuilder extends MaterialAlertDialogBuilder {
 
     public LogDialogBuilder(String log, LayoutInflater layoutInflater) {
         super(layoutInflater.getContext(), R.style.Dialog);
-
-        DialogLogsBinding dialogLogsBinding = DialogLogsBinding.inflate(layoutInflater);
-
-        dialogLogsBinding.logsTextView.setText(log);
-
         setTitle(R.string.log_dialog_title);
-        setView(dialogLogsBinding.getRoot());
+        setMessage(log);
         setNegativeButton(R.string.cancel, null);
     }
 

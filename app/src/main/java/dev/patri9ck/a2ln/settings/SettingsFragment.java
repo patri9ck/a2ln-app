@@ -52,7 +52,6 @@ import java.util.concurrent.TimeUnit;
 
 import dev.patri9ck.a2ln.BuildConfig;
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.databinding.DialogPermissionRequestBinding;
 import dev.patri9ck.a2ln.databinding.FragmentSettingsBinding;
 import dev.patri9ck.a2ln.log.LogDialogBuilder;
 import dev.patri9ck.a2ln.notification.NotificationSender;
@@ -236,13 +235,9 @@ public class SettingsFragment extends Fragment {
         }
 
         if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-            DialogPermissionRequestBinding dialogPermissionRequestBinding = DialogPermissionRequestBinding.inflate(getLayoutInflater());
-
-            dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_notification_information);
-
             new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                     .setTitle(R.string.permission_request_dialog_title)
-                    .setView(dialogPermissionRequestBinding.getRoot())
+                    .setMessage(R.string.permission_request_dialog_notification_information)
                     .setPositiveButton(R.string.grant, (requestPermissionDialog, which) -> launcher.launch(Manifest.permission.POST_NOTIFICATIONS))
                     .setNegativeButton(R.string.cancel, (requestPermissionDialog, which) -> sendNotificationDirectly())
                     .show();

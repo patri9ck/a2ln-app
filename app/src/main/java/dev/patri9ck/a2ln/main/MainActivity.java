@@ -38,7 +38,6 @@ import org.zeromq.ZCert;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.ActivityMainBinding;
-import dev.patri9ck.a2ln.databinding.DialogPermissionRequestBinding;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -92,14 +91,9 @@ public class MainActivity extends AppCompatActivity {
         if (NotificationManagerCompat.getEnabledListenerPackages(this).contains(getPackageName())) {
             return;
         }
-
-        DialogPermissionRequestBinding dialogPermissionRequestBinding = DialogPermissionRequestBinding.inflate(getLayoutInflater());
-
-        dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_listener_information);
-
         new MaterialAlertDialogBuilder(this, R.style.Dialog)
                 .setTitle(R.string.permission_request_dialog_title)
-                .setView(dialogPermissionRequestBinding.getRoot())
+                .setMessage(R.string.permission_request_dialog_listener_information)
                 .setPositiveButton(R.string.grant, (requestPermissionDialog, which) -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)))
                 .setNegativeButton(R.string.cancel, null)
                 .show();
