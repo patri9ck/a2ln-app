@@ -21,33 +21,51 @@
     android:orientation="vertical"
     android:padding="@dimen/dialog_space">
 
-    <EditText
-        android:id="@+id/edit_server_ip_edit_text"
-        style="@style/EditText"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dialog_space"
-        android:digits="0123456789."
-        android:hint="@string/ip"
-        android:importantForAutofill="no"
-        android:inputType="number" />
+        style="@style/TextInput">
 
-    <EditText
-        android:id="@+id/edit_server_port_edit_text"
-        style="@style/EditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dialog_space"
-        android:hint="@string/port"
-        android:importantForAutofill="no"
-        android:inputType="number" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_server_ip_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_space"
+            android:digits="0123456789."
+            android:hint="@string/ip"
+            android:importantForAutofill="no"
+            android:inputType="number" />
 
-    <EditText
-        android:id="@+id/edit_server_alias_edit_text"
-        style="@style/EditText"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/alias"
-        android:importantForAutofill="no"
-        android:inputType="textAutoCorrect" />
+        style="@style/TextInput">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_server_port_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_space"
+            android:hint="@string/port"
+            android:importantForAutofill="no"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextInput">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_server_alias_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/alias"
+            android:importantForAutofill="no"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
