@@ -55,8 +55,7 @@
         style="@style/TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dialog_space"
-        tools:text="Xk2gWrPGwafFX$PaApq>psV#{m8quB?rOb%qIL4&amp;" />
+        android:layout_marginBottom="@dimen/dialog_space" />
 
     <TextView
         style="@style/TextView"

@@ -17,7 +17,7 @@
   -->
 <resources>
     <dimen name="space">10dp</dimen>
-    <dimen name="fab_space">16dp</dimen>
-    <dimen name="fab_space_small">6dp</dimen>
+    <dimen name="pair_button_bottom_space">16dp</dimen>
+    <dimen name="pair_button_end_space">6dp</dimen>
     <dimen name="dialog_space">15dp</dimen>
 </resources>

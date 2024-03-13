@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_space_small"
-        android:layout_marginBottom="@dimen/fab_space"
+        android:layout_marginEnd="@dimen/pair_button_end_space"
+        android:layout_marginBottom="@dimen/pair_button_bottom_space"
         tools:ignore="ContentDescription" />
 </FrameLayout>

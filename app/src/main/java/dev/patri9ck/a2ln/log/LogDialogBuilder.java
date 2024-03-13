@@ -27,6 +27,7 @@ public class LogDialogBuilder extends MaterialAlertDialogBuilder {
 
     public LogDialogBuilder(String log, LayoutInflater layoutInflater) {
         super(layoutInflater.getContext(), R.style.Dialog);
+
         setTitle(R.string.log_dialog_title);
         setMessage(log);
         setNegativeButton(R.string.cancel, null);

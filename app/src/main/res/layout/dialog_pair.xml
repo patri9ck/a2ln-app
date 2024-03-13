@@ -15,39 +15,41 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/dialog_space">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/qr_code_button"
-        style="@style/Button"
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dialog_space"
-        android:text="@string/scan_qr_code"
-        app:icon="@drawable/ic_qr_code" />
+        android:orientation="vertical"
+        android:padding="@dimen/dialog_space">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dialog_space"
-        style="@style/TextInput">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/server_ip_edit_text"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/qr_code_button"
+            style="@style/Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dialog_space"
-            android:digits="0123456789."
-            android:hint="@string/ip"
-            android:importantForAutofill="no"
-            android:inputType="number" />
+            android:text="@string/scan_qr_code"
+            app:icon="@drawable/ic_qr_code" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/TextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_space">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/server_ip_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789."
+                android:hint="@string/ip"
+                android:importantForAutofill="no" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -59,16 +61,16 @@
             android:id="@+id/pairing_port_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dialog_space"
             android:hint="@string/port"
             android:importantForAutofill="no"
             android:inputType="number" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        style="@style/TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pair_dialog_information" />
-</LinearLayout>
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pair_dialog_information" />
+    </LinearLayout>
+</ScrollView>
