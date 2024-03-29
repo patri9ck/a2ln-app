@@ -27,6 +27,7 @@ import android.provider.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.WindowCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         loadNavigationBar();
         requestPermission();
         createNotificationChannel();
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     }
 
     private void generateKeys() {
