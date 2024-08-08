@@ -28,10 +28,11 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/pair_button"
-        style="@style/FloatingActionButton"
+        android:src="@drawable/ic_pair"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/space"
+        android:layout_marginEnd="@dimen/pair_button_end_space"
+        android:layout_marginBottom="@dimen/pair_button_bottom_space"
         tools:ignore="ContentDescription" />
 </FrameLayout>
