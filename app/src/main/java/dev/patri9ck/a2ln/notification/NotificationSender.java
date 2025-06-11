@@ -112,6 +112,7 @@ public class NotificationSender {
         zMsg.add(parsedNotification.getAppName());
         zMsg.add(parsedNotification.getTitle());
         zMsg.add(parsedNotification.getText());
+        zMsg.add(parsedNotification.getPackageName());
 
         parsedNotification.getIcon().ifPresent(zMsg::add);
 
