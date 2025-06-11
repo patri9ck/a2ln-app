@@ -64,8 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/alias"
-            android:importantForAutofill="no"
-            android:inputType="number" />
+            android:importantForAutofill="no" />
 
     </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
