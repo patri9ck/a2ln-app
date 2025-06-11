@@ -256,7 +256,7 @@ public class SettingsFragment extends Fragment {
 
             CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.app_name),
                     getString(R.string.notification_title),
-                    getString(R.string.notification_text), this.getContext().getPackageName()))).thenAccept(keptLog -> requireActivity().runOnUiThread(() -> succeed(keptLog.format())));
+                    getString(R.string.notification_text), requireContext().getPackageName()))).thenAccept(keptLog -> requireActivity().runOnUiThread(() -> succeed(keptLog.format())));
         });
     }
 
