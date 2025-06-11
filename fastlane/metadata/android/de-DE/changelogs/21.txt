@@ -1,0 +1,2 @@
+- Alphanumerische Zeichen sind nun im Server Alias erlaubt
+- Package wird nun mit an den Server gesendet
