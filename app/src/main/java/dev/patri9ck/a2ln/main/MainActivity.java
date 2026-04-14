@@ -43,6 +43,7 @@ import dev.patri9ck.a2ln.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding activityMainBinding;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        NavController navController = navHostFragment.getNavController();
+        navController = navHostFragment.getNavController();
 
         NavigationUI.setupActionBarWithNavController(this, navController, new AppBarConfiguration.Builder(R.id.navigation_servers, R.id.navigation_apps, R.id.navigation_settings)
                 .build());
@@ -108,5 +109,10 @@ public class MainActivity extends AppCompatActivity {
         notificationChannel.setDescription(getString(R.string.channel_description));
 
         NotificationManagerCompat.from(this).createNotificationChannel(notificationChannel);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return navController.navigateUp();
     }
 }

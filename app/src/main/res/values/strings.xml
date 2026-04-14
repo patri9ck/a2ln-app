@@ -41,6 +41,10 @@
     <string name="servers_title">Servers</string>
     <string name="apps_title">Apps</string>
     <string name="settings_title">Settings</string>
+    <string name="app_settings_title">App Settings</string>
+    <string name="enabled">Enabled</string>
+    <string name="hide_content">Hide Content</string>
+    <string name="content_hidden">Content Hidden</string>
     <string name="pair_dialog_title">Pair a New Server</string>
     <string name="pair_dialog_information">Alternatively, enter the IP and port of the server manually.</string>
     <string name="pairing_dialog_title">Pairing…</string>

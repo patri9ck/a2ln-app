@@ -41,6 +41,10 @@
     <string name="servers_title">Servery</string>
     <string name="apps_title">Aplikace</string>
     <string name="settings_title">Nastavení</string>
+    <string name="app_settings_title">Nastavení Aplikace</string>
+    <string name="enabled">Povoleno</string>
+    <string name="hide_content">Skrýt obsah</string>
+    <string name="content_hidden">Obsah Skrytý</string>
     <string name="pair_dialog_title">Spárujte nový server</string>
     <string name="pair_dialog_information">Případně zadejte IP a port serveru ručně.</string>
     <string name="pairing_dialog_title">Párování…</string>

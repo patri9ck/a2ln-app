@@ -41,6 +41,10 @@
     <string name="servers_title">Server</string>
     <string name="apps_title">Apps</string>
     <string name="settings_title">Einstellungen</string>
+    <string name="app_settings_title">App-Einstellungen</string>
+    <string name="enabled">Ermöglicht</string>
+    <string name="hide_content">Inhalt ausblenden</string>
+    <string name="content_hidden">Inhalt Ausgeblendet</string>
     <string name="pair_dialog_title">Neuen Server koppeln</string>
     <string name="pair_dialog_information">Alternativ können Sie hier die IP und den Port des Servers manuell eintragen.</string>
     <string name="pairing_dialog_title">Koppeln…</string>

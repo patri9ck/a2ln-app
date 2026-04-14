@@ -75,7 +75,7 @@ public class AppsFragment extends Fragment {
                 .thenAccept(apps -> requireActivity().runOnUiThread(() -> {
                     fragmentAppsBinding.loadingProgressIndicator.setVisibility(View.INVISIBLE);
 
-                    fragmentAppsBinding.appsRecyclerView.setAdapter(new AppsAdapter(disabledApps, apps, storage));
+                    fragmentAppsBinding.appsRecyclerView.setAdapter(new AppsAdapter(apps));
                     fragmentAppsBinding.appsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
                 }));
     }

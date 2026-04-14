@@ -42,9 +42,4 @@
         android:singleLine="true"
         tools:text="A cool app name" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/app_check_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
 </LinearLayout>
