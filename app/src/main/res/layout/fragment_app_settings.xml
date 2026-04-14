@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="@dimen/space"
+    android:layout_marginTop="@dimen/space"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/app_desc_view"
+        layout="@layout/item_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:background="@android:color/transparent" />
+
+    <Switch
+        android:id="@+id/app_enabled_switch"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/enabled" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:background="@android:color/transparent" />
+
+    <Switch
+        android:id="@+id/app_hide_content_switch"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/hide_content" />
+</LinearLayout>

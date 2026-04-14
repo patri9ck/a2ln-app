@@ -96,7 +96,7 @@ public class NotificationSender {
         this.servers = filterServers(servers);
     }
 
-    public KeptLog sendParsedNotification(ParsedNotification parsedNotification) {
+    public KeptLog sendParsedNotification(ParsedNotification parsedNotification, boolean contentHidden) {
         KeptLog keptLog = new KeptLog(context);
 
         if (servers.isEmpty()) {
@@ -111,7 +111,13 @@ public class NotificationSender {
 
         zMsg.add(parsedNotification.getAppName());
         zMsg.add(parsedNotification.getTitle());
-        zMsg.add(parsedNotification.getText());
+
+        if (contentHidden) {
+            zMsg.add(context.getString(R.string.content_hidden));
+        } else {
+            zMsg.add(parsedNotification.getText());
+        }
+
         zMsg.add(parsedNotification.getPackageName());
 
         parsedNotification.getIcon().ifPresent(zMsg::add);

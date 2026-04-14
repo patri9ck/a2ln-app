@@ -254,9 +254,18 @@ public class SettingsFragment extends Fragment {
 
             fragmentSettingsBinding.sendingProgressIndicator.setVisibility(View.VISIBLE);
 
-            CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.app_name),
-                    getString(R.string.notification_title),
-                    getString(R.string.notification_text), requireContext().getPackageName()))).thenAccept(keptLog -> requireActivity().runOnUiThread(() -> succeed(keptLog.format())));
+            CompletableFuture.supplyAsync(
+                            () -> notificationSender.sendParsedNotification(
+                                    new ParsedNotification(
+                                            getString(R.string.app_name),
+                                            getString(R.string.notification_title),
+                                            getString(R.string.notification_text),
+                                            requireContext().getPackageName()
+                                    ),
+                                    false))
+                    .thenAccept(keptLog -> requireActivity()
+                            .runOnUiThread(() -> succeed(keptLog.format()))
+                    );
         });
     }
 

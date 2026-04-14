@@ -17,30 +17,27 @@
  */
 package dev.patri9ck.a2ln.app;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.ItemAppBinding;
-import dev.patri9ck.a2ln.util.Storage;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder> {
-
-    private final List<String> disabledApps;
-    private final Storage storage;
     private final List<App> apps;
 
-    public AppsAdapter(List<String> disabledApps, List<App> apps, Storage storage) {
-        this.disabledApps = disabledApps;
+    public AppsAdapter(List<App> apps) {
         this.apps = apps;
-        this.storage = storage;
     }
 
     @NonNull
@@ -53,21 +50,13 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
     public void onBindViewHolder(AppViewHolder holder, int position) {
         App app = apps.get(position);
 
-        holder.appCheckBox.setOnCheckedChangeListener((appCheckBoxView, isChecked) -> {
-            app.setEnabled(isChecked);
+        holder.itemView.setOnClickListener((View appCardView) -> {
+            Bundle bundle = new Bundle();
 
-            String packageName = app.getPackageName();
-
-            if (isChecked) {
-                disabledApps.remove(packageName);
-            } else if (!disabledApps.contains(packageName)) {
-                disabledApps.add(packageName);
-            }
-
-            storage.saveDisabledApps(disabledApps);
+            bundle.putString("package_name", app.getPackageName());
+            Navigation.findNavController(appCardView).navigate(R.id.app_settings, bundle);
         });
 
-        holder.appCheckBox.setChecked(app.isEnabled());
         holder.nameTextView.setText(app.getName());
         holder.iconImageView.setImageDrawable(app.getIcon());
     }
@@ -78,16 +67,13 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
     }
 
     protected static class AppViewHolder extends RecyclerView.ViewHolder {
-
         private final TextView nameTextView;
-        private final CheckBox appCheckBox;
         private final ImageView iconImageView;
 
         public AppViewHolder(ItemAppBinding itemAppBinding) {
             super(itemAppBinding.getRoot());
 
             nameTextView = itemAppBinding.nameTextView;
-            appCheckBox = itemAppBinding.appCheckBox;
             iconImageView = itemAppBinding.iconImageView;
         }
     }

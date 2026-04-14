@@ -66,6 +66,14 @@ public class Storage {
         sharedPreferences.edit().putString(context.getString(R.string.preferences_disabled_apps), Util.toJson(disabledApps)).apply();
     }
 
+    public List<String> loadContentHiddenApps() {
+        return Util.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_content_hidden_apps), null), String.class);
+    }
+
+    public void saveContentHiddenApps(List<String> contentHiddenApps) {
+        sharedPreferences.edit().putString(context.getString(R.string.preferences_content_hidden_apps), Util.toJson(contentHiddenApps)).apply();
+    }
+
     public Optional<Float> loadSimilarity() {
         float similarity = sharedPreferences.getFloat(context.getString(R.string.preferences_similarity), Float.MIN_VALUE);
 

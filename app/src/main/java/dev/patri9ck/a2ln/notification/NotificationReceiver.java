@@ -48,6 +48,7 @@ public class NotificationReceiver extends NotificationListenerService {
     private NotificationSpamHandler notificationSpamHandler;
 
     private List<String> disabledApps;
+    private List<String> contentHiddenApps;
 
     private boolean display;
     private boolean noApp;
@@ -85,6 +86,10 @@ public class NotificationReceiver extends NotificationListenerService {
 
         if (getString(R.string.preferences_no_app).equals(key)) {
             noApp = storage.loadNoApp();
+        }
+
+        if (getString(R.string.preferences_content_hidden_apps).equals(key)) {
+            contentHiddenApps = storage.loadContentHiddenApps();
         }
     };
 
@@ -140,11 +145,17 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(parsedNotification)).thenAccept(keptLog -> {
-            if (test) {
-                storage.saveLog(keptLog.format());
-            }
-        });
+        CompletableFuture.supplyAsync(
+                        () -> notificationSender.sendParsedNotification(
+                                parsedNotification,
+                                contentHiddenApps.contains(packageName)
+                        )
+                )
+                .thenAccept(keptLog -> {
+                    if (test) {
+                        storage.saveLog(keptLog.format());
+                    }
+                });
 
         Log.v(TAG, "Notification given to NotificationSender");
     }
@@ -176,6 +187,7 @@ public class NotificationReceiver extends NotificationListenerService {
 
             notificationSpamHandler = new NotificationSpamHandler(storage.loadSimilarityOrDefault(), storage.loadDurationOrDefault());
             disabledApps = storage.loadDisabledApps();
+            contentHiddenApps = storage.loadContentHiddenApps();
             display = storage.loadDisplay();
 
             sharedPreferences.registerOnSharedPreferenceChangeListener(listener);

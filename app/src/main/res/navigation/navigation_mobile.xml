@@ -29,10 +29,23 @@
         android:id="@+id/navigation_apps"
         android:name="dev.patri9ck.a2ln.app.AppsFragment"
         android:label="@string/apps_title"
-        tools:layout="@layout/fragment_apps" />
+        tools:layout="@layout/fragment_apps" >
+        <action
+            android:id="@+id/app_settings"
+            app:destination="@id/navigation_app_settings" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_settings"
         android:name="dev.patri9ck.a2ln.settings.SettingsFragment"
         android:label="@string/settings_title"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/navigation_app_settings"
+        android:name="dev.patri9ck.a2ln.app.AppSettingsFragment"
+        android:label="AppSettingsFragment"
+        tools:layout="@layout/fragment_app_settings" >
+        <argument
+            android:name="package_name"
+            app:argType="string" />
+    </fragment>
 </navigation>

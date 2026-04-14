@@ -19,6 +19,7 @@
     <string name="preferences" translatable="false">dev.patri9ck.a2ln</string>
     <string name="preferences_servers" translatable="false">servers</string>
     <string name="preferences_disabled_apps" translatable="false">disabled_apps</string>
+    <string name="preferences_content_hidden_apps" translatable="false">content_hidden_apps</string>
     <string name="preferences_public_key" translatable="false">public_key</string>
     <string name="preferences_secret_key" translatable="false">secret_key</string>
     <string name="preferences_similarity" translatable="false">similarity</string>

@@ -41,6 +41,10 @@
     <string name="servers_title">Серверы</string>
     <string name="apps_title">Приложения</string>
     <string name="settings_title">Настройки</string>
+    <string name="app_settings_title">Настройки Приложения</string>
+    <string name="enabled">Включено</string>
+    <string name="hide_content">Скрыть Cодержимое</string>
+    <string name="content_hidden">Содержимое Cкрыто</string>
     <string name="pair_dialog_title">Сопряжить с Новым Сервером</string>
     <string name="pair_dialog_information">Как альтернатива, введите IP и порт сервера вручную.</string>
     <string name="pairing_dialog_title">Сопряжение…</string>
