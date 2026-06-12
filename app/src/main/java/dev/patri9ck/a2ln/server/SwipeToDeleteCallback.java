@@ -37,7 +37,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     private final ServersAdapter serversAdapter;
 
     public SwipeToDeleteCallback(View rootView, BoundNotificationReceiver boundNotificationReceiver, List<Server> servers, ServersAdapter serversAdapter) {
-        super(0, ItemTouchHelper.LEFT);
+        super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
 
         this.rootView = rootView;
         this.boundNotificationReceiver = boundNotificationReceiver;

@@ -19,6 +19,7 @@ package dev.patri9ck.a2ln.server;
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 import dev.patri9ck.a2ln.R;
+import dev.patri9ck.a2ln.app.AppsAdapter;
 import dev.patri9ck.a2ln.databinding.DialogEditServerBinding;
 import dev.patri9ck.a2ln.databinding.ItemServerBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
@@ -97,6 +99,10 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerVi
                     .setNegativeButton(R.string.cancel, null)
                     .show();
         });
+
+        holder.serverCheckBox.setOnCheckedChangeListener((serverCheckBoxView, isChecked) -> server.setEnabled(isChecked));
+
+        holder.serverCheckBox.setChecked(server.isEnabled());
     }
 
     @Override
@@ -107,11 +113,13 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerVi
     protected static class ServerViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView addressTextView;
+        private final CheckBox serverCheckBox;
 
         public ServerViewHolder(ItemServerBinding itemServerBinding) {
             super(itemServerBinding.getRoot());
 
             addressTextView = itemServerBinding.addressTextView;
+            serverCheckBox = itemServerBinding.serverCheckBox;
         }
     }
 }

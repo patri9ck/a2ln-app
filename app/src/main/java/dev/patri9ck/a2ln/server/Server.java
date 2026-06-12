@@ -24,20 +24,22 @@ public class Server {
     private int port;
     private byte[] publicKey;
     private String alias;
+    private boolean enabled;
 
     public Server() {
         // Gson
     }
 
-    public Server(String ip, int port, byte[] publicKey, String alias) {
+    public Server(String ip, int port, byte[] publicKey, String alias, boolean enabled) {
         this.ip = ip;
         this.port = port;
         this.publicKey = publicKey;
         this.alias = alias;
+        this.enabled = enabled;
     }
 
     public Server(String ip, int port, byte[] publicKey) {
-        this(ip, port, publicKey, null);
+        this(ip, port, publicKey, null, true);
     }
 
     public String getIp() {
@@ -66,6 +68,14 @@ public class Server {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getAddress() {
