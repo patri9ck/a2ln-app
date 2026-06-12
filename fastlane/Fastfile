@@ -1,0 +1,12 @@
+default_platform(:android)
+
+platform :android do
+  lane :build do
+    gradle(task: "clean bundleRelease")
+  end
+
+  lane :screenshots do
+    gradle(task: "clean assembleDebug assembleAndroidTest")
+    screengrab
+  end
+end
