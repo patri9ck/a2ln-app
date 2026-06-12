@@ -14,12 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
+package dev.patri9ck.a2ln.util;
+
+public class PortParser {
+
+    public static final int INVALID_PORT = -1;
+    private static final int MINIMUM_PORT = -1;
+    private static final int MAXIMUM_PORT = 65535;
+
+    private PortParser() {}
+
+    public static int parsePort(String port) {
+        try {
+            int parsedPort = Integer.parseInt(port);
+
+            if (parsedPort >= MINIMUM_PORT && parsedPort <= MAXIMUM_PORT) {
+                return parsedPort;
+            }
+        } catch (NumberFormatException ignored) {}
+
+        return INVALID_PORT;
     }
 }
-rootProject.name = "a2ln"
-include(":app")

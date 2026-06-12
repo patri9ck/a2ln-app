@@ -15,17 +15,19 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/loading_progress_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:visibility="invisible" />
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/apps_recycler_view"
+        android:id="@+id/servers_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pair_button"
+        style="@style/FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/space"
+        tools:ignore="ContentDescription" />
 </FrameLayout>

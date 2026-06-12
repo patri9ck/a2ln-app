@@ -14,18 +14,11 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/address_text_view"
+    style="@style/TextView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/loading_progress_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:visibility="invisible" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/apps_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/space"
+    android:layout_marginBottom="@dimen/space"
+    android:textSize="28sp" />

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2022 Patrick Zwick and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package dev.patri9ck.a2ln.main;
 
 import android.content.Context;
@@ -34,24 +50,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(activityMainBinding.getRoot());
 
         generateKeys();
-
         loadNavigationBar();
-
         requestPermission();
     }
 
     private void generateKeys() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        if (sharedPreferences.contains(getString(R.string.preferences_client_public_key)) && sharedPreferences.contains(getString(R.string.preferences_client_secret_key))) {
+        if (sharedPreferences.contains(getString(R.string.preferences_own_public_key)) && sharedPreferences.contains(getString(R.string.preferences_own_secret_key))) {
             return;
         }
 
         ZCert zCert = new ZCert();
 
         sharedPreferences.edit()
-                .putString(getString(R.string.preferences_client_public_key), zCert.getPublicKeyAsZ85())
-                .putString(getString(R.string.preferences_client_secret_key), zCert.getSecretKeyAsZ85())
+                .putString(getString(R.string.preferences_own_public_key), zCert.getPublicKeyAsZ85())
+                .putString(getString(R.string.preferences_own_secret_key), zCert.getSecretKeyAsZ85())
                 .apply();
     }
 
@@ -64,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         NavController navController = navHostFragment.getNavController();
 
-        NavigationUI.setupActionBarWithNavController(this, navController, new AppBarConfiguration.Builder(R.id.navigation_devices, R.id.navigation_apps, R.id.navigation_settings)
+        NavigationUI.setupActionBarWithNavController(this, navController, new AppBarConfiguration.Builder(R.id.navigation_servers, R.id.navigation_apps, R.id.navigation_settings)
                 .build());
         NavigationUI.setupWithNavController(activityMainBinding.mainBottomNavigationView, navController);
     }
@@ -76,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         DialogPermissionRequestBinding dialogPermissionRequestBinding = DialogPermissionRequestBinding.inflate(getLayoutInflater());
 
-        dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_information_notification);
+        dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_information);
 
         new MaterialAlertDialogBuilder(this, R.style.Dialog)
                 .setTitle(R.string.permission_request_dialog_title)

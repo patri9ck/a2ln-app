@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2022 Patrick Zwick and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package dev.patri9ck.a2ln.notification;
 
 import android.content.Context;
@@ -11,10 +27,9 @@ import org.zeromq.ZMsg;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.device.Device;
+import dev.patri9ck.a2ln.server.Server;
 import dev.patri9ck.a2ln.util.JsonListConverter;
 import zmq.util.Z85;
 
@@ -24,21 +39,19 @@ public class NotificationSender {
 
     private static final int TIMEOUT_SECONDS = 5;
 
-    byte[] clientPublicKey;
-    byte[] clientSecretKey;
+    private final byte[] clientPublicKey;
+    private final byte[] clientSecretKey;
+    private List<Server> servers;
 
-    private List<Device> devices;
-
-    public NotificationSender(List<Device> devices, byte[] clientPublicKey, byte[] clientSecretKey) {
-        this.devices = devices;
-
+    public NotificationSender(List<Server> servers, byte[] clientPublicKey, byte[] clientSecretKey) {
+        this.servers = servers;
         this.clientPublicKey = clientPublicKey;
         this.clientSecretKey = clientSecretKey;
     }
 
     public static NotificationSender fromSharedPreferences(Context context, SharedPreferences sharedPreferences) {
-        String clientPublicKey = sharedPreferences.getString(context.getString(R.string.preferences_client_public_key), null);
-        String clientSecretKey = sharedPreferences.getString(context.getString(R.string.preferences_client_secret_key), null);
+        String clientPublicKey = sharedPreferences.getString(context.getString(R.string.preferences_own_public_key), null);
+        String clientSecretKey = sharedPreferences.getString(context.getString(R.string.preferences_own_secret_key), null);
 
         if (clientPublicKey == null || clientSecretKey == null) {
             Log.e(TAG, "Client keys not saved in preferences properly");
@@ -46,21 +59,23 @@ public class NotificationSender {
             return null;
         }
 
-        return new NotificationSender(JsonListConverter.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_devices), null), Device.class),
+        return new NotificationSender(JsonListConverter.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_servers), null), Server.class),
                 Z85.decode(clientPublicKey),
                 Z85.decode(clientSecretKey));
     }
 
-    public synchronized void setDevices(List<Device> devices) {
-        this.devices = devices;
+    public synchronized void setServers(List<Server> servers) {
+        this.servers = servers;
     }
 
     public synchronized void sendParsedNotification(ParsedNotification parsedNotification) {
-        if (devices.isEmpty()) {
-            Log.v(TAG, "No devices given, will not start clients");
+        if (servers.isEmpty()) {
+            Log.v(TAG, "No servers given, will not start clients");
 
             return;
         }
+
+        Log.v(TAG, "Trying to send notification to clients");
 
         ZMsg zMsg = new ZMsg();
 
@@ -74,34 +89,23 @@ public class NotificationSender {
         }
 
         try (ZContext zContext = new ZContext()) {
-            CountDownLatch countDownLatch = new CountDownLatch(devices.size());
-
-            devices.forEach(device -> CompletableFuture.runAsync(() -> {
+            servers.forEach(server -> CompletableFuture.runAsync(() -> {
                 try (ZMQ.Socket client = zContext.createSocket(SocketType.PUSH)) {
                     client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
                     client.setImmediate(false);
                     client.setCurvePublicKey(clientPublicKey);
                     client.setCurveSecretKey(clientSecretKey);
-                    client.setCurveServerKey(device.getPublicKey());
-                    client.connect("tcp://" + device.getAddress());
+                    client.setCurveServerKey(server.getPublicKey());
 
-                    Log.v(TAG, "Trying to send notification to " + client.getLastEndpoint());
-
-                    if (zMsg.send(client, false)) {
+                    if (client.connect("tcp://" + server.getAddress()) && zMsg.send(client, false)) {
                         Log.v(TAG, "Successfully sent notification to " + client.getLastEndpoint());
-                    } else {
-                        Log.v(TAG, "Failed to send notification to " + client.getLastEndpoint());
+
+                        return;
                     }
+
+                    Log.v(TAG, "Failed to send notification to " + client.getLastEndpoint());
                 }
-
-                countDownLatch.countDown();
             }));
-
-            try {
-                countDownLatch.await();
-            } catch (InterruptedException ignored) {}
-
-            Log.v(TAG, "Finished trying to send notification");
         }
     }
 }
