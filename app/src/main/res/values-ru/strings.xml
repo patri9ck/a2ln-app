@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+  ~ Copyright (C) 2023  patri9ck and contributors
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="ip">IP-адрес</string>
+    <string name="port">Порт</string>
+    <string name="alias">Алиас</string>
+    <string name="public_key">Публичный ключ</string>
+    <string name="pair">Спряжить</string>
+    <string name="apply">Принять</string>
+    <string name="cancel">Cancel</string>
+    <string name="grant">Разрешить</string>
+    <string name="already_paired">Уже сопряжено</string>
+    <string name="invalid_ip">Неверный IP</string>
+    <string name="invalid_port">Неверный Порт</string>
+    <string name="invalid_qr_code">Неверный QR Код</string>
+    <string name="pairing_failed">Сопряжение не удалось</string>
+    <string name="removed_server">Сервер Удалён</string>
+    <string name="removed_server_undo">Отменить</string>
+    <string name="permission">Разрешение</string>
+    <string name="scan_qr_code">Сканировать QR код</string>
+    <string name="notification">Уведомление</string>
+    <string name="help"><a href="https://www.patri9ck.dev/a2ln/">Помощь</a></string>
+    <string name="view_log">Просмотреть журнал</string>
+    <string name="notification_text">Тестовое уведомление</string>
+    <string name="notification_sent">Тестовое уведомление было послано на все запущенные сервера.</string>
+    <string name="servers_title">Серверы</string>
+    <string name="apps_title">Приложения</string>
+    <string name="settings_title">Настройки</string>
+    <string name="pair_dialog_title">Сопряжить с Новым Сервером</string>
+    <string name="pair_dialog_information">Как альтернатива, введите IP и порт сервера вручную.</string>
+    <string name="pairing_dialog_title">Сопряжение…</string>
+    <string name="pairing_dialog_information">Примите запрос на сопряжение на сервере и проверьте IP-адрес и публичный ключ.</string>
+    <string name="paired_dialog_title">Успешно сопряжено</string>
+    <string name="paired_dialog_information">Проверьте IP и публичный ключ сервера.</string>
+    <string name="permission_request_dialog_title">Требуется разрешение</string>
+    <string name="permission_request_dialog_listener_information">Чтобы иметь возможность прослушивать уведомления необходимо разрешение.</string>
+    <string name="permission_request_dialog_notification_information">Требуется разрешение для отправки тестового уведомления которое будет подхвачено слушателем уведомлений и отправлено на сервер.</string>
+    <string name="notification_timed_out">Слушатель уведомлений не получил ни одного уведомления.</string>
+    <string name="edit_server_dialog_title">Редактировать Сервер</string>
+    <string name="log_dialog_title">Журнал</string>
+    <string name="spam_information">Уведомление может быть заблокировано на определенный срок, если оно превышает определенное сходство с предыдущим..</string>
+    <string name="similarity">Сходство в %</string>
+    <string name="duration">Продолжительность в секундах</string>
+    <string name="display_information">Не отправлять уведомления, если отображение включено.</string>
+    <string name="no_app_information">Отправляйте уведомления, которые не приходят из приложений. Их нельзя отключить.</string>
+    <string name="channel_name">Проверочные уведомления</string>
+    <string name="channel_description">Используется для тестовых уведомлений.</string>
+</resources>
