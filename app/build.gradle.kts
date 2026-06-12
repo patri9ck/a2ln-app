@@ -21,13 +21,16 @@ plugins {
     id("com.android.application")
 }
 
+@Suppress("UnstableApiUsage")
 android {
-    compileSdk = 32
+    namespace = "dev.patri9ck.a2ln"
+
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "dev.patri9ck.a2ln"
         minSdk = 27
-        targetSdk = 32
+        targetSdk = 33
 
         versionCode = 12
         versionName = "1.2.6"
@@ -69,9 +72,9 @@ android {
 
 dependencies {
     implementation("com.google.code.gson:gson:2.9.1")
-    implementation("com.google.android.material:material:1.7.0")
+    implementation("com.google.android.material:material:1.8.0")
     implementation("org.zeromq:jeromq:0.5.2")
-    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.navigation:navigation-fragment:2.5.3")
     implementation("androidx.navigation:navigation-ui:2.5.3")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")

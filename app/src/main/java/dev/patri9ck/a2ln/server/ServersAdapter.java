@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.app.AppsAdapter;
 import dev.patri9ck.a2ln.databinding.DialogEditServerBinding;
 import dev.patri9ck.a2ln.databinding.ItemServerBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
@@ -75,7 +74,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerVi
                     .setPositiveButton(R.string.apply, (editPortDialog, which) -> {
                         String serverIp = dialogEditServerBinding.editServerIpEditText.getText().toString();
 
-                        if (!serversFragment.notifyValidIp(serverIp) || (!server.getIp().equals(serverIp) && serversFragment.notifyAlreadyPaired(serverIp))) {
+                        if (!serversFragment.notifyValidIp(serverIp) || (!server.getIp().equals(serverIp) && serversFragment.isAlreadyPaired(serverIp))) {
                             return;
                         }
 
