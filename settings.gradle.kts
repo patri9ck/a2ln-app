@@ -6,4 +6,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "a2ln"
-include ':app'
+include(":app")
