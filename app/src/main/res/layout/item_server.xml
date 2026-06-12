@@ -14,11 +14,25 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/address_text_view"
-    style="@style/TextView"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/space"
     android:layout_marginBottom="@dimen/space"
-    android:textSize="28sp" />
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/address_text_view"
+        style="@style/TextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/space"
+        android:layout_weight="1"
+        android:singleLine="true"
+        android:textSize="24sp" />
+    <CheckBox
+        android:id="@+id/server_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical" />
+</LinearLayout>

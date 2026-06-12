@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.server.Server;
@@ -50,7 +51,7 @@ public class NotificationSender {
     public NotificationSender(byte[] clientPublicKey, byte[] clientSecretKey, List<Server> servers) {
         this.clientPublicKey = clientPublicKey;
         this.clientSecretKey = clientSecretKey;
-        this.servers = servers;
+        this.servers = filterServers(servers);
     }
 
     public static Optional<NotificationSender> fromSharedPreferences(Context context, SharedPreferences sharedPreferences) {
@@ -69,7 +70,7 @@ public class NotificationSender {
     }
 
     public void setServers(List<Server> servers) {
-        this.servers = servers;
+        this.servers = filterServers(servers);
     }
 
     public KeptLog sendParsedNotification(ParsedNotification parsedNotification) {
@@ -117,7 +118,7 @@ public class NotificationSender {
             }));
         } finally {
             try {
-                if (!countDownLatch.await(TIMEOUT_SECONDS * 2, TimeUnit.SECONDS)) {
+                if (!countDownLatch.await(TIMEOUT_SECONDS + 1, TimeUnit.SECONDS)) {
                     keptLog.log("Timed out");
                 }
             } catch (InterruptedException ignored) {
@@ -128,5 +129,9 @@ public class NotificationSender {
         }
 
         return keptLog;
+    }
+
+    private List<Server> filterServers(List<Server> servers) {
+        return servers.stream().filter(Server::isEnabled).collect(Collectors.toList());
     }
 }

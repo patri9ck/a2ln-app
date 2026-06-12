@@ -215,6 +215,7 @@ public class ServersFragment extends Fragment {
         fragmentServersBinding.serversRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         new ItemTouchHelper(new SwipeToDeleteCallback(fragmentServersBinding.getRoot(), boundNotificationReceiver, servers, serversAdapter)).attachToRecyclerView(fragmentServersBinding.serversRecyclerView);
+        new ItemTouchHelper(new DragAndDropCallback(servers, serversAdapter)).attachToRecyclerView(fragmentServersBinding.serversRecyclerView);
     }
 
     private void startPairing(String serverIp, int pairingPort) {
