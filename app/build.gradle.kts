@@ -37,12 +37,13 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility(JavaVersion.VERSION_1_8)
-        targetCompatibility(JavaVersion.VERSION_1_8)
+        sourceCompatibility(JavaVersion.VERSION_17)
+        targetCompatibility(JavaVersion.VERSION_17)
     }
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     val keystoreFile = rootProject.file("keystore.properties")
@@ -71,12 +72,12 @@ android {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.9.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.code.gson:gson:2.10")
+    implementation("com.google.android.material:material:1.11.0")
     implementation("org.zeromq:jeromq:0.5.2")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.navigation:navigation-fragment:2.7.4")
-    implementation("androidx.navigation:navigation-ui:2.7.4")
+    implementation("androidx.navigation:navigation-fragment:2.7.7")
+    implementation("androidx.navigation:navigation-ui:2.7.7")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("me.xdrop:fuzzywuzzy:1.4.0")
     implementation("net.jodah:expiringmap:0.5.11")
