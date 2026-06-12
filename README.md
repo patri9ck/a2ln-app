@@ -1,16 +1,18 @@
 # Android 2 Linux Notifications App
-**Android 2 Linux Notifications** is a way to show your Android phone notifications on your Linux desktop using libnotify.
+**Android 2 Linux Notifications** (**A2LN**) is a way to show your Android notifications on Linux with libnotify. It creates a direct socket connection from your phone to your computer whenever a notification arrives. Both devices must be in the same network.
 
-It creates a direct socket connection to your PC whenever a notification arrives. **Therefore your phone and your PC must be in the same network.**
+This repository contains the app part of A2LN.
 ## Which Address Do I Have to Enter?
-When you start the [A2LN server](https://github.com/patri9ck/a2ln-server), it outputs the address: `Address: 192.168.178.41:6000`.
-
-Alternatively, you can find it out by using `ip route` in your terminal for example:
-```
-$ ip route
-default via 192.168.178.1 dev wlp39s0 proto dhcp metric 600
-192.168.178.0/24 dev wlp39s0 proto kernel scope link src 192.168.178.41 metric 600
-```
+- When you start the [A2LN server](https://github.com/patri9ck/a2ln-server), the address is shown:
+  ```
+  Address: 192.168.178.41:6000
+  ```
+- Alternatively, you can find it out by using `ip route` in your terminal for example:
+  ```
+  $ ip route
+  default via 192.168.178.1 dev wlp39s0 proto dhcp metric 600
+  192.168.178.0/24 dev wlp39s0 proto kernel scope link src 192.168.178.41 metric 600
+  ```
 With both methods, we can see that the address is `192.168.178.41` in this case.
 ## Notes on Specific Phones
 ### Huawei
