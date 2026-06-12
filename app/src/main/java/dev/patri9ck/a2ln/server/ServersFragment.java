@@ -242,7 +242,13 @@ public class ServersFragment extends Fragment {
 
             if (server == null) {
                 Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.view_logs, view -> new LogsDialogBuilder(requireContext(), pairingResult.getKeptLog(), getLayoutInflater()).show())
+                        .setAction(R.string.view_logs, view -> {
+                            if (!isVisible()) {
+                                return;
+                            }
+
+                            new LogsDialogBuilder(pairingResult.getKeptLog(), getLayoutInflater()).show();
+                        })
                         .show();
 
                 return;
