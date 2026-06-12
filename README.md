@@ -3,7 +3,7 @@
 
 It creates a direct socket connection to your PC whenever a notification arrives. **Therefore your phone and your PC must be in the same network.**
 ## Which Address Do I Have to Enter?
-When you start the [*A2LN* server](https://github.com/patri9ck/a2ln-server), it outputs the address: `Address: 192.168.178.41:6000`.
+When you start the [A2LN server](https://github.com/patri9ck/a2ln-server), it outputs the address: `Address: 192.168.178.41:6000`.
 
 Alternatively, you can find it out by using `ip route` in your terminal for example:
 ```sh
