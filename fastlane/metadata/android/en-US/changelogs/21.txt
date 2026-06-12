@@ -1,0 +1,2 @@
+- Alphanumeric characters are now allowed in the server alias
+- Send package to the server as well
