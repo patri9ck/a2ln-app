@@ -39,17 +39,19 @@ public class ParsedNotification {
     private final String appName;
     private final String title;
     private final String text;
+    private final String packageName;
     private final byte[] icon;
 
-    public ParsedNotification(String appName, String title, String text, byte[] icon) {
+    public ParsedNotification(String appName, String title, String text, String packageName, byte[] icon) {
         this.appName = appName;
         this.title = title;
         this.text = text;
         this.icon = icon;
+        this.packageName = packageName;
     }
 
-    public ParsedNotification(String appName, String title, String text) {
-        this(appName, title, text, null);
+    public ParsedNotification(String appName, String title, String text, String packageName) {
+        this(appName, title, text, packageName, null);
     }
 
     public static Optional<ParsedNotification> parseNotification(StatusBarNotification statusBarNotification, Context context) {
@@ -62,7 +64,8 @@ public class ParsedNotification {
             return Optional.empty();
         }
 
-        String appName = Util.getAppName(context.getPackageManager(), statusBarNotification.getPackageName()).orElse("");
+        String packageName = statusBarNotification.getPackageName();
+        String appName = Util.getAppName(context.getPackageManager(), packageName).orElse("");
 
         Icon largeIcon = notification.getLargeIcon();
 
@@ -73,14 +76,14 @@ public class ParsedNotification {
                 if (drawable instanceof BitmapDrawable) {
                     ((BitmapDrawable) drawable).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
 
-                    return Optional.of(new ParsedNotification(appName, title, text, byteArrayOutputStream.toByteArray()));
+                    return Optional.of(new ParsedNotification(appName, title, text, packageName, byteArrayOutputStream.toByteArray()));
                 }
             } catch (IOException exception) {
                 Log.e(TAG, "Failed to convert picture to bytes", exception);
             }
         }
 
-        return Optional.of(new ParsedNotification(appName, title, text));
+        return Optional.of(new ParsedNotification(appName, title, text, packageName));
     }
 
     public String getAppName() {
@@ -93,6 +96,10 @@ public class ParsedNotification {
 
     public String getText() {
         return text;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 
     public Optional<byte[]> getIcon() {
