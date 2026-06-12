@@ -1,1 +1,1 @@
-A way to show Android phone notifications on Linux (App) 
+A way to show Android phone notifications on Linux 
