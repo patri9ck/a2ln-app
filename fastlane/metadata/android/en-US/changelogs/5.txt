@@ -1,0 +1,3 @@
+- New logo
+- "Help" button in "Settings" tab
+- New accent color
