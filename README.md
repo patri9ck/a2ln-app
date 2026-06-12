@@ -1,7 +1,10 @@
 # Android 2 Linux Notifications App
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/dev.patri9ck.a2ln/)
+
 **Android 2 Linux Notifications** (**A2LN**) is a way to show your Android notifications on Linux with libnotify. It creates a direct socket connection from your phone to your computer whenever a notification arrives. Both devices must be in the same network.
 
 This repository contains the app part of A2LN.
+
 ## Which Host Do I Have to Enter?
 You have to give the address of the computer that runs the [A2LN server](https://github.com/patri9ck/a2ln-server) to the app.
 
