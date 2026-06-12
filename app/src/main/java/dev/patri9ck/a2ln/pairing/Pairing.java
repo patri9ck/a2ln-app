@@ -24,14 +24,9 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMsg;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.log.KeptLog;
 import dev.patri9ck.a2ln.server.Destination;
-import dev.patri9ck.a2ln.server.Server;
-import dev.patri9ck.a2ln.util.Util;
 
 public class Pairing {
 
@@ -78,23 +73,15 @@ public class Pairing {
                 return new PairingResult(keptLog);
             }
 
-            zMsg = ZMsg.recvMsg(client);
+            byte[] publicKey = client.recv();
 
-            if (zMsg == null || zMsg.size() != 2) {
+            if (publicKey == null) {
                 keptLog.log(R.string.log_pairing_failed_receiving, address);
 
                 return new PairingResult(keptLog);
             }
 
-            Optional<Integer> port = Util.parsePort(zMsg.pop().getString(StandardCharsets.UTF_8));
-
-            if (!port.isPresent()) {
-                keptLog.log(R.string.log_pairing_invalid_port);
-
-                return new PairingResult(keptLog);
-            }
-
-            return new PairingResult(keptLog, new Server(destination.getIp(), port.get(), zMsg.pop().getData()));
+            return new PairingResult(keptLog, publicKey);
         }
     }
 }

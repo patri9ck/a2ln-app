@@ -19,8 +19,7 @@
     <string name="log_failed_connection">Verbindung zu %s konnte nicht hergestellt werden.</string>
     <string name="log_pairing_trying">Versuche, mit %s zu koppeln…</string>
     <string name="log_pairing_failed_sending">Eigene IP und öffentlicher Schlüssel konnten nicht zu %s gesendet werden.</string>
-    <string name="log_pairing_failed_receiving">Port und öffentlicher Schlüssel konnten nicht von %s empfangen werden.</string>
-    <string name="log_pairing_invalid_port">Ungültiger Port von %s empfangen.</string>
+    <string name="log_pairing_failed_receiving">öffentlicher Schlüssel konnte nicht von %s empfangen werden.</string>
     <string name="log_notification_no_servers">Keine Server angegeben.</string>
     <string name="log_notification_trying">Versuche Benachrichtigung zu Servern zu senden.</string>
     <string name="log_notification_failed_sending">Benachrichtigung konnte nicht zu %s gesendet werden.</string>

@@ -20,27 +20,26 @@ package dev.patri9ck.a2ln.pairing;
 import java.util.Optional;
 
 import dev.patri9ck.a2ln.log.KeptLog;
-import dev.patri9ck.a2ln.server.Server;
 
 public class PairingResult {
 
     private final KeptLog keptLog;
-    private final Server server;
+    private final byte[] publicKey;
 
     public PairingResult(KeptLog keptLog) {
         this(keptLog, null);
     }
 
-    public PairingResult(KeptLog keptLog, Server server) {
+    public PairingResult(KeptLog keptLog, byte[] publicKey) {
         this.keptLog = keptLog;
-        this.server = server;
+        this.publicKey = publicKey;
     }
 
     public KeptLog getKeptLog() {
         return keptLog;
     }
 
-    public Optional<Server> getServer() {
-        return Optional.ofNullable(server);
+    public Optional<byte[]> getPublicKey() {
+        return Optional.ofNullable(publicKey);
     }
 }
