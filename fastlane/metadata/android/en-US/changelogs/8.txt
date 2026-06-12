@@ -1,0 +1,4 @@
+- FOSS QR code pairing with ZXing
+- GUI improvements
+- IP editing
+- Sending the notification's app name to the server
