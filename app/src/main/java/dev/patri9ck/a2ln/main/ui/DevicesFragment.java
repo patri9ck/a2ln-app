@@ -35,12 +35,10 @@ import dev.patri9ck.a2ln.device.Device;
 import dev.patri9ck.a2ln.device.DevicesAdapter;
 import dev.patri9ck.a2ln.device.SwipeToDeleteCallback;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.notification.NotificationReceiver;
-import dev.patri9ck.a2ln.notification.NotificationReceiverUpdater;
 import dev.patri9ck.a2ln.pair.Pairing;
 import dev.patri9ck.a2ln.util.JsonListConverter;
 
-public class DevicesFragment extends Fragment implements NotificationReceiverUpdater {
+public class DevicesFragment extends Fragment {
 
     private static final String TAG = "A2LN";
 
@@ -83,7 +81,7 @@ public class DevicesFragment extends Fragment implements NotificationReceiverUpd
 
         devices = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_devices), null), Device.class);
 
-        boundNotificationReceiver = new BoundNotificationReceiver(this, requireContext());
+        boundNotificationReceiver = new BoundNotificationReceiver(notificationReceiver -> notificationReceiver.setDevices(devices), requireContext());
 
         boundNotificationReceiver.bind();
 
@@ -97,11 +95,6 @@ public class DevicesFragment extends Fragment implements NotificationReceiverUpd
         sharedPreferences.edit().putString(getString(R.string.preferences_devices), JsonListConverter.toJson(devices)).apply();
 
         boundNotificationReceiver.unbind();
-    }
-
-    @Override
-    public void update(NotificationReceiver notificationReceiver) {
-        notificationReceiver.setDevices(devices);
     }
 
     private void loadDevicesRecyclerView() {
