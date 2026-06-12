@@ -15,11 +15,12 @@ android {
 
         versionCode = 6
         versionName = "1.2.0"
+        compileSdkVersion = "android-32"
     }
 
     compileOptions {
-        sourceCompatibility(JavaVersion.VERSION_1_8)
-        targetCompatibility(JavaVersion.VERSION_1_8)
+        sourceCompatibility(JavaVersion.VERSION_1_9)
+        targetCompatibility(JavaVersion.VERSION_1_9)
     }
 
     buildFeatures {
@@ -58,4 +59,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.4.2")
     implementation("androidx.navigation:navigation-fragment:2.5.0")
     implementation("androidx.navigation:navigation-ui:2.5.0")
+    implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:18.0.0")
+    implementation("androidx.camera:camera-camera2:1.2.0-alpha03")
+    implementation("androidx.camera:camera-lifecycle:1.2.0-alpha03")
+    implementation("androidx.camera:camera-view:1.2.0-alpha03")
 }

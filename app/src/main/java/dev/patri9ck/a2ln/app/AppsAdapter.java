@@ -1,6 +1,5 @@
 package dev.patri9ck.a2ln.app;
 
-import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -11,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dev.patri9ck.a2ln.databinding.ItemAppBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
@@ -20,18 +18,12 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
 
     private final List<String> disabledApps;
     private final BoundNotificationReceiver boundNotificationReceiver;
-
     private final List<App> apps;
 
-    public AppsAdapter(List<String> disabledApps, BoundNotificationReceiver boundNotificationReceiver, PackageManager packageManager) {
+    public AppsAdapter(List<String> disabledApps, List<App> apps, BoundNotificationReceiver boundNotificationReceiver) {
         this.disabledApps = disabledApps;
+        this.apps = apps;
         this.boundNotificationReceiver = boundNotificationReceiver;
-
-        apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-                .stream()
-                .filter(applicationInfo -> packageManager.getLaunchIntentForPackage(applicationInfo.packageName) != null)
-                .map(applicationInfo -> new App(applicationInfo.loadLabel(packageManager).toString(), applicationInfo.packageName, applicationInfo.loadIcon(packageManager), !disabledApps.contains(applicationInfo.packageName)))
-                .collect(Collectors.toList());
     }
 
     @NonNull

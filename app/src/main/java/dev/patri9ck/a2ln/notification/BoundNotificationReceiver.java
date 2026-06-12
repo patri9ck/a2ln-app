@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import java.util.function.Consumer;
+
 public class BoundNotificationReceiver {
 
-    private final NotificationReceiverUpdater notificationReceiverUpdater;
+    private final Consumer<NotificationReceiver> notificationReceiverConsumer;
     private final Context context;
 
     private NotificationReceiver notificationReceiver;
@@ -29,8 +31,8 @@ public class BoundNotificationReceiver {
 
     private boolean bound;
 
-    public BoundNotificationReceiver(NotificationReceiverUpdater notificationReceiverUpdater, Context context) {
-        this.notificationReceiverUpdater = notificationReceiverUpdater;
+    public BoundNotificationReceiver(Consumer<NotificationReceiver> notificationReceiverConsumer, Context context) {
+        this.notificationReceiverConsumer = notificationReceiverConsumer;
         this.context = context;
     }
 
@@ -39,7 +41,7 @@ public class BoundNotificationReceiver {
             return;
         }
 
-        notificationReceiverUpdater.update(notificationReceiver);
+        notificationReceiverConsumer.accept(notificationReceiver);
     }
 
     public void bind() {

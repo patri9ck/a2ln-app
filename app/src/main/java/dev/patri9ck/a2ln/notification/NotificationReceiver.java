@@ -65,12 +65,6 @@ public class NotificationReceiver extends NotificationListenerService {
     @Override
     public void onListenerDisconnected() {
         Log.v(TAG, "NotificationReceiver disconnected");
-
-        if (!initialized) {
-            return;
-        }
-
-        notificationSender.close();
     }
 
     @Override
