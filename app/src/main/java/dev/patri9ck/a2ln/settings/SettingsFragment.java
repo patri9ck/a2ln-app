@@ -43,9 +43,9 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.common.primitives.Ints;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +58,7 @@ import dev.patri9ck.a2ln.log.LogDialogBuilder;
 import dev.patri9ck.a2ln.notification.NotificationSender;
 import dev.patri9ck.a2ln.notification.ParsedNotification;
 import dev.patri9ck.a2ln.util.Storage;
+import dev.patri9ck.a2ln.util.Util;
 
 public class SettingsFragment extends Fragment {
 
@@ -79,16 +80,6 @@ public class SettingsFragment extends Fragment {
 
         storage.loadLog().ifPresent(this::succeed);
     };
-
-    private final ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
-        if (result) {
-            sendNotification();
-
-            return;
-        }
-
-        sendNotificationDirectly();
-    });
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -120,15 +111,15 @@ public class SettingsFragment extends Fragment {
                     return;
                 }
 
-                Integer similarity = Ints.tryParse(rawSimilarity);
+                Optional<Integer> optionalSimilarity = Util.parseInteger(rawSimilarity).filter(similarity -> similarity >= 0 && similarity <= 100);
 
-                if (similarity == null || similarity < 0F || similarity > 100F) {
+                if (!optionalSimilarity.isPresent()) {
                     fragmentSettingsBinding.similarityEditText.getText().clear();
 
                     return;
                 }
 
-                storage.saveSimilarity(similarity / 100F);
+                storage.saveSimilarity(optionalSimilarity.get() / 100F);
             }
         });
 
@@ -149,27 +140,38 @@ public class SettingsFragment extends Fragment {
                     return;
                 }
 
-                Integer duration = Ints.tryParse(rawDuration);
+                Optional<Integer> optionalDuration = Util.parseInteger(rawDuration).filter(duration -> duration >= 0);
 
-                if (duration == null || duration < 0) {
+                if (!optionalDuration.isPresent()) {
                     fragmentSettingsBinding.durationEditText.getText().clear();
 
                     return;
                 }
 
-                storage.saveDuration(duration);
+                storage.saveDuration(optionalDuration.get());
             }
         });
 
         fragmentSettingsBinding.displayCheckBox.setChecked(storage.loadDisplay());
         fragmentSettingsBinding.displayCheckBox.setOnCheckedChangeListener((displayCheckBoxView, isChecked) -> storage.saveDisplay(isChecked));
 
+        fragmentSettingsBinding.noAppCheckBox.setChecked(storage.loadNoApp());
+        fragmentSettingsBinding.noAppCheckBox.setOnCheckedChangeListener((noAppCheckBoxView, isChecked) -> storage.saveNoApp(isChecked));
+
         fragmentSettingsBinding.versionTextView.setText(getString(R.string.version, BuildConfig.VERSION_NAME));
 
         fragmentSettingsBinding.helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         return fragmentSettingsBinding.getRoot();
-    }
+    }    private final ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+        if (result) {
+            sendNotification();
+
+            return;
+        }
+
+        sendNotificationDirectly();
+    });
 
     @Override
     public void onDestroyView() {
@@ -274,4 +276,6 @@ public class SettingsFragment extends Fragment {
                 })
                 .show();
     }
+
+
 }

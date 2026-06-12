@@ -79,5 +79,5 @@ dependencies {
     implementation("androidx.navigation:navigation-ui:2.7.4")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("me.xdrop:fuzzywuzzy:1.4.0")
-    implementation("com.google.guava:guava:32.1.2-android")
+    implementation("net.jodah:expiringmap:0.5.11")
 }

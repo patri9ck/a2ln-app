@@ -18,7 +18,6 @@
 package dev.patri9ck.a2ln.log;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -30,19 +29,15 @@ public class KeptLog {
     private final List<String> messages = new ArrayList<>();
 
     private final Context context;
-    private final String tag;
 
-    public KeptLog(Context context, String tag) {
+    public KeptLog(Context context) {
         this.context = context;
-        this.tag = tag;
     }
 
-    public void log(int priority, int id, Object... arguments) {
+    public void log(int id, Object... arguments) {
         String message = context.getString(id, arguments);
 
         messages.add(DateFormat.getTimeInstance().format(new Date()) + ": " + message);
-
-        Log.println(priority, tag, message);
     }
 
     public String format() {

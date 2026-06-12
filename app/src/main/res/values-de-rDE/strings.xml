@@ -57,6 +57,7 @@
     <string name="similarity">Ähnlichkeit in %</string>
     <string name="duration">Dauer in Sekunden</string>
     <string name="display_information">Keine Benachrichtigungen senden, falls das Display angeschaltet ist</string>
+    <string name="no_app_information">Benachrichtigungen senden, welche nicht von Apps kommen. Diese können nicht deaktiviert werden.</string>
     <string name="channel_name">Test-Benachrichtigungen</string>
     <string name="channel_description">Wird für Test-Benachrichtigungen genutzt.</string>
 </resources>
