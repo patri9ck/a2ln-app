@@ -47,6 +47,13 @@
             android:text="@string/help"
             app:icon="@drawable/ic_help" />
     </LinearLayout>
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/sending_progress_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="invisible" />
     <TextView
         android:id="@+id/version_text_view"
         style="@style/TextView"
