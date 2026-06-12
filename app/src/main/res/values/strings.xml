@@ -3,9 +3,11 @@
     <string name="port">Port</string>
     <string name="host">Host</string>
     <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
     <string name="removed_address">Address removed</string>
     <string name="removed_address_undo">Undo</string>
     <string name="permission">Permission</string>
-    <string name="apps">Apps</string>
-    <string name="back">Back</string>
+    <string name="title_devices">Devices</string>
+    <string name="title_apps">Apps</string>
+    <string name="title_settings">Settings</string>
 </resources>
