@@ -2,7 +2,7 @@ default_platform(:android)
 
 platform :android do
   lane :google_play_store do |options|
-    aab = options[:aab] || true
+    aab = options[:aab]
 
     if aab
       gradle(task: "clean bundleRelease")
