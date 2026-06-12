@@ -35,6 +35,7 @@
     <string name="scan_qr_code">Scan a QR Code</string>
     <string name="notification">Notification</string>
     <string name="help">Help</string>
+    <string name="view_logs">View Logs</string>
     <string name="help_url">https://www.patri9ck.dev/a2ln/</string>
     <string name="version">%s/%d (%s)</string>
     <string name="notification_title">A2LN</string>
@@ -58,6 +59,7 @@
         notifications, a permission is needed.
     </string>
     <string name="edit_server_dialog_title">Edit Server</string>
+    <string name="logs_dialog_title">Logs</string>
     <string name="preferences">dev.patri9ck.a2ln</string>
     <string name="preferences_servers">servers</string>
     <string name="preferences_disabled_apps">disabled_apps</string>

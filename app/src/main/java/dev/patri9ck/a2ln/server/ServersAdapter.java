@@ -33,7 +33,6 @@ import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.DialogEditServerBinding;
 import dev.patri9ck.a2ln.databinding.ItemServerBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.util.Util;
 
 public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerViewHolder> {
 
