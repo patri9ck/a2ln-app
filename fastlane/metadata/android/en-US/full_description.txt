@@ -1,3 +1,3 @@
 <b>Android 2 Linux Notifications</b> (<b>A2LN</b>) is a way to display your Android phone notifications on your Linux computer.
 
-A brief introduction and a tutorial can be found <a href="https://www.patri9ck.dev/a2ln/">here</a>.
+More information can be found at <a href="https://www.patri9ck.dev/a2ln/">www.patri9ck.dev</a>.
