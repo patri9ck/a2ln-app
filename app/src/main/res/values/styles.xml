@@ -1,49 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 Patrick Zwick and contributors
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
 <resources>
-    <style name="Dialog"
-        parent="ThemeOverlay.MaterialComponents.Dialog">
+    <style name="Dialog" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowMinWidthMajor">100%</item>
         <item name="android:windowMinWidthMinor">100%</item>
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">15dp</item>
     </style>
-    <style name="BottomNavigationView"
-        parent="Widget.MaterialComponents.BottomNavigationView">
+    <style name="BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="android:background">@color/background</item>
     </style>
-    <style name="Button"
-        parent="Widget.MaterialComponents.Button">
+    <style name="Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/accent_text</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
         <item name="iconTint">@color/accent_text</item>
         <item name="iconGravity">textStart</item>
     </style>
-    <style name="EditText"
-        parent="Widget.AppCompat.EditText">
+    <style name="EditText" parent="Widget.AppCompat.EditText">
         <item name="android:backgroundTint">@color/accent</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textColorHint">@color/text</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
     </style>
-    <style name="TextView"
-        parent="Widget.MaterialComponents.TextView">
+    <style name="TextView" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/text</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
     </style>
-    <style name="Snackbar"
-        parent="Widget.MaterialComponents.Snackbar">
+    <style name="HeaderTextView" parent="TextView">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Snackbar" parent="Widget.MaterialComponents.Snackbar">
         <item name="android:background">@color/accent</item>
     </style>
-    <style name="SnackbarButton"
-        parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+    <style name="SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
         <item name="android:textColor">@color/accent_text</item>
     </style>
-    <style name="SnackbarTextView"
-        parent="Widget.MaterialComponents.Snackbar.TextView">
+    <style name="SnackbarTextView" parent="Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/accent_text</item>
     </style>
-    <style name="FloatingActionButton"
-        parent="Widget.MaterialComponents.FloatingActionButton">
+    <style name="FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="srcCompat">@drawable/ic_pair</item>
         <item name="tint">@color/accent_text</item>
     </style>

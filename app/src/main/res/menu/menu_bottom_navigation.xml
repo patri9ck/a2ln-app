@@ -1,12 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2022 Patrick Zwick and contributors
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/navigation_devices"
-        android:icon="@drawable/ic_devices"
-        android:title="@string/devices_title"/>
-    <item android:id="@+id/navigation_apps"
+    <item
+        android:id="@+id/navigation_servers"
+        android:icon="@drawable/ic_servers"
+        android:title="@string/servers_title" />
+    <item
+        android:id="@+id/navigation_apps"
         android:icon="@drawable/ic_apps"
-        android:title="@string/apps_title"/>
-    <item android:id="@+id/navigation_settings"
+        android:title="@string/apps_title" />
+    <item
+        android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings"
-        android:title="@string/settings_title"/>
+        android:title="@string/settings_title" />
 </menu>

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2022 Patrick Zwick and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package dev.patri9ck.a2ln.app;
 
 import android.view.LayoutInflater;
@@ -36,8 +52,6 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
     public void onBindViewHolder(AppViewHolder holder, int position) {
         App app = apps.get(position);
 
-        holder.nameTextView.setText(app.getName());
-
         holder.appCheckBox.setOnCheckedChangeListener((appCheckBoxView, isChecked) -> {
             app.setEnabled(isChecked);
 
@@ -53,7 +67,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
         });
 
         holder.appCheckBox.setChecked(app.isEnabled());
-
+        holder.nameTextView.setText(app.getName());
         holder.iconImageView.setImageDrawable(app.getIcon());
     }
 
