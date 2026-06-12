@@ -1,0 +1,2 @@
+- A whole new UI
+- New configuration system which means that you have to setup the app again
