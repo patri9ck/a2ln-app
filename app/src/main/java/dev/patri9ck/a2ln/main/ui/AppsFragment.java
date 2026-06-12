@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -22,7 +21,6 @@ import java.util.List;
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.app.AppsAdapter;
 import dev.patri9ck.a2ln.databinding.FragmentAppsBinding;
-import dev.patri9ck.a2ln.main.MainActivity;
 import dev.patri9ck.a2ln.notification.NotificationReceiver;
 
 public class AppsFragment extends Fragment {
