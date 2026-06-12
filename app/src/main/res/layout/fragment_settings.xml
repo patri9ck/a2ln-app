@@ -16,4 +16,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/widget_margin"
         android:text="@string/help"/>
+    <Button android:id="@+id/test_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/widget_margin"
+        android:text="@string/test"/>
 </LinearLayout>
