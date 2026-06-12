@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+  ~ Copyright (C) 2023  patri9ck and contributors
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="log_failed_connection">Nepodařilo se připojit k %s.</string>
+    <string name="log_pairing_trying">Pokus o spárování s %s…</string>
+    <string name="log_pairing_failed_sending">Nepodařilo se odeslat vlastní IP adresu a veřejný klíč na %s.</string>
+    <string name="log_pairing_failed_receiving">Nepodařilo se získat veřejný klíč z %s.</string>
+    <string name="log_notification_no_servers">Nebyly zadány žádné servery.</string>
+    <string name="log_notification_trying">Pokus o odeslání oznámení na servery.</string>
+    <string name="log_notification_failed_sending">Odeslání oznámení na %s se nezdařilo.</string>
+    <string name="log_notification_success">Oznámení bylo úspěšně odesláno na %s.</string>
+    <string name="log_notification_timed_out">Časový limit vypršel.</string>
+</resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

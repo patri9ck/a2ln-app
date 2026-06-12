@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+  ~ Copyright (C) 2023  patri9ck and contributors
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="ip">IP</string>
+    <string name="port">Port</string>
+    <string name="alias">Alias</string>
+    <string name="public_key">Veřejný klíč</string>
+    <string name="pair">Spárovat</string>
+    <string name="apply">Použít</string>
+    <string name="cancel">Zrušit</string>
+    <string name="grant">Povolit</string>
+    <string name="already_paired">Již spárováno</string>
+    <string name="invalid_ip">Neplatná IP adresa</string>
+    <string name="invalid_port">Neplatný port</string>
+    <string name="invalid_qr_code">Neplatný QR kód</string>
+    <string name="pairing_failed">Párování se nezdařilo</string>
+    <string name="removed_server">Server odstraněn</string>
+    <string name="removed_server_undo">Vrátit zpět</string>
+    <string name="permission">Oprávnění</string>
+    <string name="scan_qr_code">Naskenovat QR kód</string>
+    <string name="notification">Oznámení</string>
+    <string name="help"><a href="https://www.patri9ck.dev/a2ln/">Nápověda</a></string>
+    <string name="view_log">Zobrazit protokol</string>
+    <string name="notification_text">Testovací oznámení</string>
+    <string name="notification_sent">Na každý běžící server bylo odesláno testovací oznámení.</string>
+    <string name="servers_title">Servery</string>
+    <string name="apps_title">Aplikace</string>
+    <string name="settings_title">Nastavení</string>
+    <string name="pair_dialog_title">Spárujte nový server</string>
+    <string name="pair_dialog_information">Případně zadejte IP a port serveru ručně.</string>
+    <string name="pairing_dialog_title">Párování…</string>
+    <string name="pairing_dialog_information">Přijměte požadavek na párování na serveru a ověřte IP adresu a veřejný klíč.</string>
+    <string name="paired_dialog_title">Úspěšně spárováno</string>
+    <string name="paired_dialog_information">Ověřte IP adresu a veřejný klíč serveru.</string>
+    <string name="permission_request_dialog_title">Je vyžadováno oprávnění</string>
+    <string name="permission_request_dialog_listener_information">Abyste mohli poslouchat oznámení, potřebujete oprávnění.</string>
+    <string name="permission_request_dialog_notification_information">K odeslání testovacího oznámení je vyžadováno oprávnění, které bude přijímáno posluchačem oznámení a odesláno na server.</string>
+    <string name="notification_timed_out">Posluchač oznámení nezachytil žádné oznámení.</string>
+    <string name="edit_server_dialog_title">Upravit server</string>
+    <string name="log_dialog_title">Protokol</string>
+    <string name="spam_information">Oznámení lze na určitou dobu zablokovat, pokud přesahuje určitou podobnost s předchozím.</string>
+    <string name="similarity">Podobnost v %</string>
+    <string name="duration">Trvání v sekundách</string>
+    <string name="display_information">Neposílat oznámení, pokud je displej zapnutý.</string>
+    <string name="no_app_information">Odesílat oznámení, která nepocházejí z aplikací. Nelze je zakázat.</string>
+    <string name="channel_name">Testovací oznámení</string>
+    <string name="channel_description">Používá se pro testovací oznámení.</string>
+</resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
