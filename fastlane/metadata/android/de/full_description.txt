@@ -1,0 +1,3 @@
+<b>Android 2 Linux Notifications</b> (<b>A2LN</b>) ist eine Möglichkeit, Deine Benachrichtigungen auf Deinem Linux-Computer anzeigen zu lassen.
+
+Es besteht aus einer App auf Deinem Telefon und einem Server auf Deinem Computer, welche über LAN sicher miteinander kommunizieren.
