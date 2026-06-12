@@ -13,6 +13,8 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
+        distribution: 'temurin'
         java-version: '11'
+        cache: 'gradle'
     - name: Build APK
       run: ./gradlew clean assembleRelease
