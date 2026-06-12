@@ -15,37 +15,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package dev.patri9ck.a2ln.log;
 
-import android.content.Context;
-import android.util.Log;
+package dev.patri9ck.a2ln.server;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+public class Destination {
 
-public class KeptLog {
+    private String ip;
+    private int port;
 
-    private final List<String> messages = new ArrayList<>();
-
-    private final Context context;
-    private final String tag;
-
-    public KeptLog(Context context, String tag) {
-        this.context = context;
-        this.tag = tag;
+    public Destination() {
+        // Gson
     }
 
-    public void log(int priority, int id, Object... arguments) {
-        String message = context.getString(id, arguments);
-
-        messages.add(DateFormat.getTimeInstance().format(new Date()) + ": " + message);
-
-        Log.println(priority, tag, message);
+    public Destination(String ip, int port) {
+        this.ip = ip;
+        this.port = port;
     }
 
-    public String format() {
-        return String.join("\n", messages);
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getAddress() {
+        return ip + ":" + port;
     }
 }

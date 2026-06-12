@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +19,15 @@ package dev.patri9ck.a2ln.util;
 
 import android.content.pm.PackageManager;
 
+import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 public class Util {
 
@@ -32,8 +36,7 @@ public class Util {
 
     private static final Gson GSON = new Gson();
 
-    private Util() {
-    }
+    private Util() {}
 
     public static String toJson(List<?> data) {
         return GSON.toJson(data);
@@ -47,24 +50,25 @@ public class Util {
         return GSON.fromJson(json, TypeToken.getParameterized(ArrayList.class, type).getType());
     }
 
-    public static Optional<Integer> parsePort(String port) {
-        try {
-            int parsedPort = Integer.parseInt(port);
+    public static Optional<Integer> parsePort(String rawPort) {
+        Integer port = Ints.tryParse(rawPort);
 
-            if (parsedPort >= MINIMUM_PORT && parsedPort <= MAXIMUM_PORT) {
-                return Optional.of(parsedPort);
-            }
-        } catch (NumberFormatException ignored) {
+        if (port == null || port < MINIMUM_PORT || port > MAXIMUM_PORT) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        return Optional.of(port);
     }
 
     public static Optional<String> getAppName(PackageManager packageManager, String packageName) {
         try {
             return Optional.of((String) packageManager.getApplicationLabel(packageManager.getApplicationInfo(packageName, 0)));
-        } catch (PackageManager.NameNotFoundException exception) {
+        } catch (PackageManager.NameNotFoundException ignored) {
             return Optional.empty();
         }
+    }
+
+    public static float getSimilarity(String first, String second) {
+        return (float) FuzzySearch.ratio(first, second) / 100F;
     }
 }

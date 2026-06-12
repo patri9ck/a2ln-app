@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2022  Patrick Zwick and contributors
+  ~ Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+  ~ Copyright (C) 2023  patri9ck and contributors
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -15,7 +16,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <resources>
-    <string name="app_name">Android 2 Linux Notifications</string>
     <string name="ip">IP</string>
     <string name="port">Port</string>
     <string name="alias">Alias</string>
@@ -24,45 +24,39 @@
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
     <string name="grant">Grant</string>
-    <string name="deny">Deny</string>
+    <string name="already_paired">Already Paired</string>
     <string name="invalid_ip">Invalid IP</string>
     <string name="invalid_port">Invalid Port</string>
     <string name="invalid_qr_code">Invalid QR Code</string>
-    <string name="pairing_failed">Pairing failed</string>
-    <string name="removed_server">Server removed</string>
+    <string name="pairing_failed">Pairing Failed</string>
+    <string name="removed_server">Server Removed</string>
     <string name="removed_server_undo">Undo</string>
     <string name="permission">Permission</string>
     <string name="scan_qr_code">Scan a QR Code</string>
     <string name="notification">Notification</string>
-    <string name="help">Help</string>
-    <string name="view_logs">View Logs</string>
-    <string name="help_url">https://www.patri9ck.dev/a2ln/</string>
-    <string name="version">%s/%d (%s)</string>
-    <string name="notification_title">A2LN</string>
+    <string name="help"><a href="https://www.patri9ck.dev/a2ln/">Help</a></string>
+    <string name="view_log">View Log</string>
     <string name="notification_text">Test Notification</string>
     <string name="notification_sent">A test notification was sent to every running server.</string>
     <string name="servers_title">Servers</string>
     <string name="apps_title">Apps</string>
     <string name="settings_title">Settings</string>
     <string name="pair_dialog_title">Pair a New Server</string>
-    <string name="pair_dialog_information">Alternatively, enter the IP and port of the server
-        manually.
-    </string>
+    <string name="pair_dialog_information">Alternatively, enter the IP and port of the server manually.</string>
     <string name="pairing_dialog_title">Pairing…</string>
-    <string name="pairing_dialog_information">Accept the pairing request on the server and verify
-        the IP and public key.
-    </string>
-    <string name="paired_dialog_title">Paired</string>
+    <string name="pairing_dialog_information">Accept the pairing request on the server and verify the IP and public key.</string>
+    <string name="paired_dialog_title">Paired Successfully</string>
     <string name="paired_dialog_information">Verify the IP and public key of the server.</string>
     <string name="permission_request_dialog_title">Permission Needed</string>
-    <string name="permission_request_dialog_information">To be able to listen to
-        notifications, a permission is needed.
-    </string>
+    <string name="permission_request_dialog_listener_information">To be able to listen to notifications, a permission is needed.</string>
+    <string name="permission_request_dialog_notification_information">A permission is required to send a test notification which will be picked up by the notification listener and sent to the server.</string>
+    <string name="notification_timed_out">No notification was picked up by the notification listener.</string>
     <string name="edit_server_dialog_title">Edit Server</string>
-    <string name="logs_dialog_title">Logs</string>
-    <string name="preferences">dev.patri9ck.a2ln</string>
-    <string name="preferences_servers">servers</string>
-    <string name="preferences_disabled_apps">disabled_apps</string>
-    <string name="preferences_own_public_key">public_key</string>
-    <string name="preferences_own_secret_key">secret_key</string>
+    <string name="log_dialog_title">Log</string>
+    <string name="spam_information">A notification can be blocked for a certain duration if it exceeds a certain similarity with a previous one.</string>
+    <string name="similarity">Similarity in %</string>
+    <string name="duration">Duration in Seconds</string>
+    <string name="display_information">Do not send notifications if the display is enabled.</string>
+    <string name="channel_name">Test Notifications</string>
+    <string name="channel_description">Used for test notifications.</string>
 </resources>

@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,20 +28,20 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
+import dev.patri9ck.a2ln.util.Storage;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private final View rootView;
-    private final BoundNotificationReceiver boundNotificationReceiver;
+    private final Storage storage;
     private final List<Server> servers;
     private final ServersAdapter serversAdapter;
 
-    public SwipeToDeleteCallback(View rootView, BoundNotificationReceiver boundNotificationReceiver, List<Server> servers, ServersAdapter serversAdapter) {
+    public SwipeToDeleteCallback(View rootView, Storage storage, List<Server> servers, ServersAdapter serversAdapter) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
 
         this.rootView = rootView;
-        this.boundNotificationReceiver = boundNotificationReceiver;
+        this.storage = storage;
         this.servers = servers;
         this.serversAdapter = serversAdapter;
     }
@@ -58,14 +59,14 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
         serversAdapter.notifyItemRemoved(position);
 
-        boundNotificationReceiver.updateNotificationReceiver();
+        storage.saveServers(servers);
 
         Snackbar.make(rootView, R.string.removed_server, Snackbar.LENGTH_LONG)
                 .setAction(R.string.removed_server_undo, view -> {
                     servers.add(position, server);
                     serversAdapter.notifyItemInserted(position);
 
-                    boundNotificationReceiver.updateNotificationReceiver();
+                    storage.saveServers(servers);
                 }).show();
     }
 }

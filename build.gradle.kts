@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("com.android.tools.build:gradle:8.1.2")
     }
 }
 

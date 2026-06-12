@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2023  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,15 +24,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Collections;
 import java.util.List;
 
+import dev.patri9ck.a2ln.util.Storage;
+
 public class DragAndDropCallback extends ItemTouchHelper.SimpleCallback {
 
     private final List<Server> servers;
+    private final Storage storage;
     private final ServersAdapter serversAdapter;
 
-    public DragAndDropCallback(List<Server> servers, ServersAdapter serversAdapter) {
-        super(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END, 0);
+    public DragAndDropCallback(List<Server> servers, Storage storage, ServersAdapter serversAdapter) {
+        super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0);
 
         this.servers = servers;
+        this.storage = storage;
         this.serversAdapter = serversAdapter;
     }
 
@@ -44,11 +49,13 @@ public class DragAndDropCallback extends ItemTouchHelper.SimpleCallback {
 
         serversAdapter.notifyItemMoved(from, to);
 
+        storage.saveServers(servers);
+
         return true;
     }
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
+        // Ignored
     }
 }

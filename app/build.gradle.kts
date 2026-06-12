@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import java.io.FileInputStream
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("com.android.application")
 }
 
-@Suppress("UnstableApiUsage")
 android {
     namespace = "dev.patri9ck.a2ln"
 
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "dev.patri9ck.a2ln"
         minSdk = 27
-        targetSdk = 33
+        targetSdk = 34
 
         versionCode = 14
         versionName = "1.2.8"
@@ -72,10 +72,12 @@ android {
 
 dependencies {
     implementation("com.google.code.gson:gson:2.9.1")
-    implementation("com.google.android.material:material:1.8.0")
+    implementation("com.google.android.material:material:1.10.0")
     implementation("org.zeromq:jeromq:0.5.2")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.navigation:navigation-fragment:2.5.3")
-    implementation("androidx.navigation:navigation-ui:2.5.3")
+    implementation("androidx.navigation:navigation-fragment:2.7.4")
+    implementation("androidx.navigation:navigation-ui:2.7.4")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("me.xdrop:fuzzywuzzy:1.4.0")
+    implementation("com.google.guava:guava:32.1.2-android")
 }

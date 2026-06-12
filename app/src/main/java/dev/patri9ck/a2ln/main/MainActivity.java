@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +17,8 @@
  */
 package dev.patri9ck.a2ln.main;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,20 +55,21 @@ public class MainActivity extends AppCompatActivity {
         generateKeys();
         loadNavigationBar();
         requestPermission();
+        createNotificationChannel();
     }
 
     private void generateKeys() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        if (sharedPreferences.contains(getString(R.string.preferences_own_public_key)) && sharedPreferences.contains(getString(R.string.preferences_own_secret_key))) {
+        if (sharedPreferences.contains(getString(R.string.preferences_public_key)) && sharedPreferences.contains(getString(R.string.preferences_secret_key))) {
             return;
         }
 
         ZCert zCert = new ZCert();
 
         sharedPreferences.edit()
-                .putString(getString(R.string.preferences_own_public_key), zCert.getPublicKeyAsZ85())
-                .putString(getString(R.string.preferences_own_secret_key), zCert.getSecretKeyAsZ85())
+                .putString(getString(R.string.preferences_public_key), zCert.getPublicKeyAsZ85())
+                .putString(getString(R.string.preferences_secret_key), zCert.getSecretKeyAsZ85())
                 .apply();
     }
 
@@ -90,13 +94,21 @@ public class MainActivity extends AppCompatActivity {
 
         DialogPermissionRequestBinding dialogPermissionRequestBinding = DialogPermissionRequestBinding.inflate(getLayoutInflater());
 
-        dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_information);
+        dialogPermissionRequestBinding.permissionRequestTextView.setText(R.string.permission_request_dialog_listener_information);
 
         new MaterialAlertDialogBuilder(this, R.style.Dialog)
                 .setTitle(R.string.permission_request_dialog_title)
                 .setView(dialogPermissionRequestBinding.getRoot())
                 .setPositiveButton(R.string.grant, (requestPermissionDialog, which) -> startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)))
-                .setNegativeButton(R.string.deny, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private void createNotificationChannel() {
+        NotificationChannel notificationChannel = new NotificationChannel(getString(R.string.channel_id), getString(R.string.channel_name), NotificationManager.IMPORTANCE_NONE);
+
+        notificationChannel.setDescription(getString(R.string.channel_description));
+
+        NotificationManagerCompat.from(this).createNotificationChannel(notificationChannel);
     }
 }
