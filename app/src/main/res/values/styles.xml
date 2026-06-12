@@ -16,55 +16,22 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <resources>
-
-    <style name="Dialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+    <style name="Dialog" parent="ThemeOverlay.Material3.Dialog">
         <item name="android:windowMinWidthMajor">100%</item>
         <item name="android:windowMinWidthMinor">100%</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">15dp</item>
     </style>
 
-    <style name="BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="android:background">@color/background</item>
-    </style>
-
-    <style name="Button" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/accent_text</item>
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
-        <item name="iconTint">@color/accent_text</item>
+    <style name="Button" parent="Widget.Material3.Button">
         <item name="iconGravity">textStart</item>
     </style>
 
-    <style name="EditText" parent="Widget.AppCompat.EditText">
-        <item name="android:backgroundTint">@color/accent</item>
-        <item name="android:textColor">@color/text</item>
-        <item name="android:textColorHint">@color/text</item>
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
-    </style>
+    <style name="TextInput" parent="Widget.Material3.TextInputLayout.FilledBox" />
 
     <style name="TextView" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/text</item>
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyLarge</item>
     </style>
 
     <style name="HeaderTextView" parent="TextView">
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Snackbar" parent="Widget.MaterialComponents.Snackbar">
-        <item name="android:background">@color/accent</item>
-    </style>
-
-    <style name="SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">@color/accent_text</item>
-    </style>
-
-    <style name="SnackbarTextView" parent="Widget.MaterialComponents.Snackbar.TextView">
-        <item name="android:textColor">@color/accent_text</item>
-    </style>
-
-    <style name="FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="srcCompat">@drawable/ic_pair</item>
-        <item name="tint">@color/accent_text</item>
     </style>
 </resources>
