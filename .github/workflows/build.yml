@@ -18,7 +18,7 @@ jobs:
         cache: 'gradle'
     - name: Build APK
       run: ./gradlew clean assembleRelease
-    - name: Upload Artifact
+    - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: apk
