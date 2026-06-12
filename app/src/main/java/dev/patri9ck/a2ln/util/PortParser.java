@@ -19,7 +19,8 @@ package dev.patri9ck.a2ln.util;
 public class PortParser {
 
     public static final int INVALID_PORT = -1;
-    private static final int MINIMUM_PORT = -1;
+
+    private static final int MINIMUM_PORT = 1;
     private static final int MAXIMUM_PORT = 65535;
 
     private PortParser() {}
