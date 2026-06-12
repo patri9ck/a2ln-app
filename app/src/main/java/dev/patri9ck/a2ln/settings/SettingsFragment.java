@@ -36,9 +36,9 @@ import java.util.concurrent.CompletableFuture;
 import dev.patri9ck.a2ln.BuildConfig;
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.FragmentSettingsBinding;
+import dev.patri9ck.a2ln.log.LogsDialogBuilder;
 import dev.patri9ck.a2ln.notification.NotificationSender;
 import dev.patri9ck.a2ln.notification.ParsedNotification;
-import dev.patri9ck.a2ln.log.LogsDialogBuilder;
 import dev.patri9ck.a2ln.util.Util;
 
 public class SettingsFragment extends Fragment {
@@ -46,6 +46,7 @@ public class SettingsFragment extends Fragment {
     private static final String UNKNOWN_INSTALLER = "Unknown Installer/APK";
 
     private NotificationSender notificationSender;
+    private boolean sending;
 
     private FragmentSettingsBinding fragmentSettingsBinding;
 
@@ -82,15 +83,25 @@ public class SettingsFragment extends Fragment {
     }
 
     private void sendNotification() {
-        if (notificationSender == null) {
+        if (notificationSender == null || sending) {
             return;
         }
+
+        fragmentSettingsBinding.sendingProgressIndicator.setVisibility(View.VISIBLE);
+
+        sending = true;
 
         CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(new ParsedNotification(getString(R.string.app_name),
                         getString(R.string.notification_title),
                         getString(R.string.notification_text))))
-                .thenAccept(keptLog -> Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_sent, Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.view_logs, view -> new LogsDialogBuilder(requireContext(), keptLog, getLayoutInflater()).show())
-                        .show());
+                .thenAccept(keptLog -> requireActivity().runOnUiThread(() -> {
+                    fragmentSettingsBinding.sendingProgressIndicator.setVisibility(View.INVISIBLE);
+
+                    sending = false;
+
+                    Snackbar.make(fragmentSettingsBinding.getRoot(), R.string.notification_sent, Snackbar.LENGTH_SHORT)
+                            .setAction(R.string.view_logs, view -> new LogsDialogBuilder(requireContext(), keptLog, getLayoutInflater()).show())
+                            .show();
+                }));
     }
 }
