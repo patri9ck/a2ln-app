@@ -35,10 +35,11 @@ public class Util {
 
     private static final Gson GSON = new Gson();
 
-    private Util() {}
+    private Util() {
+    }
 
-    public static String toJson(List<?> data) {
-        return GSON.toJson(data);
+    public static String toJson(List<?> raw) {
+        return GSON.toJson(raw);
     }
 
     public static <T> List<T> fromJson(String json, Class<T> type) {
@@ -49,9 +50,9 @@ public class Util {
         return GSON.fromJson(json, TypeToken.getParameterized(ArrayList.class, type).getType());
     }
 
-    public static Optional<Integer> parseInteger(String raw) {
+    public static Optional<Integer> parseInteger(String rawInteger) {
         try {
-            return Optional.of(Integer.parseInt(raw));
+            return Optional.of(Integer.parseInt(rawInteger));
         } catch (NumberFormatException ignored) {
             return Optional.empty();
         }
