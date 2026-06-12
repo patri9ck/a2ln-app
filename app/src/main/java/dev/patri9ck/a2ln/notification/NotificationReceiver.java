@@ -27,9 +27,7 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.server.Server;

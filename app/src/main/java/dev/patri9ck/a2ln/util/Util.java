@@ -32,7 +32,8 @@ public class Util {
 
     private static final Gson GSON = new Gson();
 
-    private Util() {}
+    private Util() {
+    }
 
     public static String toJson(List<?> data) {
         return GSON.toJson(data);
@@ -53,7 +54,8 @@ public class Util {
             if (parsedPort >= MINIMUM_PORT && parsedPort <= MAXIMUM_PORT) {
                 return Optional.of(parsedPort);
             }
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+        }
 
         return Optional.empty();
     }
