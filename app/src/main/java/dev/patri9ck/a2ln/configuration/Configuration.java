@@ -9,9 +9,7 @@ public class Configuration {
     private List<Address> addresses;
     private List<String> disabledApps;
 
-    public Configuration() {
-        // Gson
-    }
+    public Configuration() {}
 
     public Configuration(List<Address> addresses, List<String> disabledApps) {
         this.addresses = addresses;
