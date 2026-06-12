@@ -1,0 +1,2 @@
+- Test-Benachrichtigungen ignorieren nun alle Einstellungen
+- Option, auch Benachrichtigungen zu senden, welche nicht von Apps kommen
