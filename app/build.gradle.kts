@@ -15,8 +15,6 @@ android {
 
         versionCode = 5
         versionName = "1.1.1"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -49,12 +47,6 @@ android {
             getByName("release") {
                 signingConfig = signingConfigs.getByName("release")
             }
-        }
-    }
-
-    buildTypes {
-        getByName("debug") {
-            isDebuggable = true
         }
     }
 }
