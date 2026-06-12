@@ -29,7 +29,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.patri9ck.a2ln"
-        minSdk = 27
+        minSdk = 29
         targetSdk = 37
 
         versionCode = 21

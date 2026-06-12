@@ -18,6 +18,7 @@
 package dev.patri9ck.a2ln.server;
 
 import android.content.Context;
+import android.net.InetAddresses;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -142,7 +143,7 @@ public class ServersFragment extends Fragment {
             }
         }
 
-        if (!Patterns.IP_ADDRESS.matcher(ip).matches() && !Patterns.DOMAIN_NAME.matcher(ip).matches()) {
+        if (!InetAddresses.isNumericAddress(ip) && !Patterns.DOMAIN_NAME.matcher(ip).matches()) {
             Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_ip), Snackbar.LENGTH_SHORT).show();
 
             return Optional.empty();
@@ -154,7 +155,7 @@ public class ServersFragment extends Fragment {
     private Optional<Integer> validatePort(String rawPort) {
         Optional<Integer> optionalPort = Util.parsePort(rawPort);
 
-        if (!optionalPort.isPresent()) {
+        if (optionalPort.isEmpty()) {
             Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_port), Snackbar.LENGTH_SHORT).show();
         }
 
@@ -189,7 +190,7 @@ public class ServersFragment extends Fragment {
 
                 Optional<byte[]> optionalPublicKey = pairingResult.getPublicKey();
 
-                if (!optionalPublicKey.isPresent()) {
+                if (optionalPublicKey.isEmpty()) {
                     Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_LONG)
                             .setAction(R.string.view_log, view -> {
                                 if (isVisible()) {
