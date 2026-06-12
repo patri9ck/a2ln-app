@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ android {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.9.1")
     implementation("com.google.android.material:material:1.6.1")
     implementation("org.zeromq:jeromq:0.5.2")
     implementation("androidx.appcompat:appcompat:1.5.0")
