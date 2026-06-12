@@ -17,7 +17,6 @@
 package dev.patri9ck.a2ln.server;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -89,11 +88,11 @@ public class ServersFragment extends Fragment {
 
         String serverIp = parts[0];
 
-        if (validateAlreadyPaired(serverIp)) {
+        if (notifyAlreadyPaired(serverIp) || !notifyValidIp(serverIp)) {
             return;
         }
 
-        Optional<Integer> pairingPort = validateIpAndPort(serverIp, parts[1]);
+        Optional<Integer> pairingPort = notifyValidPort(parts[1]);
 
         if (!pairingPort.isPresent()) {
             return;
@@ -121,11 +120,11 @@ public class ServersFragment extends Fragment {
                     .setPositiveButton(R.string.pair, (pairDialog, which) -> {
                         String serverIp = dialogPairBinding.serverIpEditText.getText().toString();
 
-                        if (validateAlreadyPaired(serverIp)) {
+                        if (notifyAlreadyPaired(serverIp) || !notifyValidIp(serverIp)) {
                             return;
                         }
 
-                        Optional<Integer> pairingPort = validateIpAndPort(serverIp, dialogPairBinding.pairingPortEditText.getText().toString());
+                        Optional<Integer> pairingPort = notifyValidPort(dialogPairBinding.pairingPortEditText.getText().toString());
 
                         if (!pairingPort.isPresent()) {
                             return;
@@ -179,13 +178,27 @@ public class ServersFragment extends Fragment {
         fragmentServersBinding = null;
     }
 
-    protected Optional<Integer> validateIpAndPort(String ip, String port) {
-        if (!Patterns.IP_ADDRESS.matcher(ip).matches()) {
-            Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_ip), Snackbar.LENGTH_SHORT).show();
-
-            return Optional.empty();
+    protected boolean notifyAlreadyPaired(String ip) {
+        for (Server server : servers) {
+            if (server.getIp().equals(ip)) {
+                return true;
+            }
         }
 
+        return false;
+    }
+
+    protected boolean notifyValidIp(String ip) {
+        if (Patterns.IP_ADDRESS.matcher(ip).matches()) {
+            return true;
+        }
+
+        Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_ip), Snackbar.LENGTH_SHORT).show();
+
+        return false;
+    }
+
+    protected Optional<Integer> notifyValidPort(String port) {
         Optional<Integer> parsedPort = Util.parsePort(port);
 
         if (!parsedPort.isPresent()) {
@@ -193,18 +206,6 @@ public class ServersFragment extends Fragment {
         }
 
         return parsedPort;
-    }
-
-    protected boolean validateAlreadyPaired(String ip) {
-        for (Server server : servers) {
-            if (server.getIp().equals(ip)) {
-                Snackbar.make(fragmentServersBinding.getRoot(), R.string.already_paired, Snackbar.LENGTH_SHORT).show();
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void loadServersRecyclerView() {

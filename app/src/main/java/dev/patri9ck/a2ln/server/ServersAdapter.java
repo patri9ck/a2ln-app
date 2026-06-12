@@ -57,7 +57,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerVi
     public void onBindViewHolder(ServerViewHolder holder, int position) {
         Server server = servers.get(position);
 
-        holder.addressTextView.setText(server.getAddress());
+        holder.addressTextView.setText(server.getAlias().orElse(server.getAddress()));
 
         holder.addressTextView.setOnClickListener(view -> {
             DialogEditServerBinding dialogEditServerBinding = DialogEditServerBinding.inflate(serversFragment.getLayoutInflater());
@@ -65,17 +65,19 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerVi
             dialogEditServerBinding.editServerIpEditText.setText(server.getIp());
             dialogEditServerBinding.editServerPortEditText.setText(Integer.toString(server.getPort()));
 
+            server.getAlias().ifPresent(dialogEditServerBinding.editServerAliasEditText::setText);
+
             new MaterialAlertDialogBuilder(serversFragment.requireContext(), R.style.Dialog)
                     .setTitle(R.string.edit_server_dialog_title)
                     .setView(dialogEditServerBinding.getRoot())
                     .setPositiveButton(R.string.apply, (editPortDialog, which) -> {
                         String serverIp = dialogEditServerBinding.editServerIpEditText.getText().toString();
 
-                        if (!server.getIp().equals(serverIp) && serversFragment.validateAlreadyPaired(serverIp)) {
+                        if (!serversFragment.notifyValidIp(serverIp) || (!server.getIp().equals(serverIp) && serversFragment.notifyAlreadyPaired(serverIp))) {
                             return;
                         }
 
-                        Optional<Integer> serverPort = serversFragment.validateIpAndPort(serverIp, dialogEditServerBinding.editServerPortEditText.getText().toString());
+                        Optional<Integer> serverPort = serversFragment.notifyValidPort(dialogEditServerBinding.editServerPortEditText.getText().toString());
 
                         if (!serverPort.isPresent()) {
                             return;
@@ -83,6 +85,10 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerVi
 
                         server.setIp(serverIp);
                         server.setPort(serverPort.get());
+
+                        String alias = dialogEditServerBinding.editServerAliasEditText.getText().toString();
+
+                        server.setAlias(alias.trim().isEmpty() ? null : alias);
 
                         notifyItemChanged(position);
 

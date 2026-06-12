@@ -34,7 +34,16 @@
         style="@style/EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dialog_space"
         android:hint="@string/port"
         android:importantForAutofill="no"
         android:inputType="number" />
+    <EditText
+        android:id="@+id/edit_server_alias_edit_text"
+        style="@style/EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/alias"
+        android:importantForAutofill="no"
+        android:inputType="textAutoCorrect" />
 </LinearLayout>

@@ -37,15 +37,15 @@ public class ParsedNotification {
     private final String text;
     private final byte[] icon;
 
-    public ParsedNotification(String appName, String title, String text) {
-        this(appName, title, text, null);
-    }
-
     public ParsedNotification(String appName, String title, String text, byte[] icon) {
         this.appName = appName;
         this.title = title;
         this.text = text;
         this.icon = icon;
+    }
+
+    public ParsedNotification(String appName, String title, String text) {
+        this(appName, title, text, null);
     }
 
     public static ParsedNotification parseNotification(String appName, Notification notification, Context context) {
