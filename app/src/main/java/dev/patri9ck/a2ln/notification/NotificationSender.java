@@ -81,7 +81,7 @@ public class NotificationSender {
             return keptLog;
         }
 
-        keptLog.log("Trying to send notification to clients");
+        keptLog.log("Trying to send notification to servers");
 
         ZMsg zMsg = new ZMsg();
 
@@ -109,7 +109,7 @@ public class NotificationSender {
                     } else if (!zMsg.send(client, false)) {
                         keptLog.log("Failed to send notification to " + address);
                     } else {
-                        keptLog.log("Successfully sent notification to " + client.getLastEndpoint());
+                        keptLog.log("Successfully sent notification to " + address);
                     }
 
                     countDownLatch.countDown();
