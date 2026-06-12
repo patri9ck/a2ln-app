@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZMsg;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.server.Server;
@@ -82,15 +83,15 @@ public class Pairing {
                     return null;
                 }
 
-                int devicePort = PortParser.parsePort(zMsg.pop().getString(StandardCharsets.UTF_8));
+                Optional<Integer> devicePort = Util.parsePort(zMsg.pop().getString(StandardCharsets.UTF_8));
 
-                if (devicePort == PortParser.INVALID_PORT) {
+                if (!devicePort.isPresent()) {
                     Log.v(TAG, "Received port is not valid");
 
                     return null;
                 }
 
-                return new Server(deviceIp, devicePort, zMsg.pop().getData());
+                return new Server(deviceIp, devicePort.get(), zMsg.pop().getData());
             }
         });
     }

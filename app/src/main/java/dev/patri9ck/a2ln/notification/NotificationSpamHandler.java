@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@ public class NotificationSpamHandler {
 
     private static final long BLOCK_SECONDS = 5;
 
-    private final Map<String, Long> parsedNotifications = new HashMap<>();
+    private final Map<String, Long> notifications = new HashMap<>();
 
     public void cleanUp() {
-        parsedNotifications.keySet().removeIf(parsedNotification -> !isSpammed(parsedNotification));
+        notifications.keySet().removeIf(parsedNotification -> !isSpammed(parsedNotification));
     }
 
     public void addParsedNotification(ParsedNotification parsedNotification) {
-        parsedNotifications.put(getKey(parsedNotification), System.currentTimeMillis() + BLOCK_SECONDS * 1000);
+        notifications.put(getKey(parsedNotification), System.currentTimeMillis() + BLOCK_SECONDS * 1000);
     }
 
     public boolean isSpammed(ParsedNotification parsedNotification) {
@@ -38,10 +38,10 @@ public class NotificationSpamHandler {
     }
 
     private boolean isSpammed(String key) {
-        return parsedNotifications.containsKey(key) && parsedNotifications.get(key) > System.currentTimeMillis();
+        return notifications.containsKey(key) && notifications.get(key) > System.currentTimeMillis();
     }
 
     private String getKey(ParsedNotification parsedNotification) {
-        return parsedNotification.getTitle() + parsedNotification.getText();
+        return parsedNotification.getAppName() + parsedNotification.getTitle() + parsedNotification.getText();
     }
 }

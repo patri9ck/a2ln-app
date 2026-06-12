@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,11 +26,12 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZMsg;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.server.Server;
-import dev.patri9ck.a2ln.util.JsonListConverter;
+import dev.patri9ck.a2ln.util.Util;
 import zmq.util.Z85;
 
 public class NotificationSender {
@@ -49,19 +50,19 @@ public class NotificationSender {
         this.clientSecretKey = clientSecretKey;
     }
 
-    public static NotificationSender fromSharedPreferences(Context context, SharedPreferences sharedPreferences) {
+    public static Optional<NotificationSender> fromSharedPreferences(Context context, SharedPreferences sharedPreferences) {
         String clientPublicKey = sharedPreferences.getString(context.getString(R.string.preferences_own_public_key), null);
         String clientSecretKey = sharedPreferences.getString(context.getString(R.string.preferences_own_secret_key), null);
 
         if (clientPublicKey == null || clientSecretKey == null) {
             Log.e(TAG, "Client keys not saved in preferences properly");
 
-            return null;
+            return Optional.empty();
         }
 
-        return new NotificationSender(JsonListConverter.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_servers), null), Server.class),
+        return Optional.of(new NotificationSender(Util.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_servers), null), Server.class),
                 Z85.decode(clientPublicKey),
-                Z85.decode(clientSecretKey));
+                Z85.decode(clientSecretKey)));
     }
 
     public synchronized void setServers(List<Server> servers) {
@@ -79,14 +80,11 @@ public class NotificationSender {
 
         ZMsg zMsg = new ZMsg();
 
+        zMsg.add(parsedNotification.getAppName());
         zMsg.add(parsedNotification.getTitle());
         zMsg.add(parsedNotification.getText());
 
-        byte[] icon = parsedNotification.getIcon();
-
-        if (icon != null) {
-            zMsg.add(icon);
-        }
+        parsedNotification.getIcon().ifPresent(zMsg::add);
 
         try (ZContext zContext = new ZContext()) {
             servers.forEach(server -> CompletableFuture.runAsync(() -> {

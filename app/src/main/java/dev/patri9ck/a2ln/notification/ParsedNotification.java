@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Patrick Zwick and contributors
+ * Copyright (C) 2022  Patrick Zwick and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,26 +26,29 @@ import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 
 public class ParsedNotification {
 
     private static final String TAG = "A2LN";
 
+    private final String appName;
     private final String title;
     private final String text;
     private final byte[] icon;
 
-    public ParsedNotification(String title, String text) {
-        this(title, text, null);
+    public ParsedNotification(String appName, String title, String text) {
+        this(appName, title, text, null);
     }
 
-    public ParsedNotification(String title, String text, byte[] icon) {
+    public ParsedNotification(String appName, String title, String text, byte[] icon) {
+        this.appName = appName;
         this.title = title;
         this.text = text;
         this.icon = icon;
     }
 
-    public static ParsedNotification parseNotification(Notification notification, Context context) {
+    public static ParsedNotification parseNotification(String appName, Notification notification, Context context) {
         Object title = notification.extras.get(Notification.EXTRA_TITLE);
         Object text = notification.extras.get(Notification.EXTRA_TEXT);
 
@@ -62,14 +65,18 @@ public class ParsedNotification {
                 if (drawable instanceof BitmapDrawable) {
                     ((BitmapDrawable) drawable).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
 
-                    return new ParsedNotification(title.toString(), text.toString(), byteArrayOutputStream.toByteArray());
+                    return new ParsedNotification(appName, title.toString(), text.toString(), byteArrayOutputStream.toByteArray());
                 }
             } catch (IOException exception) {
                 Log.e(TAG, "Failed to convert picture to bytes", exception);
             }
         }
 
-        return new ParsedNotification(title.toString(), text.toString());
+        return new ParsedNotification(appName, title.toString(), text.toString());
+    }
+
+    public String getAppName() {
+        return appName;
     }
 
     public String getTitle() {
@@ -80,7 +87,7 @@ public class ParsedNotification {
         return text;
     }
 
-    public byte[] getIcon() {
-        return icon;
+    public Optional<byte[]> getIcon() {
+        return Optional.ofNullable(icon);
     }
 }
