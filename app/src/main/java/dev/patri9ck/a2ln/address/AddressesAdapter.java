@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -13,9 +14,9 @@ import dev.patri9ck.a2ln.R;
 
 public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.AddressViewHolder> {
 
-    private List<Address> addresses;
+    private List<String> addresses;
 
-    public AddressesAdapter(List<Address> addresses) {
+    public AddressesAdapter(List<String> addresses) {
         this.addresses = addresses;
     }
 
@@ -26,7 +27,7 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.Addr
 
     @Override
     public void onBindViewHolder(AddressViewHolder holder, int position) {
-        holder.addressTextView.setText(addresses.get(position).toString());
+        holder.addressTextView.setText(addresses.get(position));
     }
 
     @Override
