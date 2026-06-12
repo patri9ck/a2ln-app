@@ -1,5 +1,4 @@
 /.idea
 .gradle
 local.properties
-gradle.properties
 /app/build
