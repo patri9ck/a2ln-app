@@ -1,132 +1,201 @@
 package dev.patri9ck.a2ln.main.ui;
 
-import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.address.AddressesAdapter;
-import dev.patri9ck.a2ln.address.SwipeToDeleteCallback;
+import dev.patri9ck.a2ln.databinding.DialogPairBinding;
+import dev.patri9ck.a2ln.databinding.DialogPairedBinding;
+import dev.patri9ck.a2ln.databinding.DialogPairingBinding;
 import dev.patri9ck.a2ln.databinding.FragmentDevicesBinding;
+import dev.patri9ck.a2ln.device.Device;
+import dev.patri9ck.a2ln.device.DevicesAdapter;
+import dev.patri9ck.a2ln.device.SwipeToDeleteCallback;
+import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 import dev.patri9ck.a2ln.notification.NotificationReceiver;
+import dev.patri9ck.a2ln.notification.NotificationReceiverUpdater;
+import dev.patri9ck.a2ln.pair.Pairing;
+import dev.patri9ck.a2ln.util.JsonListConverter;
 
-public class DevicesFragment extends Fragment {
+public class DevicesFragment extends Fragment implements NotificationReceiverUpdater {
 
-    private List<String> addresses;
-    private AddressesAdapter addressesAdapter;
+    private static final String TAG = "A2LN";
+
+    private List<Device> devices;
+    private DevicesAdapter devicesAdapter;
 
     private SharedPreferences sharedPreferences;
 
-    private NotificationReceiver notificationReceiver;
-    private boolean bound;
+    private BoundNotificationReceiver boundNotificationReceiver;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            notificationReceiver = ((NotificationReceiver.NotificationReceiverBinder) service).getNotificationReceiver();
-
-            notificationReceiver.setAddresses(addresses);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            notificationReceiver = null;
-        }
-    };
-
-    private FragmentDevicesBinding binding;
+    private FragmentDevicesBinding fragmentDevicesBinding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentDevicesBinding.inflate(inflater, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        fragmentDevicesBinding = FragmentDevicesBinding.inflate(inflater, container, false);
 
-        binding.floatingActionButton.setOnClickListener(view -> {
-            View dialogView = getLayoutInflater().inflate(R.layout.add_dialog, null);
+        fragmentDevicesBinding.pairButton.setOnClickListener(view -> {
+            DialogPairBinding dialogPairBinding = DialogPairBinding.inflate(inflater);
 
-            new AlertDialog.Builder(view.getContext())
-                    .setView(dialogView)
-                    .setPositiveButton(R.string.add, (dialog, which) -> onAdd(dialogView))
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
+            new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
+                    .setTitle(R.string.pair_dialog_title)
+                    .setView(dialogPairBinding.getRoot())
+                    .setPositiveButton(R.string.pair, (pairDialog, which) -> {
+                        pairDialog.dismiss();
+
+                        startPairing(dialogPairBinding);
+                    })
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
         });
 
-        return binding.getRoot();
+        return fragmentDevicesBinding.getRoot();
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_key), Context.MODE_PRIVATE);
+        sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
 
-        addresses = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_addresses_key), new HashSet<>()));
+        devices = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_devices), null), Device.class);
 
-        loadAddressesRecyclerView();
+        boundNotificationReceiver = new BoundNotificationReceiver(this, requireContext());
 
-        bound = getContext().bindService(new Intent(getContext(), NotificationReceiver.class), serviceConnection, 0);
+        boundNotificationReceiver.bind();
+
+        loadDevicesRecyclerView();
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        sharedPreferences.edit().putStringSet(getString(R.string.preferences_addresses_key), new HashSet<>(addresses)).apply();
+        sharedPreferences.edit().putString(getString(R.string.preferences_devices), JsonListConverter.toJson(devices)).apply();
 
-        if (bound) {
-            getContext().unbindService(serviceConnection);
-
-            bound = false;
-        }
+        boundNotificationReceiver.unbind();
     }
 
-    private void onAdd(View view) {
-        String host = ((EditText) view.findViewById(R.id.host_edit_text)).getText().toString();
-        String port = ((EditText) view.findViewById(R.id.port_edit_text)).getText().toString();
-
-        if (host.isEmpty() || port.isEmpty()) {
-            return;
-        }
-
-        String address = host + ":" + port;
-
-        if (addresses.contains(address)) {
-            return;
-        }
-
-        addresses.add(address);
-
-        addressesAdapter.notifyItemInserted(addresses.size());
-
-        if (notificationReceiver == null) {
-            return;
-        }
-
-        notificationReceiver.setAddresses(addresses);
+    @Override
+    public void update(NotificationReceiver notificationReceiver) {
+        notificationReceiver.setDevices(devices);
     }
 
-    private void loadAddressesRecyclerView() {
-        addressesAdapter = new AddressesAdapter(addresses);
+    private void loadDevicesRecyclerView() {
+        devicesAdapter = new DevicesAdapter(this, boundNotificationReceiver, devices);
 
-        binding.addressesRecyclerView.setAdapter(addressesAdapter);
-        binding.addressesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        fragmentDevicesBinding.devicesRecyclerView.setAdapter(devicesAdapter);
+        fragmentDevicesBinding.devicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        new ItemTouchHelper(new SwipeToDeleteCallback(getActivity(), addresses, addressesAdapter)).attachToRecyclerView(binding.addressesRecyclerView);
+        new ItemTouchHelper(new SwipeToDeleteCallback(this, boundNotificationReceiver, devices, devicesAdapter)).attachToRecyclerView(fragmentDevicesBinding.devicesRecyclerView);
+    }
+
+    private void startPairing(DialogPairBinding dialogPairBinding) {
+        String deviceIp = dialogPairBinding.deviceIpEditText.getText().toString();
+
+        if (deviceIp.isEmpty()) {
+            return;
+        }
+
+        int devicePort;
+
+        try {
+            devicePort = Integer.parseInt(dialogPairBinding.devicePortEditText.getText().toString());
+        } catch (NumberFormatException exception) {
+            return;
+        }
+
+        for (Device device : devices) {
+            if (device.getIp().equals(deviceIp)) {
+                Toast.makeText(requireContext(), R.string.already_paired, Toast.LENGTH_LONG).show();
+
+                return;
+            }
+        }
+
+        String clientIp = getIp();
+        String clientPublicKey = sharedPreferences.getString(getString(R.string.preferences_client_public_key), null);
+
+        if (clientIp == null || clientPublicKey == null) {
+            return;
+        }
+
+        DialogPairingBinding dialogPairingBinding = DialogPairingBinding.inflate(getLayoutInflater());
+
+        dialogPairingBinding.clientIpTextView.setText(getString(R.string.client_ip, clientIp));
+        dialogPairingBinding.clientPublicKeyTextView.setText(getString(R.string.client_public_key, clientPublicKey));
+
+        AlertDialog pairingDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
+                .setTitle(R.string.pairing_dialog_title)
+                .setView(dialogPairingBinding.getRoot())
+                .setCancelable(false)
+                .show();
+
+        CompletableFuture.supplyAsync(() -> new Pairing(deviceIp, devicePort, clientIp, clientPublicKey).pair()).thenAccept(device -> requireActivity().runOnUiThread(() -> {
+            pairingDialog.dismiss();
+
+            if (device == null) {
+                Toast.makeText(requireContext(), R.string.pairing_failed, Toast.LENGTH_LONG).show();
+
+                return;
+            }
+
+            DialogPairedBinding dialogPairedBinding = DialogPairedBinding.inflate(getLayoutInflater());
+
+            dialogPairedBinding.deviceIpTextView.setText(getString(R.string.device_ip, deviceIp));
+            dialogPairedBinding.devicePublicKeyTextView.setText(getString(R.string.device_public_key, new String(device.getPublicKey(), StandardCharsets.UTF_8)));
+
+            new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
+                    .setTitle(R.string.paired_dialog_title)
+                    .setView(dialogPairedBinding.getRoot())
+                    .setPositiveButton(R.string.pair, (pairedDialog, which) -> {
+                        int position = devices.size();
+
+                        devices.add(device);
+
+                        devicesAdapter.notifyItemInserted(position);
+
+                        boundNotificationReceiver.updateNotificationReceiver();
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        }));
+    }
+
+    private String getIp() {
+        try {
+            return InetAddress.getByAddress(ByteBuffer
+                    .allocate(Integer.BYTES)
+                    .order(ByteOrder.LITTLE_ENDIAN)
+                    .putInt(((WifiManager) requireContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE)).getConnectionInfo().getIpAddress())
+                    .array()).getHostAddress();
+        } catch (UnknownHostException exception) {
+            Log.e(TAG, "Failed to get client IP", exception);
+
+            return null;
+        }
     }
 }

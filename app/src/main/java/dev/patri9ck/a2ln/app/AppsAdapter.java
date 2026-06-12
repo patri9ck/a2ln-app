@@ -2,7 +2,6 @@ package dev.patri9ck.a2ln.app;
 
 import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -14,19 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.notification.NotificationReceiver;
+import dev.patri9ck.a2ln.databinding.ItemAppBinding;
+import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 
 public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder> {
 
-    private List<String> disabledApps;
-    private NotificationReceiver notificationReceiver;
+    private final List<String> disabledApps;
+    private final BoundNotificationReceiver boundNotificationReceiver;
 
-    private List<App> apps;
+    private final List<App> apps;
 
-    public AppsAdapter(List<String> disabledApps, NotificationReceiver notificationReceiver, PackageManager packageManager) {
+    public AppsAdapter(List<String> disabledApps, BoundNotificationReceiver boundNotificationReceiver, PackageManager packageManager) {
         this.disabledApps = disabledApps;
-        this.notificationReceiver = notificationReceiver;
+        this.boundNotificationReceiver = boundNotificationReceiver;
 
         apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
                 .stream()
@@ -37,8 +36,8 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
 
     @NonNull
     @Override
-    public AppViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AppViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.app_item, parent, false));
+    public AppViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new AppViewHolder(ItemAppBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -47,7 +46,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
 
         holder.nameTextView.setText(app.getName());
 
-        holder.appCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        holder.appCheckBox.setOnCheckedChangeListener((appCheckBoxView, isChecked) -> {
             app.setEnabled(isChecked);
 
             String packageName = app.getPackageName();
@@ -58,11 +57,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
                 disabledApps.add(packageName);
             }
 
-            if (notificationReceiver == null) {
-                return;
-            }
-
-            notificationReceiver.setDisabledApps(disabledApps);
+            boundNotificationReceiver.updateNotificationReceiver();
         });
 
         holder.appCheckBox.setChecked(app.isEnabled());
@@ -75,22 +70,18 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.AppViewHolder>
         return apps.size();
     }
 
-    public void setNotificationReceiver(NotificationReceiver notificationReceiver) {
-        this.notificationReceiver = notificationReceiver;
-    }
-
     protected static class AppViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView nameTextView;
-        private CheckBox appCheckBox;
-        private ImageView iconImageView;
+        private final TextView nameTextView;
+        private final CheckBox appCheckBox;
+        private final ImageView iconImageView;
 
-        public AppViewHolder(View itemView) {
-            super(itemView);
+        public AppViewHolder(ItemAppBinding itemAppBinding) {
+            super(itemAppBinding.getRoot());
 
-            nameTextView = itemView.findViewById(R.id.name_text_view);
-            appCheckBox = itemView.findViewById(R.id.app_check_box);
-            iconImageView = itemView.findViewById(R.id.icon_image_view);
+            nameTextView = itemAppBinding.nameTextView;
+            appCheckBox = itemAppBinding.appCheckBox;
+            iconImageView = itemAppBinding.iconImageView;
         }
     }
 }

@@ -13,18 +13,20 @@ import java.io.IOException;
 
 public class ParsedNotification {
 
+    private static final String TAG = "A2LN";
+
     private String title;
     private String text;
     private byte[] icon;
 
-    private ParsedNotification(String title, String text, byte[] icon) {
+    public ParsedNotification(String title, String text) {
+        this(title, text, null);
+    }
+
+    public ParsedNotification(String title, String text, byte[] icon) {
         this.title = title;
         this.text = text;
         this.icon = icon;
-    }
-
-    public static ParsedNotification makeTestNotification() {
-        return new ParsedNotification("Test", "This is a test notification.", null);
     }
 
     public static ParsedNotification parseNotification(Notification notification, Context context) {
@@ -47,11 +49,11 @@ public class ParsedNotification {
                     return new ParsedNotification(title.toString(), text.toString(), byteArrayOutputStream.toByteArray());
                 }
             } catch (IOException exception) {
-                Log.e("A2LN", "Failed to convert picture to bytes", exception);
+                Log.e(TAG, "Failed to convert picture to bytes", exception);
             }
         }
 
-        return new ParsedNotification(title.toString(), text.toString(), null);
+        return new ParsedNotification(title.toString(), text.toString());
     }
 
     public String getTitle() {
