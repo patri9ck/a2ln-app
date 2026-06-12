@@ -1,0 +1,4 @@
+- Option to block similar notifications
+- Create an actual notification to send a test notification
+- Ability to not send notifications if the display is enabled
+- German translation
