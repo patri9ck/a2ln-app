@@ -88,7 +88,7 @@ public class ServersFragment extends Fragment {
 
         String serverIp = parts[0];
 
-        if (notifyAlreadyPaired(serverIp) || !notifyValidIp(serverIp)) {
+        if (isAlreadyPaired(serverIp) || !notifyValidIp(serverIp)) {
             return;
         }
 
@@ -120,7 +120,7 @@ public class ServersFragment extends Fragment {
                     .setPositiveButton(R.string.pair, (pairDialog, which) -> {
                         String serverIp = dialogPairBinding.serverIpEditText.getText().toString();
 
-                        if (notifyAlreadyPaired(serverIp) || !notifyValidIp(serverIp)) {
+                        if (isAlreadyPaired(serverIp) || !notifyValidIp(serverIp)) {
                             return;
                         }
 
@@ -178,7 +178,7 @@ public class ServersFragment extends Fragment {
         fragmentServersBinding = null;
     }
 
-    protected boolean notifyAlreadyPaired(String ip) {
+    protected boolean isAlreadyPaired(String ip) {
         for (Server server : servers) {
             if (server.getIp().equals(ip)) {
                 return true;
@@ -189,7 +189,7 @@ public class ServersFragment extends Fragment {
     }
 
     protected boolean notifyValidIp(String ip) {
-        if (Patterns.IP_ADDRESS.matcher(ip).matches()) {
+        if (Patterns.IP_ADDRESS.matcher(ip).matches() || Patterns.DOMAIN_NAME.matcher(ip).matches()) {
             return true;
         }
 
