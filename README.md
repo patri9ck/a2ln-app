@@ -6,7 +6,7 @@ It creates a direct socket connection to your PC whenever a notification arrives
 When you start the [A2LN server](https://github.com/patri9ck/a2ln-server), it outputs the address: `Address: 192.168.178.41:6000`.
 
 Alternatively, you can find it out by using `ip route` in your terminal for example:
-```sh
+```
 $ ip route
 default via 192.168.178.1 dev wlp39s0 proto dhcp metric 600
 192.168.178.0/24 dev wlp39s0 proto kernel scope link src 192.168.178.41 metric 600
