@@ -27,12 +27,12 @@ import android.util.Log;
 import android.view.Display;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.notification.spam.NotificationSpamHandler;
 import dev.patri9ck.a2ln.util.Storage;
-import dev.patri9ck.a2ln.util.Util;
 
 public class NotificationReceiver extends NotificationListenerService {
 
@@ -50,6 +50,7 @@ public class NotificationReceiver extends NotificationListenerService {
     private List<String> disabledApps;
 
     private boolean display;
+    private boolean noApp;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = (sharedPreferences, key) -> {
         if (getString(R.string.preferences_servers).equals(key)) {
@@ -78,6 +79,12 @@ public class NotificationReceiver extends NotificationListenerService {
 
         if (getString(R.string.preferences_display).equals(key)) {
             display = storage.loadDisplay();
+
+            return;
+        }
+
+        if (getString(R.string.preferences_no_app).equals(key)) {
+            noApp = storage.loadNoApp();
         }
     };
 
@@ -93,46 +100,48 @@ public class NotificationReceiver extends NotificationListenerService {
 
         Log.v(TAG, "Notification posted (" + packageName + ")");
 
-        if (packageManager.getLaunchIntentForPackage(packageName) == null) {
-            Log.v(TAG, "Not from an actual app");
+        boolean test = getPackageName().equals(packageName);
 
-            return;
-        }
+        if (test) {
+            Log.v(TAG, "Test notification detected");
+        } else {
+            if (!noApp && packageManager.getLaunchIntentForPackage(packageName) == null) {
+                Log.v(TAG, "Not from an actual app");
 
-        if (disabledApps.contains(packageName)) {
-            Log.v(TAG, "App is disabled");
+                return;
+            }
 
-            return;
-        }
+            if (disabledApps.contains(packageName)) {
+                Log.v(TAG, "App is disabled");
 
-        if (display) {
-            for (Display display : ((DisplayManager) getSystemService(Context.DISPLAY_SERVICE)).getDisplays()) {
-                if (display.getState() == Display.STATE_ON) {
-                    Log.v(TAG, "Display is on");
+                return;
+            }
 
-                    return;
-                }
+            if (display && isDisplayEnabled()) {
+                Log.v(TAG, "Display is on");
+
+                return;
             }
         }
 
-        ParsedNotification parsedNotification = ParsedNotification.parseNotification(Util.getAppName(packageManager, packageName).orElse(""),
-                statusBarNotification.getNotification(),
-                this);
+        Optional<ParsedNotification> optionalParsedNotification = ParsedNotification.parseNotification(statusBarNotification, this);
 
-        if (parsedNotification == null) {
+        if (!optionalParsedNotification.isPresent()) {
             Log.v(TAG, "Notification cannot be parsed");
 
             return;
         }
 
-        if (notificationSpamHandler.isSpammed(parsedNotification)) {
+        ParsedNotification parsedNotification = optionalParsedNotification.get();
+
+        if (notificationSpamHandler.isSpammed(parsedNotification, test)) {
             Log.v(TAG, "Notification is spammed");
 
             return;
         }
 
         CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(parsedNotification)).thenAccept(keptLog -> {
-            if (getPackageName().equals(packageName)) {
+            if (test) {
                 storage.saveLog(keptLog.format());
             }
         });
@@ -181,5 +190,15 @@ public class NotificationReceiver extends NotificationListenerService {
         }
 
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    private boolean isDisplayEnabled() {
+        for (Display display : ((DisplayManager) getSystemService(Context.DISPLAY_SERVICE)).getDisplays()) {
+            if (display.getState() == Display.STATE_ON) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

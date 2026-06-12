@@ -24,5 +24,6 @@
     <string name="preferences_similarity" translatable="false">similarity</string>
     <string name="preferences_duration" translatable="false">duration</string>
     <string name="preferences_display" translatable="false">display</string>
+    <string name="preferences_no_app" translatable="false">no_app</string>
     <string name="preferences_log" translatable="false">log</string>
 </resources>

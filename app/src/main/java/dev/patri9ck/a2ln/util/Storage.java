@@ -29,6 +29,9 @@ import dev.patri9ck.a2ln.server.Server;
 
 public class Storage {
 
+    public static final float DEFAULT_SIMILARITY = 1F;
+    public static final int DEFAULT_DURATION = 1;
+
     private final Context context;
     private final SharedPreferences sharedPreferences;
 
@@ -68,7 +71,7 @@ public class Storage {
     }
 
     public float loadSimilarityOrDefault() {
-        return loadSimilarity().orElse(1F);
+        return loadSimilarity().orElse(DEFAULT_SIMILARITY);
     }
 
     public void saveSimilarity(float similarity) {
@@ -86,7 +89,7 @@ public class Storage {
     }
 
     public int loadDurationOrDefault() {
-        return loadDuration().orElse(1);
+        return loadDuration().orElse(DEFAULT_DURATION);
     }
 
     public void saveDuration(int duration) {
@@ -103,6 +106,14 @@ public class Storage {
 
     public void saveDisplay(boolean display) {
         sharedPreferences.edit().putBoolean(context.getString(R.string.preferences_display), display).apply();
+    }
+
+    public boolean loadNoApp() {
+        return sharedPreferences.getBoolean(context.getString(R.string.preferences_no_app), false);
+    }
+
+    public void saveNoApp(boolean noApp) {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.preferences_no_app), noApp).apply();
     }
 
     public Optional<String> loadLog() {

@@ -97,15 +97,15 @@ public class NotificationSender {
     }
 
     public KeptLog sendParsedNotification(ParsedNotification parsedNotification) {
-        KeptLog keptLog = new KeptLog(context, TAG);
+        KeptLog keptLog = new KeptLog(context);
 
         if (servers.isEmpty()) {
-            keptLog.log(Log.INFO, R.string.log_notification_no_servers);
+            keptLog.log(R.string.log_notification_no_servers);
 
             return keptLog;
         }
 
-        keptLog.log(Log.INFO, R.string.log_notification_trying);
+        keptLog.log(R.string.log_notification_trying);
 
         ZMsg zMsg = new ZMsg();
 
@@ -129,11 +129,11 @@ public class NotificationSender {
                     String address = server.getAddress();
 
                     if (!client.connect("tcp://" + address)) {
-                        keptLog.log(Log.ERROR, R.string.log_failed_connection, address);
+                        keptLog.log(R.string.log_failed_connection, address);
                     } else if (!zMsg.send(client, false)) {
-                        keptLog.log(Log.ERROR, R.string.log_notification_failed_sending, address);
+                        keptLog.log(R.string.log_notification_failed_sending, address);
                     } else {
-                        keptLog.log(Log.INFO, R.string.log_notification_success, address);
+                        keptLog.log(R.string.log_notification_success, address);
                     }
 
                     countDownLatch.countDown();
@@ -142,7 +142,7 @@ public class NotificationSender {
         } finally {
             try {
                 if (!countDownLatch.await(TIMEOUT_SECONDS + 1, TimeUnit.SECONDS)) {
-                    keptLog.log(Log.ERROR, R.string.log_notification_timed_out);
+                    keptLog.log(R.string.log_notification_timed_out);
                 }
             } catch (InterruptedException ignored) {
                 // Ignored

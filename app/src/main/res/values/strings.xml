@@ -57,6 +57,7 @@
     <string name="similarity">Similarity in %</string>
     <string name="duration">Duration in Seconds</string>
     <string name="display_information">Do not send notifications if the display is enabled.</string>
+    <string name="no_app_information">Send notifications which do not come from apps. They cannot be disabled.</string>
     <string name="channel_name">Test Notifications</string>
     <string name="channel_description">Used for test notifications.</string>
 </resources>
