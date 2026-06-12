@@ -1,1 +1,2 @@
-- Allow domains as IPs
+- Drag and drop server order swapping
+- Toggling of servers
