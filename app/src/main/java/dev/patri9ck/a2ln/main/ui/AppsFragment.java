@@ -1,8 +1,10 @@
 package dev.patri9ck.a2ln.main.ui;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -13,8 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.app.AppsAdapter;
 import dev.patri9ck.a2ln.databinding.FragmentAppsBinding;
 import dev.patri9ck.a2ln.main.MainActivity;
@@ -24,6 +29,8 @@ public class AppsFragment extends Fragment {
 
     private List<String> disabledApps;
     private AppsAdapter appsAdapter;
+
+    private SharedPreferences sharedPreferences;
 
     private boolean bound;
 
@@ -46,10 +53,8 @@ public class AppsFragment extends Fragment {
     private FragmentAppsBinding binding;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAppsBinding.inflate(inflater, container, false);
-
-        loadAppsRecyclerView();
 
         return binding.getRoot();
     }
@@ -58,6 +63,12 @@ public class AppsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.preferences_key), Context.MODE_PRIVATE);
+
+        disabledApps = new ArrayList<>(sharedPreferences.getStringSet(getString(R.string.preferences_disabled_apps_key), new HashSet<>()));
+
+        loadAppsRecyclerView();
+
         bound = getContext().bindService(new Intent(getContext(), NotificationReceiver.class), serviceConnection, 0);
     }
 
@@ -65,24 +76,16 @@ public class AppsFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        if (!bound) {
-            return;
+        sharedPreferences.edit().putStringSet(getString(R.string.preferences_disabled_apps_key), new HashSet<>(disabledApps)).apply();
+
+        if (bound) {
+            getContext().unbindService(serviceConnection);
+
+            bound = false;
         }
-
-        getContext().unbindService(serviceConnection);
-
-        bound = false;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        binding = null;
     }
 
     private void loadAppsRecyclerView() {
-        disabledApps = MainActivity.configuration.getDisabledApps();
         appsAdapter = new AppsAdapter(disabledApps, null, getContext().getPackageManager());
 
         binding.appsRecyclerView.setAdapter(appsAdapter);

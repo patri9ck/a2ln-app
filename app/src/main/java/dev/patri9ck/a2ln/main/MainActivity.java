@@ -11,29 +11,17 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.gson.Gson;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.configuration.Configuration;
-import dev.patri9ck.a2ln.configuration.Storage;
 import dev.patri9ck.a2ln.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static Configuration configuration;
-
     private Gson gson = new Gson();
-    private Storage storage;
 
     private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        storage = new Storage(this);
-        configuration = gson.fromJson(getIntent().getStringExtra(Configuration.class.getName()), Configuration.class);
-
-        if (configuration == null) {
-            configuration = storage.loadConfiguration();
-        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
@@ -54,12 +42,5 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, new AppBarConfiguration.Builder(R.id.navigation_devices, R.id.navigation_apps, R.id.navigation_settings)
                 .build());
         NavigationUI.setupWithNavController(binding.navView, navController);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        storage.saveConfiguration(configuration);
     }
 }
