@@ -81,6 +81,16 @@ public class SettingsFragment extends Fragment {
         storage.loadLog().ifPresent(this::succeed);
     };
 
+    private final ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
+        if (result) {
+            sendNotification();
+
+            return;
+        }
+
+        sendNotificationDirectly();
+    });
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
@@ -163,15 +173,7 @@ public class SettingsFragment extends Fragment {
         fragmentSettingsBinding.helpTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         return fragmentSettingsBinding.getRoot();
-    }    private final ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {
-        if (result) {
-            sendNotification();
-
-            return;
-        }
-
-        sendNotificationDirectly();
-    });
+    }
 
     @Override
     public void onDestroyView() {
