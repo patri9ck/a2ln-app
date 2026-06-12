@@ -1,13 +1,12 @@
 package dev.patri9ck.a2ln.app;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,12 +15,11 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.address.AddressesActivity;
 import dev.patri9ck.a2ln.configuration.Configuration;
 import dev.patri9ck.a2ln.configuration.Storage;
 import dev.patri9ck.a2ln.notification.NotificationReceiver;
 
-public class AppsActivity extends Activity {
+public class AppsActivity extends AppCompatActivity {
 
     private Gson gson = new Gson();
 
@@ -89,14 +87,6 @@ public class AppsActivity extends Activity {
         super.onPause();
 
         storage.saveConfiguration(configuration);
-    }
-
-    public void onBack(View view) {
-        Intent intent = new Intent(this, AddressesActivity.class);
-
-        intent.putExtra(Configuration.class.getName(), gson.toJson(configuration));
-
-        startActivity(intent);
     }
 
     private void loadAppsRecyclerView() {

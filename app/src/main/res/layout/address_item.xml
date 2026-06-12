@@ -4,5 +4,5 @@
     android:id="@+id/address_text_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="5dp"
+    android:layout_marginHorizontal="@dimen/widget_margin"
     android:textSize="30sp"/>
