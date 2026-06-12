@@ -14,7 +14,6 @@ import java.util.List;
 import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.databinding.DialogEditPortBinding;
 import dev.patri9ck.a2ln.databinding.ItemDeviceBinding;
-import dev.patri9ck.a2ln.main.ui.DevicesFragment;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
 
 public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DeviceViewHolder> {

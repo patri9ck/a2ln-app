@@ -7,7 +7,7 @@ public class NotificationSpamHandler {
 
     private static final long BLOCK_SECONDS = 5;
 
-    private Map<String, Long> parsedNotifications = new HashMap<>();
+    private final Map<String, Long> parsedNotifications = new HashMap<>();
 
     public void cleanUp() {
         parsedNotifications.keySet().removeIf(parsedNotification -> !isSpammed(parsedNotification));

@@ -9,10 +9,7 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMsg;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
@@ -21,19 +18,14 @@ import dev.patri9ck.a2ln.device.Device;
 import dev.patri9ck.a2ln.util.JsonListConverter;
 import zmq.util.Z85;
 
-public class NotificationSender implements AutoCloseable {
+public class NotificationSender {
 
     private static final String TAG = "A2LNNS";
 
     private static final int TIMEOUT_SECONDS = 5;
-    private static final int CLOSE_SECONDS = 10;
 
     byte[] clientPublicKey;
     byte[] clientSecretKey;
-
-    private ZContext zContext;
-    private List<ZMQ.Socket> clients;
-    private Timer closeTimer;
 
     private List<Device> devices;
 
@@ -60,20 +52,15 @@ public class NotificationSender implements AutoCloseable {
     }
 
     public synchronized void setDevices(List<Device> devices) {
-        close();
-
         this.devices = devices;
     }
 
     public synchronized void sendParsedNotification(ParsedNotification parsedNotification) {
         if (devices.isEmpty()) {
-            Log.v(TAG, "No devices given, will not start sockets");
+            Log.v(TAG, "No devices given, will not start clients");
 
             return;
         }
-
-        startClients();
-        startCloseTimer();
 
         ZMsg zMsg = new ZMsg();
 
@@ -86,86 +73,35 @@ public class NotificationSender implements AutoCloseable {
             zMsg.add(icon);
         }
 
-        CountDownLatch countDownLatch = new CountDownLatch(clients.size());
+        try (ZContext zContext = new ZContext()) {
+            CountDownLatch countDownLatch = new CountDownLatch(devices.size());
 
-        clients.forEach(client -> CompletableFuture.runAsync(() -> {
-            Log.v(TAG, "Trying to send notification to " + client.getLastEndpoint() + " (" + countDownLatch.getCount() + ")");
+            devices.forEach(device -> CompletableFuture.runAsync(() -> {
+                try (ZMQ.Socket client = zContext.createSocket(SocketType.PUSH)) {
+                    client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
+                    client.setImmediate(false);
+                    client.setCurvePublicKey(clientPublicKey);
+                    client.setCurveSecretKey(clientSecretKey);
+                    client.setCurveServerKey(device.getPublicKey());
+                    client.connect("tcp://" + device.getAddress());
 
-            zMsg.send(client);
+                    Log.v(TAG, "Trying to send notification to " + client.getLastEndpoint());
 
-            countDownLatch.countDown();
-        }));
+                    if (zMsg.send(client, false)) {
+                        Log.v(TAG, "Successfully sent notification to " + client.getLastEndpoint());
+                    } else {
+                        Log.v(TAG, "Failed to send notification to " + client.getLastEndpoint());
+                    }
+                }
 
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException ignored) {}
+                countDownLatch.countDown();
+            }));
 
-        Log.v(TAG, "Finished trying to send notification");
-    }
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException ignored) {}
 
-    private synchronized void startClients() {
-        if (zContext != null && !zContext.isClosed()) {
-            return;
+            Log.v(TAG, "Finished trying to send notification");
         }
-
-        Log.v(TAG, "Starting clients");
-
-        zContext = new ZContext();
-
-        clients = new ArrayList<>();
-
-        devices.forEach(device -> {
-            ZMQ.Socket client = zContext.createSocket(SocketType.PUSH);
-
-            client.setSendTimeOut(TIMEOUT_SECONDS * 1000);
-            client.setImmediate(false);
-            client.setCurvePublicKey(clientPublicKey);
-            client.setCurveSecretKey(clientSecretKey);
-            client.setCurveServerKey(device.getPublicKey());
-            client.connect("tcp://" + device.getAddress());
-
-            clients.add(client);
-        });
-    }
-
-    private synchronized void stopClients() {
-        if (zContext == null || zContext.isClosed()) {
-            return;
-        }
-
-        Log.v(TAG, "Stopping clients");
-
-        zContext.close();
-    }
-
-    private synchronized void startCloseTimer() {
-        stopCloseTimer();
-
-        closeTimer = new Timer();
-
-        closeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                stopClients();
-
-                closeTimer = null;
-            }
-        }, CLOSE_SECONDS * 1000);
-    }
-
-    private synchronized void stopCloseTimer() {
-        if (closeTimer == null) {
-            return;
-        }
-
-        closeTimer.cancel();
-
-        closeTimer = null;
-    }
-
-    @Override
-    public synchronized void close() {
-        stopClients();
-        stopCloseTimer();
     }
 }

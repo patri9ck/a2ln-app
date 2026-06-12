@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout android:layout_width="match_parent"
@@ -7,23 +8,26 @@
         android:orientation="vertical"
         android:padding="?dialogPreferredPadding">
         <Button style="@style/Button"
-            android:id="@+id/permissions_button"
+            android:id="@+id/permission_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/widget_margin"
-            android:text="@string/permission"/>
+            android:text="@string/permission"
+            app:icon="@drawable/ic_permission"/>
         <Button style="@style/Button"
-            android:id="@+id/test_button"
+            android:id="@+id/notification_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/widget_margin"
-            android:text="@string/test"/>
+            android:text="@string/notification"
+            app:icon="@drawable/ic_notification"/>
         <Button style="@style/Button"
             android:id="@+id/help_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/widget_margin"
-            android:text="@string/help"/>
+            android:text="@string/help"
+            app:icon="@drawable/ic_help"/>
     </LinearLayout>
     <TextView style="@style/TextView"
         android:id="@+id/version_text_view"
