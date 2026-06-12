@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Dialog"
+        parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">15dp</item>
+    </style>
+    <style name="BottomNavigationView"
+        parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/background</item>
+    </style>
     <style name="Button"
-        parent="Widget.AppCompat.Button">
-        <item name="android:textColor">@color/text</item>
-        <item name="android:background">@color/second_background</item>
+        parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/accent_text</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
     </style>
     <style name="EditText"
         parent="Widget.AppCompat.EditText">
-        <item name="android:textCursorDrawable">@null</item>
-        <item name="android:background">@null</item>
+        <item name="android:backgroundTint">@color/accent</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textColorHint">@color/text</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
     </style>
     <style name="TextView"
-        parent="Widget.AppCompat.TextView">
+        parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/text</item>
-    </style>
-    <style name="ActionBar"
-        parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/background</item>
-        <item name="android:textColor">@color/accent</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
     </style>
     <style name="Snackbar"
         parent="Widget.MaterialComponents.Snackbar">
-        <item name="android:background">@color/second_background</item>
+        <item name="android:background">@color/accent</item>
     </style>
     <style name="SnackbarButton"
         parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/accent_text</item>
     </style>
     <style name="SnackbarTextView"
         parent="Widget.MaterialComponents.Snackbar.TextView">
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/accent_text</item>
+    </style>
+    <style name="FloatingActionButton"
+        parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="srcCompat">@drawable/ic_pair</item>
+        <item name="tint">@color/accent_text</item>
     </style>
 </resources>

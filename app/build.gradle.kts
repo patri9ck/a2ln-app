@@ -60,12 +60,6 @@ android {
 }
 
 dependencies {
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test:core:1.4.0")
-    androidTestImplementation("tools.fastlane:screengrab:2.1.1")
-
-    debugImplementation("androidx.fragment:fragment-testing:1.5.0")
-
     implementation("com.google.code.gson:gson:2.8.9")
     implementation("com.google.android.material:material:1.6.1")
     implementation("org.zeromq:jeromq:0.5.2")
