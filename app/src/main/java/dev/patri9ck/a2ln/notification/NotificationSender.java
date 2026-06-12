@@ -68,11 +68,11 @@ public class NotificationSender {
                 Util.fromJson(sharedPreferences.getString(context.getString(R.string.preferences_servers), null), Server.class)));
     }
 
-    public synchronized void setServers(List<Server> servers) {
+    public void setServers(List<Server> servers) {
         this.servers = servers;
     }
 
-    public synchronized KeptLog sendParsedNotification(ParsedNotification parsedNotification) {
+    public KeptLog sendParsedNotification(ParsedNotification parsedNotification) {
         KeptLog keptLog = new KeptLog(TAG);
 
         if (servers.isEmpty()) {
@@ -115,14 +115,16 @@ public class NotificationSender {
                     countDownLatch.countDown();
                 }
             }));
-        }
-
-        try {
-            if (!countDownLatch.await(TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-                keptLog.log("Ran out of time");
+        } finally {
+            try {
+                if (!countDownLatch.await(TIMEOUT_SECONDS * 2, TimeUnit.SECONDS)) {
+                    keptLog.log("Timed out");
+                }
+            } catch (InterruptedException ignored) {
+                // Ignored
             }
-        } catch (InterruptedException ignored) {
-            // Ignored
+
+            zMsg.destroy();
         }
 
         return keptLog;
