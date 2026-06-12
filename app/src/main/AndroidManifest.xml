@@ -2,17 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="dev.patri9ck.a2ln">
-    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+        tools:ignore="QueryAllPackagesPermission"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme">
-        <activity android:name="dev.patri9ck.a2ln.address.AddressesActivity"
+        <activity android:name=".main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -20,10 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="dev.patri9ck.a2ln.app.AppsActivity"
-            android:label="@string/apps"
-            android:parentActivityName=".address.AddressesActivity"/>
-        <service android:name="dev.patri9ck.a2ln.notification.NotificationReceiver"
+        <service android:name=".notification.NotificationReceiver"
             android:exported="false"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>

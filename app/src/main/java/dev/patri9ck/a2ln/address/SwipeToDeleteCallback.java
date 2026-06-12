@@ -1,5 +1,7 @@
 package dev.patri9ck.a2ln.address;
 
+import android.app.Activity;
+
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,11 +13,11 @@ import dev.patri9ck.a2ln.R;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
-    private AddressesActivity addressesActivity;
+    private Activity addressesActivity;
     private List<Address> addresses;
     private AddressesAdapter addressesAdapter;
 
-    public SwipeToDeleteCallback(AddressesActivity addressesActivity, List<Address> addresses, AddressesAdapter addressesAdapter) {
+    public SwipeToDeleteCallback(Activity addressesActivity, List<Address> addresses, AddressesAdapter addressesAdapter) {
         super(0, ItemTouchHelper.LEFT);
 
         this.addressesActivity = addressesActivity;
