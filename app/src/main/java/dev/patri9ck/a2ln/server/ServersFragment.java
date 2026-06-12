@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +18,6 @@
 package dev.patri9ck.a2ln.server;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,25 +53,22 @@ import dev.patri9ck.a2ln.databinding.DialogPairBinding;
 import dev.patri9ck.a2ln.databinding.DialogPairedBinding;
 import dev.patri9ck.a2ln.databinding.DialogPairingBinding;
 import dev.patri9ck.a2ln.databinding.FragmentServersBinding;
-import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.log.LogsDialogBuilder;
+import dev.patri9ck.a2ln.log.LogDialogBuilder;
 import dev.patri9ck.a2ln.pairing.Pairing;
+import dev.patri9ck.a2ln.util.Storage;
 import dev.patri9ck.a2ln.util.Util;
 
 public class ServersFragment extends Fragment {
 
     private static final String TAG = "A2LN";
 
-    private SharedPreferences sharedPreferences;
-
+    private Storage storage;
     private List<Server> servers;
-    private ServersAdapter serversAdapter;
-
-    private BoundNotificationReceiver boundNotificationReceiver;
-
     private FragmentServersBinding fragmentServersBinding;
 
-    private final ActivityResultLauncher<ScanOptions> qrCodeScannerLauncher = registerForActivityResult(new ScanContract(), result -> {
+    private ServersAdapter serversAdapter;
+
+    private final ActivityResultLauncher<ScanOptions> launcher = registerForActivityResult(new ScanContract(), result -> {
         String address = result.getContents();
 
         if (address == null) {
@@ -86,29 +83,13 @@ public class ServersFragment extends Fragment {
             return;
         }
 
-        String serverIp = parts[0];
-
-        if (isAlreadyPaired(serverIp) || !notifyValidIp(serverIp)) {
-            return;
-        }
-
-        Optional<Integer> pairingPort = notifyValidPort(parts[1]);
-
-        if (!pairingPort.isPresent()) {
-            return;
-        }
-
-        startPairing(serverIp, pairingPort.get());
+        validate(parts[0], parts[1], true).ifPresent(this::startPairing);
     });
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        sharedPreferences = requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
-
-        servers = Util.fromJson(sharedPreferences.getString(getString(R.string.preferences_servers), null), Server.class);
-
-        boundNotificationReceiver = new BoundNotificationReceiver(notificationReceiver -> notificationReceiver.setServers(servers), requireContext());
-
+        storage = new Storage(requireContext(), requireContext().getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE));
+        servers = storage.loadServers();
         fragmentServersBinding = FragmentServersBinding.inflate(inflater, container, false);
 
         fragmentServersBinding.pairButton.setOnClickListener(pairButtonView -> {
@@ -117,23 +98,11 @@ public class ServersFragment extends Fragment {
             AlertDialog.Builder pairDialogBuilder = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                     .setTitle(R.string.pair_dialog_title)
                     .setView(dialogPairBinding.getRoot())
-                    .setPositiveButton(R.string.pair, (pairDialog, which) -> {
-                        String serverIp = dialogPairBinding.serverIpEditText.getText().toString();
-
-                        if (isAlreadyPaired(serverIp) || !notifyValidIp(serverIp)) {
-                            return;
-                        }
-
-                        Optional<Integer> pairingPort = notifyValidPort(dialogPairBinding.pairingPortEditText.getText().toString());
-
-                        if (!pairingPort.isPresent()) {
-                            return;
-                        }
-
+                    .setPositiveButton(R.string.pair, (pairDialog, which) -> validate(dialogPairBinding.serverIpEditText.getText().toString(), dialogPairBinding.pairingPortEditText.getText().toString(), true).ifPresent(destination -> {
                         pairDialog.dismiss();
 
-                        startPairing(serverIp, pairingPort.get());
-                    })
+                        startPairing(destination);
+                    }))
                     .setNegativeButton(R.string.cancel, null);
 
             AlertDialog pairDialog = pairDialogBuilder.show();
@@ -141,7 +110,7 @@ public class ServersFragment extends Fragment {
             dialogPairBinding.qrCodeButton.setOnClickListener(qrCodeButtonView -> {
                 pairDialog.dismiss();
 
-                qrCodeScannerLauncher.launch(new ScanOptions()
+                launcher.launch(new ScanOptions()
                         .addExtra(Intents.Scan.SCAN_TYPE, Intents.Scan.MIXED_SCAN)
                         .setOrientationLocked(false)
                         .setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES)
@@ -156,125 +125,106 @@ public class ServersFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        boundNotificationReceiver.bind();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        sharedPreferences.edit().putString(getString(R.string.preferences_servers), Util.toJson(servers)).apply();
-
-        boundNotificationReceiver.unbind();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
 
         fragmentServersBinding = null;
     }
 
-    protected boolean isAlreadyPaired(String ip) {
-        for (Server server : servers) {
-            if (server.getIp().equals(ip)) {
-                return true;
+    protected Optional<Destination> validate(String ip, String rawPort, boolean paired) {
+        if (paired) {
+            for (Server server : servers) {
+                if (server.getIp().equals(ip)) {
+                    Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.already_paired), Snackbar.LENGTH_SHORT).show();
+
+                    return Optional.empty();
+                }
             }
         }
 
-        return false;
-    }
+        if (!Patterns.IP_ADDRESS.matcher(ip).matches() && !Patterns.DOMAIN_NAME.matcher(ip).matches()) {
+            Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_ip), Snackbar.LENGTH_SHORT).show();
 
-    protected boolean notifyValidIp(String ip) {
-        if (Patterns.IP_ADDRESS.matcher(ip).matches() || Patterns.DOMAIN_NAME.matcher(ip).matches()) {
-            return true;
+            return Optional.empty();
         }
 
-        Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_ip), Snackbar.LENGTH_SHORT).show();
+        Optional<Integer> port = Util.parsePort(rawPort);
 
-        return false;
-    }
-
-    protected Optional<Integer> notifyValidPort(String port) {
-        Optional<Integer> parsedPort = Util.parsePort(port);
-
-        if (!parsedPort.isPresent()) {
+        if (!port.isPresent()) {
             Snackbar.make(fragmentServersBinding.getRoot(), getString(R.string.invalid_port), Snackbar.LENGTH_SHORT).show();
+
+            return Optional.empty();
         }
 
-        return parsedPort;
+        return Optional.of(new Destination(ip, port.get()));
     }
 
     private void loadServersRecyclerView() {
-        serversAdapter = new ServersAdapter(this, boundNotificationReceiver, servers);
+        serversAdapter = new ServersAdapter(this, storage, servers);
 
         fragmentServersBinding.serversRecyclerView.setAdapter(serversAdapter);
         fragmentServersBinding.serversRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        new ItemTouchHelper(new SwipeToDeleteCallback(fragmentServersBinding.getRoot(), boundNotificationReceiver, servers, serversAdapter)).attachToRecyclerView(fragmentServersBinding.serversRecyclerView);
-        new ItemTouchHelper(new DragAndDropCallback(servers, serversAdapter)).attachToRecyclerView(fragmentServersBinding.serversRecyclerView);
+        new ItemTouchHelper(new SwipeToDeleteCallback(fragmentServersBinding.getRoot(), storage, servers, serversAdapter)).attachToRecyclerView(fragmentServersBinding.serversRecyclerView);
+        new ItemTouchHelper(new DragAndDropCallback(servers, storage, serversAdapter)).attachToRecyclerView(fragmentServersBinding.serversRecyclerView);
     }
 
-    private void startPairing(String serverIp, int pairingPort) {
-        String ownIp = getIp();
-        String ownPublicKey = sharedPreferences.getString(getString(R.string.preferences_own_public_key), null);
+    private void startPairing(Destination destination) {
+        String ip = getIp();
 
-        if (ownIp == null || ownPublicKey == null) {
+        if (ip == null) {
             return;
         }
 
-        DialogPairingBinding dialogPairingBinding = DialogPairingBinding.inflate(getLayoutInflater());
+        storage.loadRawPublicKey().ifPresent(rawPublicKey -> {
+            DialogPairingBinding dialogPairingBinding = DialogPairingBinding.inflate(getLayoutInflater());
 
-        dialogPairingBinding.ownIpTextView.setText(ownIp);
-        dialogPairingBinding.ownPublicKeyTextView.setText(ownPublicKey);
+            dialogPairingBinding.ownIpTextView.setText(ip);
+            dialogPairingBinding.ownPublicKeyTextView.setText(rawPublicKey);
 
-        AlertDialog pairingDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
-                .setTitle(R.string.pairing_dialog_title)
-                .setView(dialogPairingBinding.getRoot())
-                .setCancelable(false)
-                .show();
-
-        CompletableFuture.supplyAsync(() -> new Pairing(serverIp, pairingPort, ownIp, ownPublicKey).pair()).thenAccept(pairingResult -> requireActivity().runOnUiThread(() -> {
-            pairingDialog.dismiss();
-
-            Server server = pairingResult.getServer().orElse(null);
-
-            if (server == null) {
-                Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_SHORT)
-                        .setAction(R.string.view_logs, view -> {
-                            if (!isVisible()) {
-                                return;
-                            }
-
-                            new LogsDialogBuilder(pairingResult.getKeptLog(), getLayoutInflater()).show();
-                        })
-                        .show();
-
-                return;
-            }
-
-            DialogPairedBinding dialogPairedBinding = DialogPairedBinding.inflate(getLayoutInflater());
-
-            dialogPairedBinding.serverIpTextView.setText(serverIp);
-            dialogPairedBinding.serverPublicKeyTextView.setText(new String(server.getPublicKey(), StandardCharsets.UTF_8));
-
-            new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
-                    .setTitle(R.string.paired_dialog_title)
-                    .setView(dialogPairedBinding.getRoot())
-                    .setPositiveButton(R.string.pair, (pairedDialog, which) -> {
-                        int position = servers.size();
-
-                        servers.add(server);
-                        serversAdapter.notifyItemInserted(position);
-
-                        boundNotificationReceiver.updateNotificationReceiver();
-                    })
-                    .setNegativeButton(R.string.cancel, null)
+            AlertDialog pairingDialog = new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
+                    .setTitle(R.string.pairing_dialog_title)
+                    .setView(dialogPairingBinding.getRoot())
+                    .setCancelable(false)
                     .show();
-        }));
+
+            CompletableFuture.supplyAsync(() -> new Pairing(requireContext(), destination, ip, rawPublicKey).pair()).thenAccept(pairingResult -> requireActivity().runOnUiThread(() -> {
+                pairingDialog.dismiss();
+
+                Server server = pairingResult.getServer().orElse(null);
+
+                if (server == null) {
+                    Snackbar.make(fragmentServersBinding.getRoot(), R.string.pairing_failed, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.view_log, view -> {
+                                if (isVisible()) {
+                                    new LogDialogBuilder(pairingResult.getKeptLog(), getLayoutInflater()).show();
+                                }
+                            })
+                            .show();
+
+                    return;
+                }
+
+                DialogPairedBinding dialogPairedBinding = DialogPairedBinding.inflate(getLayoutInflater());
+
+                dialogPairedBinding.serverIpTextView.setText(destination.getIp());
+                dialogPairedBinding.serverPublicKeyTextView.setText(new String(server.getPublicKey(), StandardCharsets.UTF_8));
+
+                new MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
+                        .setTitle(R.string.paired_dialog_title)
+                        .setView(dialogPairedBinding.getRoot())
+                        .setPositiveButton(R.string.pair, (pairedDialog, which) -> {
+                            int position = servers.size();
+
+                            servers.add(server);
+                            serversAdapter.notifyItemInserted(position);
+
+                            storage.saveServers(servers);
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }));
+        });
     }
 
     private String getIp() {

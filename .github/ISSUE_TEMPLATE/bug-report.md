@@ -17,5 +17,5 @@ Steps to reproduce the behavior.
 If applicable, add screenshots to help explain your problem.
 
 # Smartphone
- - Device:
- - Android version:
+- Device:
+- Android version:

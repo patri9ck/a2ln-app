@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2022  Patrick Zwick and contributors
+ * Android 2 Linux Notifications - A way to display Android phone notifications on Linux
+ * Copyright (C) 2023  patri9ck and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,43 +18,74 @@
 package dev.patri9ck.a2ln.notification;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Binder;
-import android.os.IBinder;
+import android.hardware.display.DisplayManager;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import android.view.Display;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 import dev.patri9ck.a2ln.R;
-import dev.patri9ck.a2ln.server.Server;
+import dev.patri9ck.a2ln.notification.spam.NotificationSpamHandler;
+import dev.patri9ck.a2ln.util.Storage;
 import dev.patri9ck.a2ln.util.Util;
 
 public class NotificationReceiver extends NotificationListenerService {
 
     private static final String TAG = "A2LNNR";
 
-    private final NotificationReceiverBinder notificationReceiverBinder = new NotificationReceiverBinder();
-    private final NotificationSpamHandler notificationSpamHandler = new NotificationSpamHandler();
-
     private boolean initialized;
+
+    private SharedPreferences sharedPreferences;
+    private Storage storage;
 
     private NotificationSender notificationSender;
 
+    private NotificationSpamHandler notificationSpamHandler;
+
     private List<String> disabledApps;
 
-    @Override
-    public void onNotificationPosted(StatusBarNotification statusBarNotification) {
-        if (!initialized) {
+    private boolean display;
+
+    private final SharedPreferences.OnSharedPreferenceChangeListener listener = (sharedPreferences, key) -> {
+        if (getString(R.string.preferences_servers).equals(key)) {
+            notificationSender.setServers(storage.loadServers());
+
             return;
         }
 
-        notificationSpamHandler.cleanUp();
+        if (getString(R.string.preferences_similarity).equals(key)) {
+            notificationSpamHandler.setSimilarity(storage.loadSimilarityOrDefault());
+
+            return;
+        }
+
+        if (getString(R.string.preferences_duration).equals(key)) {
+            notificationSpamHandler.setDuration(storage.loadDurationOrDefault());
+
+            return;
+        }
+
+        if (getString(R.string.preferences_disabled_apps).equals(key)) {
+            disabledApps = storage.loadDisabledApps();
+
+            return;
+        }
+
+        if (getString(R.string.preferences_display).equals(key)) {
+            display = storage.loadDisplay();
+        }
+    };
+
+    @Override
+    public synchronized void onNotificationPosted(StatusBarNotification statusBarNotification) {
+        if (!initialized) {
+            return;
+        }
 
         PackageManager packageManager = getPackageManager();
 
@@ -73,6 +105,16 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
+        if (display) {
+            for (Display display : ((DisplayManager) getSystemService(Context.DISPLAY_SERVICE)).getDisplays()) {
+                if (display.getState() == Display.STATE_ON) {
+                    Log.v(TAG, "Display is on");
+
+                    return;
+                }
+            }
+        }
+
         ParsedNotification parsedNotification = ParsedNotification.parseNotification(Util.getAppName(packageManager, packageName).orElse(""),
                 statusBarNotification.getNotification(),
                 this);
@@ -89,9 +131,11 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        notificationSpamHandler.addParsedNotification(parsedNotification);
-
-        CompletableFuture.runAsync(() -> notificationSender.sendParsedNotification(parsedNotification));
+        CompletableFuture.supplyAsync(() -> notificationSender.sendParsedNotification(parsedNotification)).thenAccept(keptLog -> {
+            if (getPackageName().equals(packageName)) {
+                storage.saveLog(keptLog.format());
+            }
+        });
 
         Log.v(TAG, "Notification given to NotificationSender");
     }
@@ -106,17 +150,8 @@ public class NotificationReceiver extends NotificationListenerService {
     @Override
     public void onListenerDisconnected() {
         Log.v(TAG, "NotificationReceiver disconnected");
-    }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        if (SERVICE_INTERFACE.equals(intent.getAction())) {
-            return super.onBind(intent);
-        }
-
-        initialize();
-
-        return notificationReceiverBinder;
+        uninitialize();
     }
 
     private synchronized void initialize() {
@@ -124,37 +159,27 @@ public class NotificationReceiver extends NotificationListenerService {
             return;
         }
 
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+        storage = new Storage(this, sharedPreferences);
 
-        NotificationSender.fromSharedPreferences(this, sharedPreferences).ifPresent(notificationSender -> {
+        NotificationSender.fromStorage(this, storage).ifPresent(notificationSender -> {
             this.notificationSender = notificationSender;
 
-            disabledApps = Util.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
+            notificationSpamHandler = new NotificationSpamHandler(storage.loadSimilarityOrDefault(), storage.loadDurationOrDefault());
+            disabledApps = storage.loadDisabledApps();
+            display = storage.loadDisplay();
+
+            sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
             initialized = true;
         });
     }
 
-    public void setServers(List<Server> servers) {
+    private synchronized void uninitialize() {
         if (!initialized) {
             return;
         }
 
-        notificationSender.setServers(servers);
-    }
-
-    public void setDisabledApps(List<String> disabledApps) {
-        if (!initialized) {
-            return;
-        }
-
-        this.disabledApps = disabledApps;
-    }
-
-    public class NotificationReceiverBinder extends Binder {
-
-        public NotificationReceiver getNotificationReceiver() {
-            return NotificationReceiver.this;
-        }
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 }
