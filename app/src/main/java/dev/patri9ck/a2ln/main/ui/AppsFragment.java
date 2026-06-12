@@ -17,11 +17,9 @@ import dev.patri9ck.a2ln.R;
 import dev.patri9ck.a2ln.app.AppsAdapter;
 import dev.patri9ck.a2ln.databinding.FragmentAppsBinding;
 import dev.patri9ck.a2ln.notification.BoundNotificationReceiver;
-import dev.patri9ck.a2ln.notification.NotificationReceiver;
-import dev.patri9ck.a2ln.notification.NotificationReceiverUpdater;
 import dev.patri9ck.a2ln.util.JsonListConverter;
 
-public class AppsFragment extends Fragment implements NotificationReceiverUpdater {
+public class AppsFragment extends Fragment {
 
     private List<String> disabledApps;
 
@@ -46,7 +44,7 @@ public class AppsFragment extends Fragment implements NotificationReceiverUpdate
 
         disabledApps = JsonListConverter.fromJson(sharedPreferences.getString(getString(R.string.preferences_disabled_apps), null), String.class);
 
-        boundNotificationReceiver = new BoundNotificationReceiver(this, requireContext());
+        boundNotificationReceiver = new BoundNotificationReceiver(notificationReceiver -> notificationReceiver.setDisabledApps(disabledApps), requireContext());
 
         boundNotificationReceiver.bind();
 
@@ -60,11 +58,6 @@ public class AppsFragment extends Fragment implements NotificationReceiverUpdate
         sharedPreferences.edit().putString(getString(R.string.preferences_disabled_apps), JsonListConverter.toJson(disabledApps)).apply();
 
         boundNotificationReceiver.unbind();
-    }
-
-    @Override
-    public void update(NotificationReceiver notificationReceiver) {
-        notificationReceiver.setDisabledApps(disabledApps);
     }
 
     private void loadAppsRecyclerView() {
