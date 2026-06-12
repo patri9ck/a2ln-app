@@ -17,9 +17,9 @@ jobs:
         java-version: '11'
         cache: 'gradle'
     - name: Build APK
-      run: ./gradlew clean assembleRelease
+      run: ./gradlew clean assembleDebug
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: apk
-        path: app/build/outputs/apk/release/app-release.apk
+        path: app/build/outputs/apk/debug/app-debug.apk
