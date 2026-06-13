@@ -1,0 +1,1 @@
+- Abstufung von ZMQ um Authentifizierung zu beheben
