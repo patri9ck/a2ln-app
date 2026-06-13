@@ -32,8 +32,8 @@ android {
         minSdk = 29
         targetSdk = 37
 
-        versionCode = 24
-        versionName = "1.4.2"
+        versionCode = 25
+        versionName = "1.4.3"
     }
 
     compileOptions {
@@ -74,7 +74,7 @@ android {
 dependencies {
     implementation("com.google.code.gson:gson:2.14.0")
     implementation("com.google.android.material:material:1.14.0")
-    implementation("org.zeromq:jeromq:0.6.0")
+    implementation("org.zeromq:jeromq:0.5.2")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.navigation:navigation-fragment:2.9.8")
     implementation("androidx.navigation:navigation-ui:2.9.8")
